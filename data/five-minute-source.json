@@ -1,0 +1,637 @@
+{
+  "audit": {
+    "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+    "file": "电视节目数据.xls",
+    "sessions": 16,
+    "segments": 96,
+    "valueColumn": "C",
+    "totalColumn": "D",
+    "boundary": "[0,5),[5,10),[10,15),[15,20),[20,25),[25,30)分钟；30分钟及以后另列。"
+  },
+  "records": [
+    {
+      "date": "2026-09-23",
+      "program": "清远肇庆",
+      "type": "首播",
+      "values": [
+        5,
+        7,
+        15,
+        15,
+        28,
+        16
+      ],
+      "first30": 86,
+      "after30": 11,
+      "scans": 97,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "清远肇庆",
+        "labelCell": "A2",
+        "timeCells": "B2:B7",
+        "valueCells": "C2:C7",
+        "totalCell": "C15",
+        "mergedTotalCell": "D2",
+        "mergedTotalRange": "D2:D7",
+        "mergedTotal": 86.0,
+        "afterCells": "C8:C14",
+        "times": [
+          "17:30-17:35",
+          "17:35-17:40",
+          "17:40-17:45",
+          "17:45-17:50",
+          "17:50-17:55",
+          "17:55-18:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-09-24",
+      "program": "清远肇庆",
+      "type": "重播",
+      "values": [
+        2,
+        2,
+        8,
+        14,
+        14,
+        13
+      ],
+      "first30": 53,
+      "after30": 2,
+      "scans": 55,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "清远肇庆",
+        "labelCell": "A19",
+        "timeCells": "B19:B24",
+        "valueCells": "C19:C24",
+        "totalCell": "C29",
+        "mergedTotalCell": "D19",
+        "mergedTotalRange": "D19:D24",
+        "mergedTotal": 53.0,
+        "afterCells": "C25:C28",
+        "times": [
+          "09:30-09:35",
+          "09:35-09:40",
+          "09:40-09:45",
+          "09:45-09:50",
+          "09:50-09:55",
+          "09:55-10:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-10-04",
+      "program": "清远肇庆",
+      "type": "重播",
+      "values": [
+        2,
+        2,
+        3,
+        5,
+        4,
+        1
+      ],
+      "first30": 17,
+      "after30": 2,
+      "scans": 19,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "清远肇庆",
+        "labelCell": "A33",
+        "timeCells": "B33:B38",
+        "valueCells": "C33:C38",
+        "totalCell": "C41",
+        "mergedTotalCell": "D33",
+        "mergedTotalRange": "D33:D40",
+        "mergedTotal": 19.0,
+        "afterCells": "C39:C40",
+        "times": [
+          "23:20-23:25",
+          "23:25-23:30",
+          "23:30-23:35",
+          "23:35-23:40",
+          "23:40-23:45",
+          "23:45-23:50"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "D列合计覆盖40分钟；30分钟内17人，后续2人，总量19人。"
+      }
+    },
+    {
+      "date": "2026-09-24",
+      "program": "新加坡·马来西亚",
+      "type": "首播",
+      "values": [
+        2,
+        8,
+        6,
+        10,
+        15,
+        29
+      ],
+      "first30": 70,
+      "after30": 8,
+      "scans": 78,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "新马",
+        "labelCell": "A2",
+        "timeCells": "B2:B7",
+        "valueCells": "C2:C7",
+        "totalCell": "C14",
+        "mergedTotalCell": "D2",
+        "mergedTotalRange": "D2:D7",
+        "mergedTotal": 70.0,
+        "afterCells": "C8:C13",
+        "times": [
+          "17:30-17:35",
+          "17:35-17:40",
+          "17:40-17:45",
+          "17:45-17:50",
+          "17:50-17:55",
+          "17:55-18:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-09-25",
+      "program": "新加坡·马来西亚",
+      "type": "重播",
+      "values": [
+        25,
+        4,
+        16,
+        9,
+        7,
+        1
+      ],
+      "first30": 62,
+      "after30": 6,
+      "scans": 68,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "新马",
+        "labelCell": "A18",
+        "timeCells": "B18:B23",
+        "valueCells": "C18:C23",
+        "totalCell": "C28",
+        "mergedTotalCell": "D18",
+        "mergedTotalRange": "D18:D23",
+        "mergedTotal": 62.0,
+        "afterCells": "C24:C27",
+        "times": [
+          "09:30-09:35",
+          "09:35-09:40",
+          "09:40-09:45",
+          "09:45-09:50",
+          "09:50-09:55",
+          "09:55-10:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-10-13",
+      "program": "新加坡·马来西亚",
+      "type": "重播",
+      "values": [
+        6,
+        29,
+        12,
+        20,
+        30,
+        35
+      ],
+      "first30": 132,
+      "after30": 13,
+      "scans": 145,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "新马",
+        "labelCell": "A33",
+        "timeCells": "B33:B38",
+        "valueCells": "C33:C38",
+        "totalCell": "C45",
+        "mergedTotalCell": "D33",
+        "mergedTotalRange": "D33:D38",
+        "mergedTotal": 132.0,
+        "afterCells": "C39:C44",
+        "times": [
+          "17:30-17:35",
+          "17:35-17:40",
+          "17:40-17:45",
+          "17:45-17:50",
+          "17:50-17:55",
+          "17:55-18:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "program": "新加坡·马来西亚",
+      "type": "重播",
+      "values": [
+        16,
+        7,
+        7,
+        10,
+        12,
+        0
+      ],
+      "first30": 52,
+      "after30": 1,
+      "scans": 53,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "新马",
+        "labelCell": "A49",
+        "timeCells": "B49:B54",
+        "valueCells": "C49:C54",
+        "totalCell": "C59",
+        "mergedTotalCell": "D49",
+        "mergedTotalRange": "D49:D54",
+        "mergedTotal": 52.0,
+        "afterCells": "C55:C58",
+        "times": [
+          "09:30-09:35",
+          "09:35-09:40",
+          "09:40-09:45",
+          "09:45-09:50",
+          "09:50-09:55",
+          "09:55-10:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-09-28",
+      "program": "福建泰宁",
+      "type": "首播",
+      "values": [
+        2,
+        10,
+        23,
+        25,
+        22,
+        8
+      ],
+      "first30": 90,
+      "after30": 9,
+      "scans": 99,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "福建泰宁",
+        "labelCell": "A2",
+        "timeCells": "B2:B7",
+        "valueCells": "C2:C7",
+        "totalCell": "C14",
+        "mergedTotalCell": "D2",
+        "mergedTotalRange": "D2:D7",
+        "mergedTotal": 90.0,
+        "afterCells": "C8:C13",
+        "times": [
+          "17:30-17:35",
+          "17:35-17:40",
+          "17:40-17:45",
+          "17:45-17:50",
+          "17:50-17:55",
+          "17:55-18:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-09-29",
+      "program": "福建泰宁",
+      "type": "重播",
+      "values": [
+        21,
+        20,
+        8,
+        14,
+        6,
+        2
+      ],
+      "first30": 71,
+      "after30": 2,
+      "scans": 73,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "福建泰宁",
+        "labelCell": "A18",
+        "timeCells": "B18:B23",
+        "valueCells": "C18:C23",
+        "totalCell": "C28",
+        "mergedTotalCell": "D18",
+        "mergedTotalRange": "D18:D23",
+        "mergedTotal": 71.0,
+        "afterCells": "C24:C27",
+        "times": [
+          "09:30-09:35",
+          "09:35-09:40",
+          "09:40-09:45",
+          "09:45-09:50",
+          "09:50-09:55",
+          "09:55-10:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "program": "福建泰宁",
+      "type": "重播",
+      "values": [
+        1,
+        2,
+        5,
+        0,
+        2,
+        0
+      ],
+      "first30": 10,
+      "after30": 0,
+      "scans": 10,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "福建泰宁",
+        "labelCell": "A33",
+        "timeCells": "B33:B38",
+        "valueCells": "C33:C38",
+        "totalCell": "C41",
+        "mergedTotalCell": "D33",
+        "mergedTotalRange": "D33:D40",
+        "mergedTotal": 10.0,
+        "afterCells": "C39:C40",
+        "times": [
+          "23:20-23:25",
+          "23:25-23:30",
+          "23:30-23:35",
+          "23:35-23:40",
+          "23:40-23:45",
+          "23:45-23:50"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "D列合计覆盖40分钟；30分钟内10人，后续0人，总量10人。"
+      }
+    },
+    {
+      "date": "2026-09-29",
+      "program": "越南全景",
+      "type": "首播",
+      "values": [
+        3,
+        3,
+        14,
+        21,
+        23,
+        18
+      ],
+      "first30": 82,
+      "after30": 3,
+      "scans": 85,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "越南全景",
+        "labelCell": "A2",
+        "timeCells": "B2:B7",
+        "valueCells": "C2:C7",
+        "totalCell": "C14",
+        "mergedTotalCell": "D2",
+        "mergedTotalRange": "D2:D7",
+        "mergedTotal": 82.0,
+        "afterCells": "C8:C13",
+        "times": [
+          "17:30-17:35",
+          "17:35-17:40",
+          "17:40-17:45",
+          "17:45-17:50",
+          "17:50-17:55",
+          "17:55-18:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-09-30",
+      "program": "越南全景",
+      "type": "重播",
+      "values": [
+        8,
+        19,
+        26,
+        13,
+        15,
+        1
+      ],
+      "first30": 82,
+      "after30": 3,
+      "scans": 85,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "越南全景",
+        "labelCell": "A18",
+        "timeCells": "B18:B23",
+        "valueCells": "C18:C23",
+        "totalCell": "C28",
+        "mergedTotalCell": "D18",
+        "mergedTotalRange": "D18:D23",
+        "mergedTotal": 82.0,
+        "afterCells": "C24:C27",
+        "times": [
+          "09:30-09:35",
+          "09:35-09:40",
+          "09:40-09:45",
+          "09:45-09:50",
+          "09:50-09:55",
+          "09:55-10:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "program": "越南全景",
+      "type": "重播",
+      "values": [
+        5,
+        9,
+        15,
+        31,
+        27,
+        26
+      ],
+      "first30": 113,
+      "after30": 6,
+      "scans": 119,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "越南全景",
+        "labelCell": "A32",
+        "timeCells": "B32:B37",
+        "valueCells": "C32:C37",
+        "totalCell": "C44",
+        "mergedTotalCell": "D32",
+        "mergedTotalRange": "D32:D37",
+        "mergedTotal": 113.0,
+        "afterCells": "C38:C43",
+        "times": [
+          "17:30-17:35",
+          "17:35-17:40",
+          "17:40-17:45",
+          "17:45-17:50",
+          "17:50-17:55",
+          "17:55-18:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "program": "越南全景",
+      "type": "重播",
+      "values": [
+        4,
+        10,
+        11,
+        14,
+        10,
+        0
+      ],
+      "first30": 49,
+      "after30": 0,
+      "scans": 49,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "越南全景",
+        "labelCell": "A48",
+        "timeCells": "B48:B53",
+        "valueCells": "C48:C53",
+        "totalCell": "C58",
+        "mergedTotalCell": "D48",
+        "mergedTotalRange": "D48:D53",
+        "mergedTotal": 49.0,
+        "afterCells": "C54:C57",
+        "times": [
+          "09:30-09:35",
+          "09:35-09:40",
+          "09:40-09:45",
+          "09:45-09:50",
+          "09:50-09:55",
+          "09:55-10:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "program": "拈花湾",
+      "type": "首播",
+      "values": [
+        4,
+        29,
+        53,
+        33,
+        33,
+        53
+      ],
+      "first30": 205,
+      "after30": 17,
+      "scans": 222,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "不一样的拈花湾",
+        "labelCell": "A2",
+        "timeCells": "B2:B7",
+        "valueCells": "C2:C7",
+        "totalCell": "C14",
+        "mergedTotalCell": "D2",
+        "mergedTotalRange": "D2:D7",
+        "mergedTotal": 205.0,
+        "afterCells": "C8:C13",
+        "times": [
+          "17:30-17:35",
+          "17:35-17:40",
+          "17:40-17:45",
+          "17:45-17:50",
+          "17:50-17:55",
+          "17:55-18:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "program": "拈花湾",
+      "type": "重播",
+      "values": [
+        18,
+        25,
+        7,
+        19,
+        12,
+        1
+      ],
+      "first30": 82,
+      "after30": 3,
+      "scans": 85,
+      "source": {
+        "file": "电视节目数据.xls",
+        "sha256": "ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3",
+        "sheet": "不一样的拈花湾",
+        "labelCell": "A18",
+        "timeCells": "B18:B23",
+        "valueCells": "C18:C23",
+        "totalCell": "C28",
+        "mergedTotalCell": "D18",
+        "mergedTotalRange": "D18:D23",
+        "mergedTotal": 82.0,
+        "afterCells": "C24:C27",
+        "times": [
+          "09:30-09:35",
+          "09:35-09:40",
+          "09:40-09:45",
+          "09:45-09:50",
+          "09:50-09:55",
+          "09:55-10:00"
+        ],
+        "definition": "C列为各时间段新增扫码添加企微人数；以首个扫码区间起点为相对0分钟，非已核实节目单开播时间。",
+        "note": "六段C列增量之和与30分钟合计一致；后续扫码独立列示。"
+      }
+    }
+  ]
+}
