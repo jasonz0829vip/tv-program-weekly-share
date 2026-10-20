@@ -1,7 +1,7 @@
 /* 都市频道共享周报 V2: upload original XLS/XLSX locally, publish de-identified data to D1. */
 'use strict';
 (function(){
-const API={base:'',enabled:false,currentVersion:null,snapshot:null,updatedAt:'',preview:null,sourceFile:null,parseResult:null,polling:false,sheetLoader:null,localPreview:false,online:false,mirrorLoaded:false,mirrorVersion:null,mirrorTime:'',mirrorPath:'data/current.json',sourceKind:'seed',gateways:[]};
+const API={base:'',enabled:false,currentVersion:null,snapshot:null,updatedAt:'',preview:null,sourceFile:null,parseResult:null,polling:false,sheetLoader:null,localPreview:false,online:false,mirrorLoaded:false,mirrorVersion:null,mirrorTime:'',mirrorPath:'data/current.json',sourceKind:'seed',gateways:[],activeBase:''};
 const CLOUD_CACHE_KEY='urban-channel-last-confirmed-shared-v1';
 const UI=id=>document.getElementById(id);
 const text=(id,value)=>{const el=UI(id);if(el)el.textContent=String(value??'')};
@@ -39,17 +39,34 @@ function cleanBase(s){
   try{const u=new URL(val);return u.protocol==='https:'&&u.hostname&&!u.username&&!u.password&&!u.search&&!u.hash?val:''}catch{return ''}
 }
 async function request(path,options={}){
-  if(!API.base)throw Error('尚未配置共享数据服务');
-  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),16000);
-  try{
-    const res=await fetch(API.base+path,{...options,signal:controller.signal,cache:'no-store'});
-    let body;try{body=await res.json()}catch{throw Error('共享接口返回了非JSON内容，请检查云端部署')}
-    if(!res.ok||body?.ok===false)throw Error(body.error||'同步失败：HTTP '+res.status);
-    return body;
-  }catch(error){
-    if(error.name==='AbortError')throw Error('网络请求超时，请检查服务连通性');
-    throw error;
-  }finally{clearTimeout(timeout)}
+  const bases=[API.base,...API.gateways].filter(Boolean);
+  if(!bases.length)throw Error('尚未配置共享数据上传服务');
+  let preferred=API.activeBase||'';
+  try{if(!preferred)preferred=localStorage.getItem('urban-channel-best-gateway')||''}catch(e){}
+  const ordered=preferred&&bases.includes(preferred)?[preferred,...bases.filter(x=>x!==preferred)]:bases;
+  let lastFailure;
+  for(const base of ordered){
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),ordered.length>1?6000:15000);
+    try{
+      const res=await fetch(base+path,{...options,signal:controller.signal,cache:'no-store'});
+      let payload;
+      try{payload=await res.json()}catch(e){throw Error('共享接口没有返回有效JSON')}
+      if(!res.ok||payload?.ok===false){
+        const error=Error(payload?.error||'同步失败：HTTP '+res.status);
+        // Validation and optimistic-lock errors are shared across all proxies. No fallback retry.
+        if(res.status>=400&&res.status<500&&res.status!==429)throw Object.assign(error,{stop:true});
+        throw error;
+      }
+      API.activeBase=base;
+      try{localStorage.setItem('urban-channel-best-gateway',base)}catch(e){}
+      return payload;
+    }catch(error){
+      if(error.stop)throw error;
+      lastFailure=error;
+    }finally{clearTimeout(timeout)}
+  }
+  throw Error('国内、国外共享接口当前均无法访问：'+(lastFailure?.name==='AbortError'?'连接超时':String(lastFailure?.message||'网络不可达')));
 }
 async function loadSheetJS(){
   if(window.XLSX?.read)return window.XLSX;
@@ -129,7 +146,7 @@ function renderFilePreview(){
    (metrics.length?'<div class="excel-preview-metrics">识别到新增指标：'+metrics.map(m=>'<b>'+esc(m.label)+'</b>').join('、')+'</div>':'')+
    (warnings.length?'<details class="excel-preview-warnings"><summary>有 '+warnings.length+' 条数据提醒（点开核对）</summary>'+warnings.slice(0,15).map(x=>'<p>'+esc(x)+'</p>').join('')+'</details>':'')+
    '<p class="excel-preview-foot">仅向共享服务提交节目、场次、金额等经过字段白名单处理的汇总数据；原始文件和客户明细不会上传。发布后其他人自动看到同一版本。</p>';
-  feedback(API.enabled?'解析完成。请检查数字，确认后向全员发布。':'解析已完成。本机预览可用；云端服务尚未连接，因此暂时不能全员发布。',API.enabled?'success':'neutral');
+  feedback(API.online?'解析完成。核对数字后即可发布到共享数据库。':'解析完成。本机预览可用；当前网络还未验证上传通道，请等共享接口恢复。',API.online?'success':'neutral');
   updatePublishButton();
 }
 async function handleExcelFile(event){
@@ -169,7 +186,7 @@ async function publishExcel(){
     UI('excelSyncPreview').innerHTML='';
     const input=UI('excelFilePicker');if(input)input.value='';
     await refreshShared(true);
-    feedback(result.unchanged?'与当前共享版本完全一致，无需重复发布。':'已向全员发布成功，正在使用同一份最新周报。','success');
+    feedback(result.unchanged?'与共享数据库中当前版本一致，无需重复发布。':'新数据已写入共享数据库。使用直连接口的同事可立即读取；本站国内外公开镜像会在后续自动发布后同步（可能延迟数分钟）。','success');
     setTimeout(()=>hideModal(),850);
   }catch(error){feedback('发布失败，旧数据仍保留：'+error.message,'error')}
   finally{setRunning(false)}
@@ -397,6 +414,7 @@ async function initialize(){
     API.base=cleanBase(conf.apiBase);
     API.mirrorPath=typeof conf.mirrorPath==='string'&&/^data\/[\w.-]+\.json$/.test(conf.mirrorPath)?conf.mirrorPath:'data/current.json';
     API.gateways=Array.isArray(conf.apiFallbacks)?conf.apiFallbacks.map(cleanBase).filter(Boolean):[];
+    API.activeBase='';
     API.enabled=!!(API.base||API.gateways.length);
     try{
       const cached=JSON.parse(localStorage.getItem(CLOUD_CACHE_KEY)||'null');
