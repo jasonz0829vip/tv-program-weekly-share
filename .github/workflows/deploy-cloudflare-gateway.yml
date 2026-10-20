@@ -1,12 +1,9 @@
 name: 都市频道 · 备用免费上传接口
 
+# Backup Cloudflare Pages requires optional Cloudflare Pages Edit permission.
+# Keep this manual so regular weekly updates never trigger failed builds.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "cloudflare-gateway/**"
-      - ".github/workflows/deploy-cloudflare-gateway.yml"
 
 permissions:
   contents: write
