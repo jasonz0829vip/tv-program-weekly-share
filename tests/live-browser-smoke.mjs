@@ -96,8 +96,15 @@ async function main(){
   console.log('Mainland Worker-block simulation:',JSON.stringify(china));
   assert(china.title==='都市频道经营驾驶舱'&&china.mirror,'mainland user should still load shared report without workers.dev');
   assert(china.version===china.staticVersion&&china.rows===16&&china.scans===1342,'public mirror must remain consistent');
-  assert(china.cloudOnline===false,'upload must remain disabled if no write endpoint works');
+  assert(china.cloudOnline===true,'Netlify upload gateway must work when workers.dev is blocked');
+  const activeGateway=await evaluate("window.UrbanSync?.api?.activeBase");
+  assert(activeGateway==='https://urban-channel-sync.netlify.app','fallback must use the deployed Netlify gateway');
   assert(china.issues.length===0,'no JS errors on workers.dev-blocked network');
+  await cdp('Network.setBlockedURLs',{urls:['*workers.dev*','*urban-channel-sync.netlify.app*']});
+  await cdp('Page.navigate',{url:url+(url.includes('?')?'&':'?')+'all_apis_blocked=1'});
+  await sleep(15000);
+  const offline=await evaluate("({mirror:window.UrbanSync?.api?.mirrorLoaded,online:window.UrbanSync?.api?.online,rows:records.length})");
+  assert(offline.mirror&&offline.rows===16&&!offline.online,'all APIs blocked must retain mirror and disable publishing');
   console.log('PASS: live desktop/mobile and simulated mainland static fallback');
 }
 try{await main()}catch(error){
