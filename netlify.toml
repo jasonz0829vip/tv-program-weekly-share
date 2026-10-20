@@ -1,0 +1,8 @@
+# Separate free Netlify gateway site for China/global upload fallback.
+# Do NOT point the existing FieldNotes Netlify project at this repository.
+[build]
+  publish = "gateway-public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
