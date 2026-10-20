@@ -88,7 +88,7 @@ async function main(){
   console.log('Failed network:',JSON.stringify(failedRequests.slice(0,20)));
   console.log('HTTP >=400:',JSON.stringify(badStatus.slice(0,20)));
   assert(errors.length===0&&mobile.errors.length===0,'JavaScript runtime errors present');
-  assert(badStatus.filter(x=>x.url.includes('tv-program-weekly-sync')).length===0,'Backend HTTP errors present');
+  assert(badStatus.length===0,'The live site returned HTTP errors: '+JSON.stringify(badStatus));
   console.log('PASS: live desktop/mobile smoke test');
 }
 try{await main()}catch(error){
