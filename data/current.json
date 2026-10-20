@@ -1,0 +1,558 @@
+{
+  "ok": true,
+  "version": "2026-10-20T10-15-07-929Z-12f1721a",
+  "updatedAt": "2026-10-20T10:15:07.929Z",
+  "mirroredAt": "2026-10-20T15:04:36.237Z",
+  "snapshot": {
+    "schemaVersion": 2,
+    "source": {
+      "name": "都市频道脱敏经营汇总",
+      "hash": "2287759909b6c5277062224696b5f4cab42240775627025a45edc33240e7aa73",
+      "sheets": 12,
+      "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
+    },
+    "records": [
+      {
+        "date": "2026-09-23",
+        "program": "清远肇庆",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 97,
+        "orders": 0,
+        "first30": 86,
+        "after30": 11,
+        "phone": null,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            5,
+            7,
+            15,
+            15,
+            28,
+            16
+          ],
+          "source": {
+            "sheet": "清远肇庆",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C15",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-09-24",
+        "program": "清远肇庆",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 55,
+        "orders": 2,
+        "first30": 53,
+        "after30": 2,
+        "phone": 3,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            2,
+            2,
+            8,
+            14,
+            14,
+            13
+          ],
+          "source": {
+            "sheet": "清远肇庆",
+            "valueCells": "C19:C24",
+            "timeCells": "B19:B24",
+            "totalCell": "C29",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-09-24",
+        "program": "新加坡·马来西亚",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 78,
+        "orders": 3,
+        "first30": 70,
+        "after30": 8,
+        "phone": 5,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            2,
+            8,
+            6,
+            10,
+            15,
+            29
+          ],
+          "source": {
+            "sheet": "新马",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-09-25",
+        "program": "新加坡·马来西亚",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 68,
+        "orders": 1,
+        "first30": 62,
+        "after30": 6,
+        "phone": 9,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            25,
+            4,
+            16,
+            9,
+            7,
+            1
+          ],
+          "source": {
+            "sheet": "新马",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-09-28",
+        "program": "福建泰宁",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 99,
+        "orders": 5,
+        "first30": 90,
+        "after30": 9,
+        "phone": 6,
+        "group": 26,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            2,
+            10,
+            23,
+            25,
+            22,
+            8
+          ],
+          "source": {
+            "sheet": "福建泰宁",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-09-29",
+        "program": "福建泰宁",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 73,
+        "orders": 5,
+        "first30": 71,
+        "after30": 2,
+        "phone": 3,
+        "group": 15,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            21,
+            20,
+            8,
+            14,
+            6,
+            2
+          ],
+          "source": {
+            "sheet": "福建泰宁",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-09-29",
+        "program": "越南全景",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 85,
+        "orders": 4,
+        "first30": 82,
+        "after30": 3,
+        "phone": 6,
+        "group": 19,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            3,
+            3,
+            14,
+            21,
+            23,
+            18
+          ],
+          "source": {
+            "sheet": "越南全景",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-09-30",
+        "program": "越南全景",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 85,
+        "orders": 0,
+        "first30": 82,
+        "after30": 3,
+        "phone": 5,
+        "group": 18,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            8,
+            19,
+            26,
+            13,
+            15,
+            1
+          ],
+          "source": {
+            "sheet": "越南全景",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-04",
+        "program": "清远肇庆",
+        "type": "重播",
+        "startTime": "23:20",
+        "scans": 19,
+        "orders": 0,
+        "first30": 17,
+        "after30": 2,
+        "phone": 1,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            2,
+            2,
+            3,
+            5,
+            4,
+            1
+          ],
+          "source": {
+            "sheet": "清远肇庆",
+            "valueCells": "C33:C38",
+            "timeCells": "B33:B38",
+            "totalCell": "C41",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-10",
+        "program": "福建泰宁",
+        "type": "重播",
+        "startTime": "23:20",
+        "scans": 10,
+        "orders": 2,
+        "first30": 10,
+        "after30": 0,
+        "phone": 0,
+        "group": 4,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            1,
+            2,
+            5,
+            0,
+            2,
+            0
+          ],
+          "source": {
+            "sheet": "福建泰宁",
+            "valueCells": "C33:C38",
+            "timeCells": "B33:B38",
+            "totalCell": "C41",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-13",
+        "program": "新加坡·马来西亚",
+        "type": "重播",
+        "startTime": "17:30",
+        "scans": 145,
+        "orders": 10,
+        "first30": 132,
+        "after30": 13,
+        "phone": 7,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            6,
+            29,
+            12,
+            20,
+            30,
+            35
+          ],
+          "source": {
+            "sheet": "新马",
+            "valueCells": "C33:C38",
+            "timeCells": "B33:B38",
+            "totalCell": "C45",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-14",
+        "program": "新加坡·马来西亚",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 53,
+        "orders": 0,
+        "first30": 52,
+        "after30": 1,
+        "phone": 1,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            16,
+            7,
+            7,
+            10,
+            12,
+            0
+          ],
+          "source": {
+            "sheet": "新马",
+            "valueCells": "C49:C54",
+            "timeCells": "B49:B54",
+            "totalCell": "C59",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-14",
+        "program": "越南全景",
+        "type": "重播",
+        "startTime": "17:30",
+        "scans": 119,
+        "orders": 3,
+        "first30": 113,
+        "after30": 6,
+        "phone": 6,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            5,
+            9,
+            15,
+            31,
+            27,
+            26
+          ],
+          "source": {
+            "sheet": "越南全景",
+            "valueCells": "C32:C37",
+            "timeCells": "B32:B37",
+            "totalCell": "C44",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-15",
+        "program": "拈花湾",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 222,
+        "orders": 2,
+        "first30": 205,
+        "after30": 17,
+        "phone": 6,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            4,
+            29,
+            53,
+            33,
+            33,
+            53
+          ],
+          "source": {
+            "sheet": "不一样的拈花湾",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-15",
+        "program": "越南全景",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 49,
+        "orders": 3,
+        "first30": 49,
+        "after30": 0,
+        "phone": 1,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            4,
+            10,
+            11,
+            14,
+            10,
+            0
+          ],
+          "source": {
+            "sheet": "越南全景",
+            "valueCells": "C48:C53",
+            "timeCells": "B48:B53",
+            "totalCell": "C58",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-16",
+        "program": "拈花湾",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 85,
+        "orders": 7,
+        "first30": 82,
+        "after30": 3,
+        "phone": 2,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            18,
+            25,
+            7,
+            19,
+            12,
+            1
+          ],
+          "source": {
+            "sheet": "不一样的拈花湾",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      }
+    ],
+    "paymentSummary": [
+      {
+        "program": "清远肇庆",
+        "amount": 50385,
+        "fullOrders": 5,
+        "fullPersons": 15,
+        "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "新加坡·马来西亚",
+        "amount": 272625,
+        "fullOrders": 17,
+        "fullPersons": 34,
+        "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "福建泰宁",
+        "amount": 54694,
+        "fullOrders": 7,
+        "fullPersons": 19,
+        "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "越南全景",
+        "amount": 95150,
+        "fullOrders": 7,
+        "fullPersons": 17,
+        "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "拈花湾",
+        "amount": 16217,
+        "fullOrders": 4,
+        "fullPersons": 8,
+        "source": "汇总数据 F:G:H"
+      }
+    ],
+    "metrics": [
+      {
+        "key": "average_price_per_person",
+        "label": "人均客单价",
+        "unit": "元/人",
+        "valuesByProgram": {
+          "清远肇庆": 3359,
+          "新加坡·马来西亚": 8018.41,
+          "福建泰宁": 2879,
+          "越南全景": 5597.24,
+          "拈花湾": 2027
+        },
+        "source": "Excel 汇总数据 I1 列",
+        "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
+      }
+    ],
+    "sourceLastRecorded": "2026-10-16",
+    "totals": {
+      "sessions": 16,
+      "programs": 5,
+      "scans": 1342,
+      "orders": 47,
+      "amount": 489071
+    }
+  }
+}
