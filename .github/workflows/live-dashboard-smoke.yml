@@ -1,0 +1,29 @@
+name: 都市频道 · 真实网页运行检查
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "five-minute.js"
+      - "shared-sync.js"
+      - "tests/live-browser-smoke.mjs"
+      - ".github/workflows/live-dashboard-smoke.yml"
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Ensure recent GitHub Pages deployment
+        run: |
+          echo "Running Chrome headless against GitHub Pages; no credentials needed"
+          command -v google-chrome
+          google-chrome --version
+      - name: Test actual homepage, 5-minute chart, mobile viewport and cloud errors
+        run: node tests/live-browser-smoke.mjs
