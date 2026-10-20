@@ -57,5 +57,5 @@ export default async function handler(request){
 }
 export const config={
   path:['/api/current','/api/versions','/api/publish','/api/restore'],
-  rateLimit:{action:'rate_limit',aggregateBy:'ip',windowSize:60,windowLimit:30}
+  rateLimit:{action:'rate_limit',aggregateBy:['ip','domain'],windowSize:60,windowLimit:30}
 };

@@ -1,7 +1,7 @@
 {
   "apiBase": "https://tv-program-weekly-sync.jasonz0829vip.workers.dev",
-  "apiFallbacks": [],
+  "apiFallbacks": ["https://urban-channel-sync.netlify.app"],
   "mirrorPath": "data/current.json",
   "pollSeconds": 45,
-  "note": "Same-origin JSON serves China/worldwide readers. Cloudflare Workers accepts uploads overseas; add verified free mainland-reachable Netlify gateway URL to apiFallbacks after deployment. Mirror is read-only and updates after GitHub Actions publication."
+  "note": "Same-origin JSON serves readers. Netlify Free gateway relays uploads to the same Cloudflare D1 database when Workers is unreachable. Both endpoints verified over HTTPS; mainland direct-network and phone acceptance remain separate. Mirror is read-only and updates after GitHub Actions publication."
 }
