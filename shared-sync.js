@@ -201,37 +201,48 @@ function programGroups(rows){
   });return [...map.values()];
 }
 function refreshScheduleAdvice(){
-  const box=document.querySelector('.schedule-list');if(!box)return;
-  const paid=new Map(PAYMENT_ROUTES.map(p=>[p.program,p]));
-  const names=programGroups(records);
-  const suggestions=names.map(g=>{
-    const avgOrders=g.orders/g.n,avgScans=g.scans/g.n,paidInfo=paid.get(g.name);
-    let tier='test',status='继续测试',next='保留一场测试，观察意向金向全款的转化';
-    if(g.n<2){status='补充场次验证';next='建议再播一场，补足首播和重播样本'}
-    else if(avgOrders>=3.0&&avgScans>=75 && paidInfo?.fullOrders>=5 && g.n>=3){
-      tier='primary';status='优先续播';next='建议安排一场重播，对比同一产品不同时段的订单与扫码';
-    }else if(avgOrders<1){tier='pause';status='暂缓重播';next='优先优化内容和权益，再以单场测试重新验证'}
-    else if(avgOrders<3){tier='observe';status='控制频次';next='先优化优惠机制与客服承接，控制重复播出密度'}
-    const paidText=paidInfo?'¥'+fmtNumber(paidInfo.amount)+' · 全款'+fmtNumber(paidInfo.fullOrders)+'单':'待补金额数据';
-    return {...g,avgOrders,avgScans,paidInfo,paidText,tier,status,next,
-      reason:'基于 '+g.n+' 场（首播 '+g.live+' / 重播 '+g.replay+'）、场均扫码 '+avgScans.toFixed(1)+
-      ' 人次、场均意向金 '+avgOrders.toFixed(2)+' 单。'+
-      (paidInfo?'累计实付 '+fmtNumber(paidInfo.amount)+' 元，属于跟踪全周期金额，不等于场次净利润。':'暂无已核验的实付金额，不据此推定成交强弱。')};
-  }).sort((a,b)=>(
-    ({primary:3,test:2,observe:1,pause:0}[b.tier])-({primary:3,test:2,observe:1,pause:0}[a.tier]) ||
-    b.avgOrders-a.avgOrders));
-  box.innerHTML=suggestions.map((g,i)=>
-    '<div class="schedule-item schedule-'+g.tier+'"><div class="schedule-item-head">'+
-    '<span class="schedule-n">'+String(i+1).padStart(2,'0')+'</span><strong class="schedule-name">'+esc(g.name)+
-    '</strong><span class="schedule-status">'+g.status+'</span></div>'+
-    '<div class="schedule-metrics"><span>首播 <b>'+g.live+'</b> · 重播 <b>'+g.replay+'</b></span>'+
-    '<span>场均扫码 <b>'+g.avgScans.toFixed(1)+'</b></span><span>场均意向 <b>'+
-    g.avgOrders.toFixed(2)+' 单</b></span><span>全款累计 <b>'+esc(g.paidText)+'</b></span></div>'+
-    '<div class="schedule-times" data-program="'+esc(g.name)+'"></div>'+
-    '<p class="schedule-reason">'+esc(g.reason)+'</p><p class="schedule-next"><b>下一步：</b>'+
-    esc(g.next)+'</p></div>').join('');
+  const box=document.querySelector('.schedule-list');
+  if(!box)return;
+  if(!window.UrbanRecommendation?.evaluate){
+    box.innerHTML='<div class="table-empty">排播测算正在加载。未完成全款数据核验前不提供增加播次建议。</div>';
+    return;
+  }
+  const analysis=window.UrbanRecommendation.evaluate(records,PAYMENT_ROUTES);
+  const cards=analysis.items;
+  if(!cards.length){
+    box.innerHTML='<div class="table-empty">当前没有已核验的播出场次，不生成排播建议。</div>';
+    return;
+  }
+  box.innerHTML=cards.map((g,i)=>{
+    const paid=g.paid;
+    const paidText=paid?'¥'+fmtNumber(paid.amount):'待核验';
+    const orderText=paid?fmtNumber(paid.fullOrders)+'单':'—';
+    const perShow=paid?'¥'+fmtNumber(Math.round(g.revenuePerBroadcast))+'/场':'—';
+    const perScan=g.paidPerScan===null?'—':'¥'+Number(g.paidPerScan).toFixed(2)+'/人次';
+    return '<div class="schedule-item schedule-'+g.tier+'"><div class="schedule-item-head">'+
+      '<span class="schedule-n">'+String(i+1).padStart(2,'0')+'</span><strong class="schedule-name">'+esc(g.name)+
+      '</strong><span class="schedule-status">'+esc(g.status)+'</span></div>'+
+      '<div class="schedule-metrics">'+
+      '<span>首播 <b>'+g.live+'</b> · 重播 <b>'+g.replay+'</b></span>'+
+      '<span>场均扫码 <b>'+g.avgScans.toFixed(1)+' 人次</b></span>'+
+      '<span>场均意向金 <b>'+g.avgOrders.toFixed(2)+' 单</b></span>'+
+      '<span>累计全款实付 <b>'+esc(paidText)+'</b> · 全款 <b>'+esc(orderText)+'</b></span>'+
+      '<span>按播次均摊实付 <b>'+esc(perShow)+'</b></span>'+
+      '<span>按扫码规模折算实付 <b>'+esc(perScan)+'</b></span></div>'+
+      '<div class="schedule-times" data-program="'+esc(g.name)+'" aria-label="'+esc(g.name)+'历次播出时间"></div>'+
+      '<p class="schedule-reason">'+esc(g.reason)+'</p>'+
+      '<p class="schedule-next"><b>下一步：</b>'+esc(g.next)+'</p></div>';
+  }).join('');
   const header=document.querySelector('.schedule-panel .section-sub');
-  if(header)header.textContent='自动计算的参考排播建议 · 以最新全周期场均及成交数据为依据，非利润预测';
+  if(header)header.textContent='成交产出优先 · 已纳入全款实付、订单和播次均摊；扫码及意向仅作过程诊断';
+  const asOf=document.querySelector('.schedule-asof');
+  if(asOf)asOf.textContent='样本截至 '+(analysis.asOf?analysis.asOf.replace(/-/g,'.'):'待核验');
+  const footnote=document.querySelector('.schedule-footnote');
+  if(footnote)footnote.textContent=
+    '统计口径：'+analysis.definition+
+    ' 时间口径：各场时间为扫码区间起点，未核实正式开播时刻。缺少退款、节目成本和毛利，不得将收入排序等同于净利润。排播建议基于全部已发布场次与线路累计全款结果自动重算，不随上方日期筛选变化。';
+  // Re-created schedule cards must reattach their real historical dates and scanning start times.
+  if(typeof renderScheduleTimes==='function')renderScheduleTimes();
 }
 function refreshNewMetrics(metrics){
   let box=UI('sharedNewMetrics');
@@ -408,6 +419,7 @@ async function restoreVersion(version){
   }catch(e){feedback('恢复失败：'+e.message,'error')}
 }
 async function initialize(){
+  try{refreshScheduleAdvice()}catch(error){console.warn('排播建议核验尚未完成',error)}
   try{
     const res=await fetch('sync-config.json?_=20261020-dual',{cache:'no-store'});
     const conf=res.ok?await res.json():{};
