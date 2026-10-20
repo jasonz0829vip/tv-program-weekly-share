@@ -1,11 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createRequire} from 'node:module';
+import vm from 'node:vm';
 import {validateSnapshot} from '../api/worker.mjs';
 
-const require=createRequire(import.meta.url);
-const parser=require('../excel-import.js');
+// excel-import.js is deliberately a classic browser script; test it with a CommonJS shim.
+const parserContext={module:{exports:{}},console};
+vm.runInNewContext(fs.readFileSync(new URL('../excel-import.js',import.meta.url),'utf8'),parserContext,{filename:'excel-import.js'});
+const parser=parserContext.module.exports;
 const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const embedded=html.match(/<script id="seed-data" type="application\/json">([\s\S]*?)<\/script>/);
 assert.ok(embedded,'Source HTML should embed the verified 2026 season');
@@ -52,13 +54,13 @@ test('Verified original input normalizes exactly 16 sessions, 96 increments and 
 });
 test('Updated workbook creates program, six minute increments, finance and new metrics',()=>{
   const data=parser.parseMatrices(syntheticWorkbook(),{year:2026});
-  assert.deepEqual(data.blocking,[]);
+  assert.equal(data.blocking.length,0);
   assert.equal(data.recognizedSheets[0],'最新海南线路');
   const normalized=validateSnapshot(data.snapshot);
   assert.deepEqual(normalized.totals,{sessions:1,programs:1,scans:80,orders:5,amount:8800});
   const row=normalized.records[0];
   assert.equal(row.date,'2026-10-19');
-  assert.deepEqual(row.fiveMinute.values,[8,12,17,20,14,9]);
+  assert.deepEqual(Array.from(row.fiveMinute.values),[8,12,17,20,14,9]);
   assert.equal(row.first30,80);
   assert.equal(row.after30,0);
   assert.deepEqual(new Set(normalized.metrics.map(x=>x.label)),new Set(['人均客单价','新增复购人数']));
