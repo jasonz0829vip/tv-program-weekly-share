@@ -1,5 +1,5 @@
 {
-  "apiBase": "",
+  "apiBase": "https://tv-program-weekly-sync.jasonz0829vip.workers.dev",
   "pollSeconds": 45,
-  "note": "After Cloudflare Worker deployment, set apiBase to your workers.dev HTTPS origin"
+  "note": "Uploaded XLS/XLSX is parsed in browser, only validated business metrics stored in D1. Public anonymous writers by design."
 }
