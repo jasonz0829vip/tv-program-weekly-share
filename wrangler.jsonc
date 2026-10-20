@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tv-program-weekly-sync",
+  "main": "api/worker.mjs",
+  "compatibility_date": "2026-10-20",
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tv-program-weekly-data"
+    }
+  ],
+  "observability": {
+    "enabled": false
+  }
+}
