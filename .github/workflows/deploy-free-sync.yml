@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 concurrency:
   group: tv-weekly-cloudflare-initial-deploy
@@ -40,6 +41,8 @@ jobs:
       - name: Provision D1, deploy Worker, verify HTTPS and initialize historical snapshot
         run: node scripts/deploy-free-sync.mjs
       - name: Save public Worker URL to GitHub Pages configuration
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
@@ -49,4 +52,5 @@ jobs:
             git commit -m "Connect public dashboard to Cloudflare D1 shared data endpoint"
             git push origin HEAD:main
           fi
-          echo "Cloudflare shared data service is connected; GitHub Pages will refresh on the next publication."
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
+          echo "Cloudflare shared data service is connected; GitHub Pages build requested."
