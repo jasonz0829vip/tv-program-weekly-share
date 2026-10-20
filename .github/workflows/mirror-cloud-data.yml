@@ -1,0 +1,48 @@
+name: 都市频道 · 国内国外共享数据镜像
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/mirror-cloud-data.mjs"
+      - ".github/workflows/mirror-cloud-data.yml"
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: urban-channel-mirror
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: 同步脱敏经营数据到 GitHub Pages 同源 JSON
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Pull current dashboard repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check and mirror the latest cloud snapshot
+        run: node scripts/mirror-cloud-data.mjs
+      - name: Commit only when there is a new cloud data version
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/current.json
+          if git diff --cached --quiet; then
+            echo "No new snapshot; avoiding unnecessary Pages build"
+            exit 0
+          fi
+          git commit -m "Publish verified shared dashboard data for mainland and worldwide readers"
+          git push origin HEAD:main
+          echo "Same-origin snapshot now tracked; GitHub Pages will publish it"
