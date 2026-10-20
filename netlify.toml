@@ -3,6 +3,7 @@
 [build]
   publish = "gateway-public"
   functions = "netlify/functions"
+  ignore = "bash ./scripts/netlify-ignore-build.sh"
 
 [functions]
   node_bundler = "esbuild"
