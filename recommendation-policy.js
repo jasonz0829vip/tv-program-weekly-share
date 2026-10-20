@@ -8,7 +8,7 @@
 })(typeof window!=='undefined'?window:null,function(){
 'use strict';
 const sum=(rows,k)=>rows.reduce((n,r)=>n+(Number(r[k])||0),0);
-const value=x=>Number.isFinite(Number(x))&&Number(x)>=0?Number(x):null;
+const value=x=>x!==null&&x!==undefined&&x!==''&&Number.isFinite(Number(x))&&Number(x)>=0?Number(x):null;
 const money=x=>'¥'+Math.round(x).toLocaleString('zh-CN');
 const fixed=(x,decimals=1)=>Number(x||0).toFixed(decimals);
 function median(values){
@@ -92,7 +92,7 @@ function evaluate(broadcasts,paidRoutes){
   const rank={primary:3,observe:2,review:1,pause:0};
   evaluated.sort((a,b)=>rank[b.tier]-rank[a.tier]||
     (b.revenuePerBroadcast??-1)-(a.revenuePerBroadcast??-1)||
-    b.paid?.fullOrders-a.paid?.fullOrders||
+    (b.paid?.fullOrders??-1)-(a.paid?.fullOrders??-1)||
     a.name.localeCompare(b.name,'zh-CN'));
   return {items:evaluated,asOf,medianRevenuePerBroadcast:medianRevenue,medianRevenuePerScan:medianPerScan,
     definition:'实付为线路全周期累计。按播次均摊实付、按扫码规模折算实付，只是同口径经营比较，不是单场归因收入、用户转化率或净利润。'};
