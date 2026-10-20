@@ -1,0 +1,52 @@
+name: 都市频道 · 启用免费共享数据
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tv-weekly-cloudflare-initial-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: 测试并部署 Cloudflare Workers + D1
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CI: "true"
+    steps:
+      - name: Checkout latest dashboard
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check account authorization
+        shell: bash
+        run: |
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing CLOUDFLARE_ACCOUNT_ID secret"; exit 1; }
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Missing CLOUDFLARE_API_TOKEN secret"; exit 1; }
+      - name: Install Wrangler (free service CLI)
+        run: npm install --no-package-lock --no-audit --no-fund
+      - name: Regression tests - parsing and data privacy
+        run: npm test
+      - name: Provision D1, deploy Worker, verify HTTPS and initialize historical snapshot
+        run: node scripts/deploy-free-sync.mjs
+      - name: Save public Worker URL to GitHub Pages configuration
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sync-config.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Connect public dashboard to Cloudflare D1 shared data endpoint"
+            git push origin HEAD:main
+          fi
+          echo "Cloudflare shared data service is connected; GitHub Pages will refresh on the next publication."
