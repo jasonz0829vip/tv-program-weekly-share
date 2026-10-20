@@ -1,0 +1,5 @@
+{
+  "apiBase": "",
+  "pollSeconds": 45,
+  "note": "After Cloudflare Worker deployment, set apiBase to your workers.dev HTTPS origin"
+}
