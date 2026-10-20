@@ -1,7 +1,7 @@
 /* 都市频道共享周报 V2: upload original XLS/XLSX locally, publish de-identified data to D1. */
 'use strict';
 (function(){
-const API={base:'',enabled:false,currentVersion:null,snapshot:null,updatedAt:'',preview:null,sourceFile:null,parseResult:null,polling:false,sheetLoader:null};
+const API={base:'',enabled:false,currentVersion:null,snapshot:null,updatedAt:'',preview:null,sourceFile:null,parseResult:null,polling:false,sheetLoader:null,localPreview:false};
 const UI=id=>document.getElementById(id);
 const text=(id,value)=>{const el=UI(id);if(el)el.textContent=String(value??'')};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -28,6 +28,7 @@ function openExcelUploader(){
 function setRunning(b){
   const btn=UI('excelSyncPublish');
   if(btn){btn.disabled=b||!API.enabled||!API.preview;btn.textContent=b?'正在同步…':'确认发布 · 全员同步'}
+  const demo=UI('excelLocalPreview');if(demo)demo.disabled=b||!API.preview;
   const file=UI('excelFilePicker');if(file)file.disabled=b;
 }
 function updatePublishButton(){setRunning(false)}
@@ -228,12 +229,12 @@ function refreshNewMetrics(metrics){
         '<p>'+esc(m.note||m.source||'来自新版Excel')+'</p></article>';
     }).join('')+'</div>';
 }
-function applySnapshot(snapshot,version,updatedAt){
+function applySnapshot(snapshot,version,updatedAt,options={}){
   if(!snapshot?.records?.length)return;
   records=snapshot.records;
   PAYMENT_ROUTES=Array.isArray(snapshot.paymentSummary)?snapshot.paymentSummary:[];
   issues=[];
-  try{localStorage.removeItem(storageKey)}catch{}
+  if(options.clearLegacyCache!==false){try{localStorage.removeItem(storageKey)}catch{}}
   const datesSorted=dates(records);
   if(preset==='all'){start=datesSorted[0];end=datesSorted[datesSorted.length-1]}
   else if(preset==='custom'&&start>end){start=datesSorted[0];end=datesSorted[datesSorted.length-1]}
@@ -246,6 +247,35 @@ function applySnapshot(snapshot,version,updatedAt){
   const title=UI('qualityIntroText');
   if(title)title.textContent='已发布数据通过格式与数值校验。如有业务定义差异，请回查原Excel和本页核验项。';
 }
+function previewExcelLocally(){
+  const draft=evaluateDraft();
+  if(!draft){feedback('请先选择并核验Excel文件','error');return}
+  API.localPreview=true;
+  applySnapshot(draft,'本机预览','',{clearLegacyCache:false});
+  safeStatus('当前仅本机预览 · 尚未全员共享','preview');
+  text('sharedCurrentAt','刚才上传的数据只在本设备预览；刷新网页会恢复共享版或历史内置版');
+  text('sharedDataFooter','本机临时预览，未同步到其他同事');
+  feedback('本机预览已应用，尚未同步其他人。云端接通后请使用「确认发布 · 全员同步」。','success');
+  const reset=UI('excelLocalReset');if(reset)reset.hidden=false;
+  hideModal();
+  if(typeof navigate==='function')navigate('overview');
+}
+async function exitExcelLocalPreview(){
+  API.localPreview=false;
+  const reset=UI('excelLocalReset');if(reset)reset.hidden=true;
+  if(API.enabled && API.snapshot){
+    applySnapshot(API.snapshot,API.currentVersion,API.updatedAt);
+    safeStatus('共享数据已连接 · 自动同步中','connected');
+  }else{
+    records=[...SEED.records];PAYMENT_ROUTES=SEED.paymentSummary;issues=[...SEED.quality];
+    if(preset==='all'){start=SEED.sourceRange[0];end=SEED.sourceLastRecorded}
+    render();
+    refreshNewMetrics([]);
+    safeStatus(API.enabled?'共享服务已连接 · 尚无公开版本':'待连接免费共享服务','pending');
+    text('sharedCurrentAt','当前显示原始历史数据，无本机临时修改');
+  }
+  feedback('已结束本机临时预览','neutral');
+}
 async function refreshShared(force=false){
   if(!API.enabled||API.polling)return;
   API.polling=true;
@@ -253,19 +283,21 @@ async function refreshShared(force=false){
     const result=await request('/api/current');
     if(result.version&&result.snapshot){
       if(force||result.version!==API.currentVersion){
+        API.localPreview=false;
+        const reset=UI('excelLocalReset');if(reset)reset.hidden=true;
         applySnapshot(result.snapshot,result.version,result.updatedAt);
         API.snapshot=result.snapshot;
         API.currentVersion=result.version;
         API.updatedAt=result.updatedAt||'';
       }
-      safeStatus('共享数据已连接 · 自动同步中','connected');
-      text('sharedCurrentAt','最新共享版本 · '+(result.updatedAt||'').replace('T',' ').slice(0,16)+' UTC');
+      if(!API.localPreview){safeStatus('共享数据已连接 · 自动同步中','connected');
+      text('sharedCurrentAt','最新共享版本 · '+(result.updatedAt||'').replace('T',' ').slice(0,16)+' UTC');}
     }else{
-      safeStatus('共享服务已连接 · 尚未发布新版','connected');
+      if(!API.localPreview)safeStatus('共享服务已连接 · 尚未发布新版','connected');
       text('sharedCurrentAt','尚无已发布共享数据，可上传首份Excel');
     }
   }catch(error){
-    safeStatus('共享服务暂不可达 · 当前显示上次数据','error');
+    if(!API.localPreview)safeStatus('共享服务暂不可达 · 当前显示上次数据','error');
     text('sharedCurrentAt','网络暂不可达：'+error.message);
   }finally{API.polling=false}
 }
@@ -323,6 +355,8 @@ window.closeExcelUploader=hideModal;
 window.handleExcelFile=handleExcelFile;
 window.recomputeExcelPreview=renderFilePreview;
 window.publishExcel=publishExcel;
+window.previewExcelLocally=previewExcelLocally;
+window.exitExcelLocalPreview=exitExcelLocalPreview;
 window.showExcelHistory=showHistory;
 window.UrbanSync={api:API,initialize,refreshShared,applySnapshot,mergeSnapshots,handleExcelFile};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
