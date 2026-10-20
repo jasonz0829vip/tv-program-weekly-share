@@ -1,0 +1,82 @@
+name: 都市频道 · 备用免费上传接口
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "cloudflare-gateway/**"
+      - ".github/workflows/deploy-cloudflare-gateway.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: urban-tv-cloudflare-gateway
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CI: "true"
+      PAGES_PROJECT: tv-weekly-jasonz0829vip-cn-gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify existing Cloudflare authorization
+        run: |
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing Cloudflare account authorization"; exit 1; }
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Missing existing Cloudflare token"; exit 1; }
+      - name: Install existing Wrangler CLI
+        run: npm install --no-package-lock --no-audit --no-fund
+      - name: Create free alternate Pages project if missing
+        shell: bash
+        run: |
+          cd cloudflare-gateway
+          if ../node_modules/.bin/wrangler pages project list --json | grep -q "\"name\":\"$PAGES_PROJECT\""; then
+            echo "Existing dedicated gateway project found."
+          else
+            ../node_modules/.bin/wrangler pages project create "$PAGES_PROJECT" --production-branch main
+          fi
+      - name: Deploy Pages Functions with no paid resources
+        shell: bash
+        run: |
+          cd cloudflare-gateway
+          ../node_modules/.bin/wrangler pages deploy . --project-name "$PAGES_PROJECT" --branch main
+      - name: Verify public read and reject invalid upload without modifying data
+        run: |
+          node --input-type=module <<'NODE'
+          import {writeFileSync,readFileSync} from 'node:fs';
+          const site='https://'+process.env.PAGES_PROJECT+'.pages.dev';
+          const original='https://tv-program-weekly-sync.jasonz0829vip.workers.dev';
+          const get=await fetch(site+'/api/current',{signal:AbortSignal.timeout(18000)});
+          if(get.status!==200)throw Error('Gateway GET failed, HTTP '+get.status);
+          const body=await get.json();
+          if(!body.ok||!body.version||!body.snapshot?.records?.length)throw Error('Gateway failed to read shared data');
+          const root=await fetch(original+'/api/current',{signal:AbortSignal.timeout(15000)});
+          const cloud=await root.json();
+          if(cloud.version!==body.version)throw Error('Gateway returned an inconsistent version');
+          const post=await fetch(site+'/api/publish',{method:'POST',headers:{Origin:'https://jasonz0829vip.github.io','Content-Type':'application/json'},
+            body:JSON.stringify({baseVersion:body.version,snapshot:{records:[]}}),
+            signal:AbortSignal.timeout(18000)});
+          if(post.status!==422)throw Error('Gateway invalid upload was not rejected HTTP '+post.status);
+          const config=JSON.parse(readFileSync('sync-config.json','utf8'));
+          config.apiFallbacks=[...new Set([...(config.apiFallbacks||[]),site])];
+          writeFileSync('sync-config.json',JSON.stringify(config,null,2)+'\n');
+          console.log('FREE_GATEWAY_VERIFIED '+site+'; version '+body.version+'; invalid uploads rejected; enabling fallback');
+          NODE
+      - name: Publish verified fallback URL to existing GitHub Pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sync-config.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Enable verified free second API endpoint for mainland and global Excel uploads"
+            git push origin HEAD:main
+          fi
