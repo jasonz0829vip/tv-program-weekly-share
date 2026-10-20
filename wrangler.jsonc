@@ -7,7 +7,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "tv-program-weekly-data"
+      "database_name": "tv-program-weekly-data",
+      "database_id": "00000000-0000-0000-0000-000000000000"
     }
   ],
   "observability": {
