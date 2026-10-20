@@ -147,7 +147,7 @@ async function publish(request,env){
   const prev=await currentVersion(env.DB);
   if(prev!==baseVersion)return json(request,{ok:false,error:'另一位同事已经更新了数据，请重新加载最新版本再上传',currentVersion:prev},409);
   const previous=await getSnapshot(env.DB,prev);
-  if(previous && snapshot.source.hash && previous.file_hash===snapshot.source.hash)return json(request,{ok:true,unchanged:true,version:prev,message:'同一个文件已是当前版本'});
+  if(previous && snapshot.source.hash && previous.file_hash===snapshot.source.hash && previous.snapshot===JSON.stringify(snapshot))return json(request,{ok:true,unchanged:true,version:prev,message:'经营数据已是当前版本'});
   if(previous && snapshot.records.length < Math.ceil(previous.session_count/2) && body.confirmReplaceSmaller!==true)
     return json(request,{ok:false,error:'新Excel场次不足当前版本的一半，防止误上传覆盖，请在页面明确确认后再发布'},422);
   const version=new Date().toISOString().replace(/[:.]/g,'-')+'-'+crypto.randomUUID().slice(0,8),createdAt=iso();
@@ -167,7 +167,8 @@ async function restore(request,env){
   if(!item)invalid('没有找到指定历史版本',404);
   const prev=await currentVersion(env.DB),base=body.baseVersion??null;
   if(prev!==base)return json(request,{ok:false,error:'有人更新了数据，请刷新后重试',currentVersion:prev},409);
-  await env.DB.prepare("INSERT INTO tv_state (key,value) VALUES ('current',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(version).run();
+  const change=await env.DB.prepare("INSERT INTO tv_state (key,value) VALUES ('current',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value WHERE tv_state.value=?").bind(version,prev??'').run();
+  if(change.meta?.changes===0)return json(request,{ok:false,error:'其他人刚刚发布了新版本，请重新刷新后操作'},409);
   return json(request,{ok:true,version,updatedAt:item.created_at,restored:true});
 }
 export default {
