@@ -5,9 +5,9 @@ import vm from 'node:vm';
 import {validateSnapshot} from '../api/worker.mjs';
 
 // excel-import.js is deliberately a classic browser script; test it with a CommonJS shim.
-const parserContext={module:{exports:{}},console};
-vm.runInNewContext(fs.readFileSync(new URL('../excel-import.js',import.meta.url),'utf8'),parserContext,{filename:'excel-import.js'});
-const parser=parserContext.module.exports;
+const source=fs.readFileSync(new URL('../excel-import.js',import.meta.url),'utf8');
+const parser=Function('module',source+'\nreturn module.exports;')({exports:{}});
+assert.equal(typeof parser.parseMatrices,'function','Excel parser must expose named import methods');
 const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const embedded=html.match(/<script id="seed-data" type="application\/json">([\s\S]*?)<\/script>/);
 assert.ok(embedded,'Source HTML should embed the verified 2026 season');
