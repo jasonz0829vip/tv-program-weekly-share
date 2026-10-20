@@ -190,7 +190,7 @@
 }
 
 
-/* V2.0 original Excel import + shared data; no new navigation destinations */
+/* Original Excel import + shared data; no new navigation destinations */
 .shared-sync-banner{border-radius:10px;border:1px solid #dce8ed;background:#f1f8f7;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 18px}
 .shared-sync-copy{min-width:0}.shared-eyebrow{font-size:10px;font-weight:850;letter-spacing:1.2px;color:#236c87;display:flex;align-items:center;gap:7px}.shared-live-dot{width:7px;height:7px;background:#17a68d;border-radius:50%;box-shadow:0 0 0 4px #17a68d19}
 .shared-sync-copy strong{display:block;font-size:18px;color:#1b3557;margin:7px 0 4px}.shared-sync-copy p{font-size:11px;margin:0;color:#69809d}
@@ -233,6 +233,7 @@
 @media(max-width:900px){.shared-sync-banner{align-items:flex-start;padding:10px 12px;flex-wrap:wrap}.shared-metrics-grid{grid-template-columns:1fr}}
 @media(max-width:550px){.shared-excel-modal{width:calc(100vw - 16px);max-height:calc(90dvh - env(safe-area-inset-bottom));padding:15px}.shared-sync-copy strong{font-size:15px}.shared-excel-actions button{flex:1}.excel-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shared-file-drop{padding:17px 10px}}
 .shared-cta-tools{display:flex;flex-direction:column;align-items:stretch;gap:8px;flex:none}.shared-local-reset{min-height:32px!important;font-size:11px!important;opacity:.9}.shared-local-reset[hidden]{display:none!important}#sharedSyncBadge[data-state=preview]{background:#fff1dd;color:#ad702c}.shared-excel-actions #excelLocalPreview{background:#e8f0fd;border-color:#a8c5ee;color:#275896}
+.schedule-loading{grid-column:1/-1;border:1px dashed #d5dfeb;background:#f7faff;border-radius:12px;padding:22px;color:#6e819c;font-size:13px}.schedule-review{border-left-color:#d5ad57}.schedule-review .schedule-status{background:#fbf4e4;color:#947326}.schedule-metrics b{font-variant-numeric:tabular-nums}
 </style><link rel="stylesheet" href="mobile-layout.css?v=20261020-2"></head><body>
 <div class="menu-shade" id="shade" onclick="toggleMenu(false)"></div>
 <div class="app"><aside class="sidebar" id="sidebar">
@@ -270,69 +271,7 @@
     <div><h3 class="section-title">下一轮排播建议</h3><p class="section-sub">基于原始全部16场的阶段性判断 · 列出全部首播、重播日期及时间</p></div>
     <span class="schedule-asof">样本截至 2026.10.16</span>
   </div>
-  <div class="schedule-list">
-    
-    <div class="schedule-item schedule-primary">
-      <div class="schedule-item-head"><span class="schedule-n">01</span><strong class="schedule-name">新加坡·马来西亚</strong><span class="schedule-status">优先续播</span></div>
-      <div class="schedule-metrics">
-        <span>首播 <b>1</b> · 重播 <b>3</b></span>
-        <span>场均扫码 <b>86.0</b></span>
-        <span>场均意向 <b>3.50 单</b></span>
-        <span>全款累计 <b>¥272,625</b> · <b>17单</b></span>
-      </div>
-      <div class="schedule-times" data-program="新加坡·马来西亚" aria-label="新加坡·马来西亚历次播出时间"></div>
-      <p class="schedule-reason">累计全款实付和全款订单数领先；3次重播共取得11单意向金，但最近两次重播分别为10单与0单，必须优化场次内容并观察波动。</p>
-      <p class="schedule-next"><b>下一步：</b>建议继续排播1场，验证后决定是否追加。</p>
-    </div>
-    <div class="schedule-item schedule-test">
-      <div class="schedule-item-head"><span class="schedule-n">02</span><strong class="schedule-name">福建泰宁</strong><span class="schedule-status">继续测试</span></div>
-      <div class="schedule-metrics">
-        <span>首播 <b>1</b> · 重播 <b>2</b></span>
-        <span>场均扫码 <b>60.7</b></span>
-        <span>场均意向 <b>4.00 单</b></span>
-        <span>全款累计 <b>¥54,694</b> · <b>7单</b></span>
-      </div>
-      <div class="schedule-times" data-program="福建泰宁" aria-label="福建泰宁历次播出时间"></div>
-      <p class="schedule-reason">订单／扫码数量之比在五条线路中最高，场均意向金也较高；但最近一场仅10人次扫码，不宜直接增加大量重播。</p>
-      <p class="schedule-next"><b>下一步：</b>建议再播1场，重点跟踪意向金到全款的成交。</p>
-    </div>
-    <div class="schedule-item schedule-test">
-      <div class="schedule-item-head"><span class="schedule-n">03</span><strong class="schedule-name">拈花湾</strong><span class="schedule-status">继续测试</span></div>
-      <div class="schedule-metrics">
-        <span>首播 <b>1</b> · 重播 <b>1</b></span>
-        <span>场均扫码 <b>153.5</b></span>
-        <span>场均意向 <b>4.50 单</b></span>
-        <span>全款累计 <b>¥16,217</b> · <b>4单</b></span>
-      </div>
-      <div class="schedule-times" data-program="拈花湾" aria-label="拈花湾历次播出时间"></div>
-      <p class="schedule-reason">场均扫码与场均意向金均领先；只有2场历史样本、累计全款金额较低，先补充样本，再决定是否扩大频次。</p>
-      <p class="schedule-next"><b>下一步：</b>建议再播1场，重点验证实付转化。</p>
-    </div>
-    <div class="schedule-item schedule-observe">
-      <div class="schedule-item-head"><span class="schedule-n">04</span><strong class="schedule-name">越南全景</strong><span class="schedule-status">控制频次</span></div>
-      <div class="schedule-metrics">
-        <span>首播 <b>1</b> · 重播 <b>3</b></span>
-        <span>场均扫码 <b>84.5</b></span>
-        <span>场均意向 <b>2.50 单</b></span>
-        <span>全款累计 <b>¥95,150</b> · <b>7单</b></span>
-      </div>
-      <div class="schedule-times" data-program="越南全景" aria-label="越南全景历次播出时间"></div>
-      <p class="schedule-reason">累计实付和扫码规模不低，但已经播4场，场均意向金仅2.50单；宜控制频次，而不是因累计量高继续密集重播。</p>
-      <p class="schedule-next"><b>下一步：</b>建议保留低频排播，调整开场和成交机制后复盘。</p>
-    </div>
-    <div class="schedule-item schedule-pause">
-      <div class="schedule-item-head"><span class="schedule-n">05</span><strong class="schedule-name">清远肇庆</strong><span class="schedule-status">暂缓重播</span></div>
-      <div class="schedule-metrics">
-        <span>首播 <b>1</b> · 重播 <b>2</b></span>
-        <span>场均扫码 <b>57.0</b></span>
-        <span>场均意向 <b>0.67 单</b></span>
-        <span>全款累计 <b>¥50,385</b> · <b>5单</b></span>
-      </div>
-      <div class="schedule-times" data-program="清远肇庆" aria-label="清远肇庆历次播出时间"></div>
-      <p class="schedule-reason">3场仅2单意向金，场均0.67单；最近一次重播扫码19人次、意向金0单，新增产出偏弱。</p>
-      <p class="schedule-next"><b>下一步：</b>建议暂缓，待选题、福利与产品机制调整后再验证。</p>
-    </div>
-  </div>
+  <div class="schedule-list"><div class="schedule-loading" role="status">正在依据累计全款实付、场均成交产出与扫码表现重新计算排播建议…</div></div>
   <p class="schedule-footnote">时间口径：每场显示的时刻来自第一个扫码时间段的起点，不等于已核实的正式开播时刻。决策口径：场均＝该线路总量÷播出次数；全款金额和全款订单为历史累计，无法严格归因到某一场。尚无节目成本、退款及毛利，所列为排播优先级，不是净利润结论。建议基于截至10月16日原始场次作出，不随顶部日期筛选变化；新增数据后需重新评估。</p>
 </article>
 
@@ -739,5 +678,6 @@ setPreset('all');
 navigateFromHash();
 </script>
 <script src="excel-import.js?v=2.0.2" defer></script>
-<script src="shared-sync.js?v=20261020-dual-network-1" defer></script>
+<script src="recommendation-policy.js?v=20261021" defer></script>
+<script src="shared-sync.js?v=20261021-recommendations" defer></script>
 </body></html>
