@@ -612,4 +612,5 @@ async function handleImport(e){let f=e.target.files?.[0];if(!f)return;try{let t=
 function resetImported(){if(!confirm('确认恢复网页内置的 16 条原始演示场次？本设备导入的数据会被清除。'))return;records=[...SEED.records];try{localStorage.removeItem(storageKey)}catch(e){}closeImport();render();toast('已恢复原始演示数据')}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeImport();toggleMenu(false)}});
 setPreset('all');
+if(location.hash==='#ledger')navigate('ledger');
 </script></body></html>
