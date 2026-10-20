@@ -164,12 +164,35 @@
 @media(max-width:800px){.ledger-viz-overview{flex-direction:column;align-items:stretch;padding:17px 16px;gap:13px}.ledger-viz-quickmetrics{min-width:0;grid-template-columns:repeat(3,minmax(0,1fr))}.ledger-viz-quickmetrics>div{padding:9px 10px}.ledger-viz-quickmetrics strong{font-size:19px}.ledger-chart-grid{gap:12px}.ledger-chart-card{padding:17px 15px}.ledger-chart-heading{flex-wrap:wrap}.ledger-chart-scroll svg{height:270px}.ledger-viz-bottom{align-items:flex-start;gap:7px}.ledger-viz-bottom h3{font-size:16px}.ledger-chart-label{white-space:normal}}
 @media(max-width:410px){.ledger-viz-quickmetrics strong{font-size:16px}.ledger-viz-quickmetrics span{font-size:9px}.ledger-chart-heading h3{font-size:14px}.ledger-chart-legend{gap:7px}.ledger-chart-toggle button{font-size:10px;padding:5px 8px}}
 @media print{.ledger-chart-grid{grid-template-columns:1fr 1fr}.ledger-chart-card{break-inside:avoid}.ledger-chart-scroll{overflow:visible}.ledger-chart-scroll svg{max-width:100%}}
+
+/* Mobile navigation: reuse the existing four destinations and handlers. */
+@media screen and (max-width:800px){
+  :root{--mobile-nav-height:68px;--mobile-safe-bottom:0px}
+  @supports(padding:constant(safe-area-inset-bottom)){:root{--mobile-safe-bottom:constant(safe-area-inset-bottom)}}
+  @supports(padding:env(safe-area-inset-bottom)){:root{--mobile-safe-bottom:env(safe-area-inset-bottom)}}
+  html{scroll-padding-bottom:calc(var(--mobile-nav-height) + var(--mobile-safe-bottom) + 16px)}
+  .app{display:block}
+  .sidebar,.sidebar.show{position:fixed;top:auto;left:0;right:0;bottom:0;width:100%;height:auto;transform:none;transition:none;z-index:60;display:block;padding:0 0 var(--mobile-safe-bottom);background:#fff;border-top:1px solid #dbe3ef;box-shadow:0 -4px 18px #10223b12}
+  .sidebar .brand,.sidebar .nav-label,.sidebar .side-lower,.sidebar .side-bottom{display:none}
+  .sidebar .nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:0}
+  .sidebar .nav-btn{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;min-width:0;min-height:var(--mobile-nav-height);padding:8px 2px;border-radius:0;color:#53647c;background:#fff;text-align:center;font-size:12px;font-weight:650;line-height:1.4;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  .sidebar .nav-btn span{display:block;white-space:nowrap}
+  .sidebar .nav-btn svg{display:block;width:21px;height:21px;opacity:1;flex:none}
+  .sidebar .nav-btn:hover{background:#f5f8ff;color:#3056c8}
+  .sidebar .nav-btn.active{background:#edf3ff;color:#274fc5;font-weight:800}
+  .sidebar .nav-btn.active svg{color:inherit}
+  .sidebar .nav-btn.active:before{top:0;left:25%;width:50%;height:3px;border-radius:0 0 3px 3px;background:#4069ed}
+  .mobile-menu,.menu-shade,.menu-shade.show{display:none}
+  .main{padding-bottom:calc(var(--mobile-nav-height) + var(--mobile-safe-bottom))}
+  .fab-toast{bottom:calc(var(--mobile-nav-height) + var(--mobile-safe-bottom) + 12px)}
+}
+
 </style></head><body>
 <div class="menu-shade" id="shade" onclick="toggleMenu(false)"></div>
 <div class="app"><aside class="sidebar" id="sidebar">
   <div class="brand"><div class="brand-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13h4l3-8 5 14 3-8h5"/></svg></div><div><div class="brand-name">都市频道</div><div class="brand-sub">CHANNEL OPERATIONS</div></div></div>
   <div class="nav-label">WORKSPACE</div><nav class="nav" aria-label="主导航">
-    <button class="nav-btn active" data-view="overview" onclick="navigate('overview')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>经营总览</span></button>
+    <button class="nav-btn active" data-view="overview" aria-current="page" onclick="navigate('overview')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>经营总览</span></button>
     <button class="nav-btn" data-view="comparison" onclick="navigate('comparison')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 19V9m5 10V4m5 15v-7m5 7v-13"/></svg><span>节目对比</span></button>
     <button class="nav-btn" data-view="ledger" onclick="navigate('ledger')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg><span>场次台账</span></button>
     <button class="nav-btn" data-view="quality" onclick="navigate('quality')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3 2 20h20L12 3ZM12 9v5m0 3h.01"/></svg><span>数据核验</span></button>
@@ -336,7 +359,21 @@ function localISO(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'
 function weekRange(offset){const now=new Date(),mon=new Date(now.getFullYear(),now.getMonth(),now.getDate()),dow=(mon.getDay()+6)%7;mon.setDate(mon.getDate()-dow+7*offset);const sun=new Date(mon);sun.setDate(mon.getDate()+6);return [localISO(mon),localISO(sun)]}
 function setPreset(p){preset=p;for(const b of document.querySelectorAll('[data-preset]'))b.classList.toggle('active',b.dataset.preset===p);$('customDates').classList.toggle('show',p==='custom');if(p==='last'){[start,end]=weekRange(-1)}if(p==='current'){[start,end]=weekRange(0)}if(p==='month'){let now=new Date();start=localISO(new Date(now.getFullYear(),now.getMonth(),1));end=localISO(new Date(now.getFullYear(),now.getMonth()+1,0))}if(p==='all'){start=records.reduce((m,r)=>r.date<m?r.date:m,SEED.sourceRange[0]);end=records.reduce((m,r)=>r.date>m?r.date:m,SEED.sourceLastRecorded)}if(p==='custom'){start=$('startDate').value;end=$('endDate').value}render()}
 function setCustom(){start=$('startDate').value;end=$('endDate').value;if(start>end){toast('开始日期不能晚于结束日期');return}render()}
-function navigate(target){activeView=target;for(const el of document.querySelectorAll('.nav-btn'))el.classList.toggle('active',el.dataset.view===target);for(const el of document.querySelectorAll('.content-section'))el.classList.toggle('active',el.id===target);toggleMenu(false);window.scrollTo({top:0,behavior:'smooth'});render()}
+function navigate(target){
+  if(!['overview','comparison','ledger','quality'].includes(target))return;
+  activeView=target;
+  for(const el of document.querySelectorAll('.nav-btn')){
+    const selected=el.dataset.view===target;
+    el.classList.toggle('active',selected);
+    if(selected)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');
+  }
+  for(const el of document.querySelectorAll('.content-section'))el.classList.toggle('active',el.id===target);
+  toggleMenu(false);
+  render();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function navigateFromHash(){navigate(['overview','comparison','ledger','quality'].includes(location.hash.slice(1))?location.hash.slice(1):'overview')}
+window.addEventListener('hashchange',navigateFromHash);
 function toggleMenu(yes){$('sidebar').classList.toggle('show',yes);$('shade').classList.toggle('show',yes)}
 function render(){const a=getPeriod(),s=summary(a),g=groups(a);$('periodLabel').textContent=longDate(start)+'—'+longDate(end)+' · '+(a.length?'原始场次 '+a.length+' 条':'当前暂无场次记录');$('topUpdated').textContent='数据截至 '+shortDate(records.reduce((m,r)=>r.date>m?r.date:m,SEED.sourceLastRecorded));$('footerDate').textContent=records.reduce((m,r)=>r.date>m?r.date:m,SEED.sourceLastRecorded);$('heroSessions').textContent=fmt(s.sessions);$('heroSub').textContent=s.programs+' 档节目覆盖 · '+s.sessions+' 条场次记录';$('heroBar').style.width=(s.sessions?Math.min(s.sessions/16*100,100):0)+'%';$('heroHeadline').textContent=s.sessions?'每一场播出，都应该看见真正的效果。':'当前日期范围，还没有可统计的节目数据。';$('heroDesc').textContent=s.sessions?'把扫码、意向金和重播效率整合到一个看板。扫码与意向金可按日期切换；五条线路的全款实付金额按原表全周期累计展示。':'这不是系统异常。原始文件的数据截至 '+longDate(SEED.sourceLastRecorded)+'。请切换「上周」或「全部」查看已发生的节目，或导入新场次。';$('kpiScans').textContent=fmt(s.scans);$('kpiOrders').textContent=fmt(s.orders);$('kpiRatio').textContent=pct(s.orders,s.scans,2);$('kpiAvgScans').textContent=decimal(s.scans,s.sessions,1);const byFirst=a.filter(r=>r.type==='首播'),byRepeat=a.filter(r=>r.type==='重播');$('kpiAvgSplit').textContent='首播 '+decimal(sum(byFirst,'scans'),byFirst.length,1)+' · 重播 '+decimal(sum(byRepeat,'scans'),byRepeat.length,1)+' 人次/场';renderRevenue();renderScheduleTimes();renderBars(g);renderInsights(a,s,g);renderTrend(a);renderComparison(g,s);renderLedger();renderQuality();}
 function recordedTime(r){
@@ -612,5 +649,5 @@ async function handleImport(e){let f=e.target.files?.[0];if(!f)return;try{let t=
 function resetImported(){if(!confirm('确认恢复网页内置的 16 条原始演示场次？本设备导入的数据会被清除。'))return;records=[...SEED.records];try{localStorage.removeItem(storageKey)}catch(e){}closeImport();render();toast('已恢复原始演示数据')}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeImport();toggleMenu(false)}});
 setPreset('all');
-if(location.hash==='#ledger')navigate('ledger');
+navigateFromHash();
 </script></body></html>
