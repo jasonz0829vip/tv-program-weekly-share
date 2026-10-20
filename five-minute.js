@@ -1,7 +1,6 @@
 'use strict';
 const FIVE_LABELS=['0–5','5–10','10–15','15–20','20–25','25–30'];
-const FIVE_COLORS=['#4069d8','#0c9688','#bb7440'];
-let fiveView='minute',fiveMode='line',fiveSelected=[];
+let fiveView='minute',fiveProgram='',fiveSession='';
 function sessionId(r){return [r.date,r.program,r.type,r.startTime||''].join('|')}
 function seedFive(r){
   const s=SEED.records.find(x=>sessionId(x)===sessionId(r));
@@ -20,55 +19,83 @@ function fiveData(r){
 }
 function setFiveView(view){
   fiveView=view;
-  $('fiveMinutePanel').hidden=view!=='minute';$('fiveOriginal').hidden=view!=='original';
-  for(const b of document.querySelectorAll('[data-five-view]'))b.setAttribute('aria-selected',String(b.dataset.fiveView===view));
+  $('fiveMinutePanel').hidden=view!=='minute';
+  $('fiveOriginal').hidden=view!=='original';
+  for(const b of document.querySelectorAll('[data-five-view]')){
+    b.setAttribute('aria-selected',String(b.dataset.fiveView===view));
+  }
 }
-function openFive(){navigate('ledger');setFiveView('minute');history.replaceState(null,'','#ledger-five');$('fiveTabs').scrollIntoView({block:'start',behavior:'smooth'})}
-function setFiveMode(mode){fiveMode=mode;renderFiveMinute()}
-function setFiveSelection(index,value){fiveSelected[index]=value;renderFiveMinute()}
-function fiveName(r){return r.date+' '+r.program+' '+r.type+' '+(recordedTime(r)||'时间待补')}
+function openFive(){
+  navigate('ledger');
+  setFiveView('minute');
+  history.replaceState(null,'','#ledger-five');
+  $('fiveTabs').scrollIntoView({block:'start',behavior:'smooth'});
+}
+function setFiveProgram(name){
+  fiveProgram=name;
+  fiveSession='';
+  renderFiveMinute();
+}
+function setFiveSelection(index,value){
+  if(index!==0)return;
+  fiveSession=value;
+  renderFiveMinute();
+}
+function fiveName(r){return r.date+' · '+r.type+' · '+(recordedTime(r)||'时间未录')}
+function fiveStats(r,data){
+  if(!r)return '';
+  const peak=data.valid?Math.max(...data.values):null;
+  const peakIndexes=data.valid?data.values.map((n,i)=>n===peak?i:-1).filter(i=>i>=0):[];
+  const peakText=peak===null?'缺测':peakIndexes.map(i=>FIVE_LABELS[i]).join('、')+' 分钟';
+  const items=[
+    {label:'30分钟内扫码',value:r.first30,unit:'人次'},
+    {label:'后续跟踪扫码',value:r.after30,unit:'人次'},
+    {label:'累计扫码',value:r.scans,unit:'人次'},
+    {label:'扫码最多的时段',value:peakText,unit:peak===null?'':fmt(peak)+' 人次'}
+  ];
+  return items.map((x,i)=>'<div class="five-stat-item '+(i===3?'five-stat-peak':'')+'"><span>'+x.label+'</span>'+
+    '<strong>'+ (typeof x.value==='number'?fmt(x.value):h(x.value==null?'—':x.value))+'</strong>'+
+    '<small>'+h(x.unit)+'</small></div>').join('');
+}
 function renderFiveMinute(){
   const rows=ledgerRecordsForCharts().slice().reverse();
-  if(!fiveSelected.length&&rows.length){fiveSelected=[sessionId(rows[0]),sessionId(rows.find(r=>r.program===rows[0].program&&sessionId(r)!==sessionId(rows[0]))||rows[1]||rows[0]),''];if(fiveSelected[0]===fiveSelected[1])fiveSelected[1]=''}
-  const ids=rows.map(sessionId);
-  if(!ids.includes(fiveSelected[0]))fiveSelected[0]=ids[0]||'';
-  for(let i=1;i<3;i++)if(!ids.includes(fiveSelected[i]))fiveSelected[i]='';
-  const selected=[];
-  for(let i=0;i<3;i++){
-    const el=$('fiveSelect'+i),value=fiveSelected[i]||'';
-    el.innerHTML=(i?'<option value="">不比较</option>':'')+rows.map(r=>'<option value="'+h(sessionId(r))+'">'+h(fiveName(r))+'</option>').join('');el.value=value;
-    const r=rows.find(r=>sessionId(r)===value);if(r&&!selected.some(s=>sessionId(s.r)===value))selected.push({r,color:FIVE_COLORS[i],data:fiveData(r)});
-  }
+  const names=[...new Set(rows.map(r=>r.program))];
+  if(!names.includes(fiveProgram))fiveProgram=names[0]||'';
+  const programSelect=$('fiveProgram');
+  programSelect.innerHTML=names.length?names.map(n=>'<option value="'+h(n)+'">'+h(n)+'</option>').join(''):'<option value="">当前日期范围没有节目</option>';
+  programSelect.value=fiveProgram;
+  programSelect.disabled=!names.length;
+  const sessions=rows.filter(r=>r.program===fiveProgram);
+  const sessionIds=sessions.map(sessionId);
+  if(!sessionIds.includes(fiveSession))fiveSession=sessionIds[0]||'';
+  const sessionSelect=$('fiveSelect0');
+  sessionSelect.innerHTML=sessions.length?sessions.map(r=>'<option value="'+h(sessionId(r))+'">'+h(fiveName(r))+'</option>').join(''):'<option value="">暂无场次</option>';
+  sessionSelect.value=fiveSession;
+  sessionSelect.disabled=!sessions.length;
+  const r=sessions.find(r=>sessionId(r)===fiveSession);
+  const data=r?fiveData(r):null;
   const validCount=rows.filter(r=>fiveData(r).valid).length;
-  $('fiveCoverage').textContent=validCount+' / '+rows.length+' 场六段完整';
-  $('fiveScope').textContent='沿用上方日期、线路与首播／重播筛选。当前 '+rows.length+' 场，可选择最多3场并排比较。';
-  $('fiveLegend').innerHTML=selected.map(s=>'<span style="--series:'+s.color+'">'+h(fiveName(s.r))+(s.data.valid?'':'（缺测／未通过核验）')+'</span>').join('');
-  for(const b of document.querySelectorAll('[data-five-mode]'))b.setAttribute('aria-pressed',String(b.dataset.fiveMode===fiveMode));
-  const commonMax=Math.max(1,...selected.filter(s=>s.data.valid).flatMap(s=>s.data.values));
-  $('fiveChart').innerHTML=fiveChart(selected,commonMax);
-  $('fiveCards').innerHTML=selected.length?selected.map(s=>fiveCard(s,commonMax)).join(''):'<div class="five-missing">当前筛选没有场次，请切换日期或线路。</div>';
-  $('fiveScrollHint').textContent=selected.length>1?'手机可左右滑动比较各场卡片；上图使用相同人数刻度。':'六段为各自区间新增扫码数，后续扫码单独列示。';
+  $('fiveCoverage').textContent=validCount+' / '+rows.length+' 场分段已核实';
+  $('fiveScope').textContent='只看选中场次的六个5分钟扫码数。先选节目，再选首播或重播；不叠加其他场次。';
+  $('fiveStats').innerHTML=r?fiveStats(r,data):'<div class="five-missing">当前筛选没有场次，请切换上方日期或线路。</div>';
+  $('fiveChart').innerHTML=r?fiveChart(r,data):'<div class="five-missing">暂无场次数据。</div>';
+  $('fiveCards').innerHTML=r?fiveCard(r,data):'';
   setFiveView(fiveView);
 }
-function fiveChart(selected,max){
-  const good=selected.filter(s=>s.data.valid);
-  if(!good.length)return '<div class="five-missing">暂无通过核验的完整六段数据，不绘制推测曲线。请选择其他场次或补录分段数据。</div>';
-  const W=700,H=285,L=46,R=18,T=24,B=48,pw=W-L-R,ph=H-T-B,ceil=Math.ceil(max/4)*4;
-  const x=i=>L+pw*(i+.5)/6,y=v=>T+ph*(1-v/ceil);
-  let svg=Array.from({length:5},(_,i)=>{const v=ceil*i/4;return `<line x1="${L}" y1="${y(v)}" x2="${W-R}" y2="${y(v)}" stroke="#e5ecf6"/><text x="${L-10}" y="${y(v)+4}" text-anchor="end" fill="#6f8199" font-size="12">${v}</text>`}).join('');
-  good.forEach((s,j)=>{
-    const pts=s.data.values.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
-    if(fiveMode==='line')svg+=`<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="3"/>`;
-    s.data.values.forEach((v,i)=>{
-      const title=h(fiveName(s.r)+' '+FIVE_LABELS[i]+'分钟：'+v+'人次');
-      if(fiveMode==='bar'){const bw=Math.min(24,pw/6/(good.length+1)),xx=x(i)+(j-(good.length-1)/2)*(bw+3)-bw/2;svg+=`<rect x="${xx}" y="${y(v)}" width="${bw}" height="${T+ph-y(v)}" rx="3" fill="${s.color}"><title>${title}</title></rect>`}
-      else svg+=`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="white" stroke="${s.color}" stroke-width="2"><title>${title}</title></circle>`;
-    });
-  });
-  svg+=FIVE_LABELS.map((label,i)=>`<text x="${x(i)}" y="${H-22}" text-anchor="middle" fill="#506b8b" font-size="13">${label}</text>`).join('');
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="每5分钟新增扫码人数${fiveMode==='line'?'折线':'柱状'}对比图"><text x="5" y="14" font-size="12" fill="#657e9b">人次</text>${svg}<text x="${W-8}" y="${H-3}" text-anchor="end" font-size="11" fill="#6b8099">相对首个扫码区间起点 / 分钟</text></svg>`;
+function fiveChart(r,data){
+  if(!data.valid)return '<div class="five-missing">'+h(data.reason)+'</div>';
+  const max=Math.max(1,...data.values);
+  const bars=data.values.map((n,i)=>{
+    const isPeak=n===max&&n>0;
+    return '<div class="five-bar-slot'+(isPeak?' is-peak':'')+'">'+
+      '<div class="five-bar-number">'+fmt(n)+'</div>'+
+      '<div class="five-bar-track"><span class="five-bar-fill" style="height:'+(n===0?0:Math.max(2,n/max*100)).toFixed(1)+'%"></span></div>'+
+      '<div class="five-bar-label">'+FIVE_LABELS[i]+'</div></div>';
+  }).join('');
+  return '<div class="five-single-bar-chart" role="img" aria-label="'+h(r.program+' '+r.date+' '+r.type+'六段扫码：'+data.values.join('、')+'人次')+'">'+bars+'</div>'+
+    '<div class="five-chart-axis">播出相对时段（分钟） · 数字为本时段新增扫码人次</div>';
 }
-function fiveCard({r,color,data},max){
+function fiveCard(r,data){
   const nums=data.valid?data.values:[null,null,null,null,null,null];
   const source=data.source;
   const src=typeof source==='string'?h(source):source?[
@@ -78,7 +105,21 @@ function fiveCard({r,color,data},max){
     source.note&&h(source.note),source.definition&&h(source.definition),
     source.sha256&&'文件 SHA-256：'+h(source.sha256)
   ].filter(Boolean).join('<br>'):'尚无可核验的六段来源';
-  return `<article class="five-card" style="--series:${color}"><h3>${h(r.program)}</h3><p class="five-session">${h(r.date)} · ${h(r.type)} · 扫码起点 ${h(recordedTime(r)||'待补')}</p><div class="five-totals"><span>30分钟内<b>${r.first30==null?'—':fmt(r.first30)}</b></span><span>后续扫码<b>${r.after30==null?'—':fmt(r.after30)}</b></span><span>总扫码<b>${fmt(r.scans)}</b></span></div>${data.valid?'':'<p class="five-missing">'+h(data.reason)+'</p>'}<table class="five-values"><thead><tr><th>相对区间（分钟）</th><th>人数</th><th>同刻度比较</th></tr></thead><tbody>${nums.map((n,i)=>`<tr><td>${FIVE_LABELS[i]}</td><td>${n==null?'缺测':fmt(n)}</td><td>${n==null?'—':`<i style="width:${n/max*100}%"></i>`}</td></tr>`).join('')}</tbody></table><details class="five-source"><summary>查看原始单元格与口径</summary><p>${src}</p>${source?.times?'<p>'+source.times.map((t,i)=>h(t)+'：'+nums[i]).join('<br>')+'</p>':''}</details></article>`;
+  const max=data.valid?Math.max(1,...data.values):1;
+  const rows=nums.map((n,i)=>{
+    const pctText=n===null||!r.first30?'—':(n/r.first30*100).toFixed(1)+'%';
+    const width=n===null?0:n/max*100;
+    return '<tr><td>'+FIVE_LABELS[i]+' 分钟</td>'+
+      '<td>'+ (n===null?'缺测':fmt(n))+'</td>'+
+      '<td><div class="five-value-share"><span>'+pctText+'</span>'+
+      (n===null?'':'<i style="width:'+width.toFixed(1)+'%"></i>')+'</div></td></tr>';
+  }).join('');
+  const sourceTime=source?.times?.length===6?'<p>'+source.times.map((t,i)=>h(t)+'：'+(nums[i]===null?'缺测':nums[i])).join('<br>')+'</p>':'';
+  return '<article class="five-card"><div class="five-single-heading"><h3>六段扫码明细</h3>'+
+    '<p>'+h(r.program)+' · '+h(r.date)+' · '+h(r.type)+' · 首段起点 '+h(recordedTime(r)||'待补')+'</p></div>'+
+    '<table class="five-values"><thead><tr><th scope="col">时间段</th><th scope="col">扫码人数</th><th scope="col">30分钟内占比</th></tr></thead>'+
+    '<tbody>'+rows+'</tbody></table>'+
+    '<details class="five-source"><summary>查看原表单元格与统计口径</summary><p>'+src+'</p>'+sourceTime+'</details></article>';
 }
 const FIVE_HEADERS=['日期','节目','播出类型','扫码起始时间','0–5分钟','5–10分钟','10–15分钟','15–20分钟','20–25分钟','25–30分钟','30分钟内扫码','后续扫码','来源'];
 function fiveCSV(rows){return '\ufeff'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')}
