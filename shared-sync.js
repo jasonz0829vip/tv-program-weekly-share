@@ -217,6 +217,8 @@ function refreshScheduleAdvice(){
     const paid=g.paid;
     const paidText=paid?'¥'+fmtNumber(paid.amount):'待核验';
     const orderText=paid?fmtNumber(paid.fullOrders)+'单':'—';
+    const personsText=paid?fmtNumber(paid.fullPersons)+'人':'—';
+    const paidPerPerson=paid&&g.paidPerPerson!==null?'¥'+fmtNumber(Math.round(g.paidPerPerson))+'/人':'—';
     const perShow=paid?'¥'+fmtNumber(Math.round(g.revenuePerBroadcast))+'/场':'—';
     const perScan=g.paidPerScan===null?'—':'¥'+Number(g.paidPerScan).toFixed(2)+'/人次';
     return '<div class="schedule-item schedule-'+g.tier+'"><div class="schedule-item-head">'+
@@ -227,6 +229,7 @@ function refreshScheduleAdvice(){
       '<span>场均扫码 <b>'+g.avgScans.toFixed(1)+' 人次</b></span>'+
       '<span>场均意向金 <b>'+g.avgOrders.toFixed(2)+' 单</b></span>'+
       '<span>累计全款实付 <b>'+esc(paidText)+'</b> · 全款 <b>'+esc(orderText)+'</b></span>'+
+      '<span>全款付费人数 <b>'+esc(personsText)+'</b> · 人均实付 <b>'+esc(paidPerPerson)+'</b></span>'+
       '<span>按播次均摊实付 <b>'+esc(perShow)+'</b></span>'+
       '<span>按扫码规模折算实付 <b>'+esc(perScan)+'</b></span></div>'+
       '<div class="schedule-times" data-program="'+esc(g.name)+'" aria-label="'+esc(g.name)+'历次播出时间"></div>'+
