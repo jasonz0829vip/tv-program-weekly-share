@@ -1,5 +1,7 @@
 {
   "apiBase": "https://tv-program-weekly-sync.jasonz0829vip.workers.dev",
+  "apiFallbacks": [],
+  "mirrorPath": "data/current.json",
   "pollSeconds": 45,
-  "note": "Uploaded XLS/XLSX is parsed in browser, only validated business metrics stored in D1. Public anonymous writers by design."
+  "note": "Same-origin JSON serves China/worldwide readers. Cloudflare Workers accepts uploads overseas; add verified free mainland-reachable Netlify gateway URL to apiFallbacks after deployment. Mirror is read-only and updates after GitHub Actions publication."
 }
