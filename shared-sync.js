@@ -1,7 +1,7 @@
 /* 都市频道共享周报 V2: upload original XLS/XLSX locally, publish de-identified data to D1. */
 'use strict';
 (function(){
-const API={base:'',enabled:false,currentVersion:null,snapshot:null,updatedAt:'',preview:null,sourceFile:null,parseResult:null,polling:false,sheetLoader:null,localPreview:false,online:false};
+const API={base:'',enabled:false,currentVersion:null,snapshot:null,updatedAt:'',preview:null,sourceFile:null,parseResult:null,polling:false,sheetLoader:null,localPreview:false,online:false,mirrorLoaded:false,mirrorVersion:null,mirrorTime:'',mirrorPath:'data/current.json',sourceKind:'seed',gateways:[]};
 const CLOUD_CACHE_KEY='urban-channel-last-confirmed-shared-v1';
 const UI=id=>document.getElementById(id);
 const text=(id,value)=>{const el=UI(id);if(el)el.textContent=String(value??'')};
@@ -277,12 +277,62 @@ async function exitExcelLocalPreview(){
   }
   feedback('已结束本机临时预览','neutral');
 }
+
+/* Same-origin fallback: every viewer can read the identical published JSON without
+   contacting workers.dev. The scheduled mirror job validates/de-identifies it first.
+   This route is READ ONLY; it never pretends to make browser uploads writable. */
+async function refreshPublishedMirror(force=false){
+  let result;
+  try{
+    const path=API.mirrorPath||'data/current.json';
+    const c=new AbortController();
+    const timer=setTimeout(()=>c.abort(),8000);
+    try{
+      const response=await fetch(path+'?nocache='+Date.now(),{cache:'no-store',signal:c.signal});
+      if(!response.ok)throw Error('本站尚未发布数据镜像');
+      result=await response.json();
+    }finally{clearTimeout(timer)}
+    if(!result?.ok||!result.version||!Array.isArray(result.snapshot?.records)||!result.snapshot.records.length){
+      throw Error('共享数据镜像内容不完整');
+    }
+    if(result.snapshot.totals?.sessions!==result.snapshot.records.length){
+      throw Error('共享数据镜像场次数不符');
+    }
+    API.mirrorLoaded=true;
+    API.mirrorVersion=result.version;
+    API.mirrorTime=result.mirroredAt||'';
+    // Live writable API always wins while online, even after a restore to an older version.
+    if(API.online||API.localPreview)return;
+    const cachedTime=Date.parse(API.updatedAt||'')||0;
+    const mirrorTime=Date.parse(result.updatedAt||'')||0;
+    if(API.sourceKind==='cache'&&API.currentVersion!==result.version&&cachedTime>mirrorTime)return;
+    if(force||API.currentVersion!==result.version||!API.snapshot){
+      applySnapshot(result.snapshot,result.version,result.updatedAt||'');
+      API.snapshot=result.snapshot;
+      API.currentVersion=result.version;
+      API.updatedAt=result.updatedAt||'';
+      API.sourceKind='mirror';
+      try{localStorage.setItem(CLOUD_CACHE_KEY,JSON.stringify({
+        version:result.version,updatedAt:result.updatedAt,snapshot:result.snapshot
+      }))}catch(e){}
+    }
+    safeStatus('共享数据已发布 · 国内外可读取','connected');
+    text('sharedCurrentAt','本站公开版本 · 截至 '+(result.updatedAt||'').replace('T',' ').slice(0,16)+
+      ' UTC · 正在尝试连接上传通道');
+  }catch(e){
+    if(!API.snapshot&&!API.localPreview){
+      text('sharedCurrentAt','本站数据镜像暂无更新；当前显示内置历史场次。');
+    }
+  }
+}
+
 async function refreshShared(force=false){
   if(!API.enabled||API.polling)return;
   API.polling=true;
   try{
     const result=await request('/api/current');
     API.online=true;
+    API.sourceKind='cloud';
     if(result.version&&result.snapshot){
       if(force||result.version!==API.currentVersion){
         API.localPreview=false;
@@ -302,9 +352,14 @@ async function refreshShared(force=false){
   }catch(error){
     API.online=false;
     if(!API.localPreview){
-      safeStatus('共享接口连接失败 · 暂不能全员上传','error');
-      const detail=API.base.endsWith('.workers.dev')?'Cloudflare workers.dev 在国内网络可能无法直接访问。':'当前网络无法访问共享服务。';
-      text('sharedCurrentAt',detail+(API.snapshot?'目前显示本设备最近成功同步的版本。':'目前显示网站内置历史数据。')+' 仍可在本机预览 Excel。');
+      if(API.mirrorLoaded||API.snapshot){
+        safeStatus('公开数据正常 · 上传通道不可达','pending');
+        text('sharedCurrentAt','正在显示已发布的共享数据。国内外查看不必连接 Cloudflare；当前网络无法上传 Excel。'+
+          (API.mirrorTime?' 公开副本同步于 '+API.mirrorTime.replace('T',' ').slice(0,16)+' UTC。':''));
+      }else{
+        safeStatus('尚未获取共享数据 · 显示内置历史记录','error');
+        text('sharedCurrentAt','当前网络无法连接上传接口，也未获得本站公开数据副本。');
+      }
     }
   }finally{API.polling=false;updatePublishButton()}
 }
@@ -337,30 +392,43 @@ async function restoreVersion(version){
 }
 async function initialize(){
   try{
-    const res=await fetch('sync-config.json?_=20261020',{cache:'no-store'});
+    const res=await fetch('sync-config.json?_=20261020-dual',{cache:'no-store'});
     const conf=res.ok?await res.json():{};
     API.base=cleanBase(conf.apiBase);
-    if(API.base){
-      API.enabled=true;
-      try{
-        const cached=JSON.parse(localStorage.getItem(CLOUD_CACHE_KEY)||'null');
-        if(cached?.snapshot?.records?.length && cached.version && !API.localPreview){
-          applySnapshot(cached.snapshot,cached.version,cached.updatedAt||'',{clearLegacyCache:false});
-          API.snapshot=cached.snapshot;API.currentVersion=cached.version;API.updatedAt=cached.updatedAt||'';
-        }
-      }catch(e){}
-      safeStatus('连接共享数据…','pending');
+    API.mirrorPath=typeof conf.mirrorPath==='string'&&/^data\/[\w.-]+\.json$/.test(conf.mirrorPath)?conf.mirrorPath:'data/current.json';
+    API.gateways=Array.isArray(conf.apiFallbacks)?conf.apiFallbacks.map(cleanBase).filter(Boolean):[];
+    API.enabled=!!(API.base||API.gateways.length);
+    try{
+      const cached=JSON.parse(localStorage.getItem(CLOUD_CACHE_KEY)||'null');
+      if(cached?.snapshot?.records?.length&&cached.version&&!API.localPreview){
+        applySnapshot(cached.snapshot,cached.version,cached.updatedAt||'',{clearLegacyCache:false});
+        API.snapshot=cached.snapshot;API.currentVersion=cached.version;API.updatedAt=cached.updatedAt||'';
+        API.sourceKind='cache';
+      }
+    }catch(e){}
+    // A same-origin public JSON is tried FIRST to serve mainland and global readers.
+    await refreshPublishedMirror(true);
+    if(API.enabled){
       await refreshShared(true);
-      setInterval(()=>{if(!document.hidden)refreshShared()},Math.max(30000,Number(conf.pollSeconds||45)*1000));
-      document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshShared()});
-      window.addEventListener('focus',()=>refreshShared());
     }else{
-      safeStatus('待连接免费共享服务 · 可先预览Excel','pending');
-      text('sharedCurrentAt','当前使用内置历史记录；尚未连接云端共享数据库');
+      safeStatus(API.mirrorLoaded?'公开数据可读 · 上传服务待连接':'当前显示内置历史记录',API.mirrorLoaded?'connected':'pending');
     }
+    const interval=Math.max(30000,Number(conf.pollSeconds||45)*1000);
+    setInterval(()=>{
+      if(!document.hidden){
+        refreshPublishedMirror();
+        if(API.enabled)refreshShared();
+      }
+    },interval);
+    document.addEventListener('visibilitychange',()=>{
+      if(!document.hidden){refreshPublishedMirror();if(API.enabled)refreshShared()}
+    });
+    window.addEventListener('focus',()=>{
+      refreshPublishedMirror();if(API.enabled)refreshShared();
+    });
   }catch(error){
-    safeStatus('共享配置暂不可用 · 本机预览仍可使用','error');
-    text('sharedCurrentAt','共享配置加载失败：'+error.message);
+    safeStatus(API.snapshot?'已显示最后成功同步数据':'共享数据暂未更新','pending');
+    text('sharedCurrentAt','目前仍可查看上次数据；上传连接正在恢复。');
   }
   updatePublishButton();
 }
@@ -372,7 +440,7 @@ window.publishExcel=publishExcel;
 window.previewExcelLocally=previewExcelLocally;
 window.exitExcelLocalPreview=exitExcelLocalPreview;
 window.showExcelHistory=showHistory;
-window.UrbanSync={api:API,initialize,refreshShared,applySnapshot,mergeSnapshots,handleExcelFile};
+window.UrbanSync={api:API,initialize,refreshShared,refreshPublishedMirror,applySnapshot,mergeSnapshots,handleExcelFile};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
 else initialize();
 })();
