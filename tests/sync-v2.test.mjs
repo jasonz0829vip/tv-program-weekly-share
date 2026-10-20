@@ -67,7 +67,7 @@ test('Front-end exposes XLS selection and backend-absent local preview without p
  assert.match(html,/id="excelFilePicker"/);
  assert.match(html,/id="excelLocalPreview"/);
  assert.match(html,/id="excelSyncPublish"/);
- assert.match(html,/src="shared-sync.js"/);
+ assert.match(html,/src="shared-sync\.js(?:\?[^"\s]*)?"/);
  assert.match(html,/id="fiveMinutePanel"/);
  const conf=JSON.parse(readFileSync(new URL('../sync-config.json',import.meta.url),'utf8'));
  assert.ok(Object.hasOwn(conf,'apiBase'));

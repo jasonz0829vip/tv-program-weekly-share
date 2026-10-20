@@ -108,7 +108,7 @@ test('V2 upload UI and every existing navigation/chart remain available',()=>{
     assert.ok(html.includes('id="'+id+'"'),id+' missing');
   }
   assert.match(html,/<script src="excel-import\.js(?:\?v=[0-9.]+)?"/);
-  assert.ok(html.includes('script src="shared-sync.js"'));
+  assert.match(html,/<script src="shared-sync\.js(?:\?[^"\s]*)?"/);
   assert.ok(html.includes('--mobile-safe-bottom:env(safe-area-inset-bottom)'));
   assert.ok(!html.includes('为什么会突出'));
   assert.ok(!html.includes('数据质量提醒'));
