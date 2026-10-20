@@ -19,3 +19,38 @@
 - 旧浏览器缓存若完全匹配10/4原内置的19+0记录，会按本轮原表证据修正为17+2；其余自定义数据不会套用不匹配的内置分段。
 
 运行计算与导入回归检查：`node --test tests/five-minute.test.cjs`。浏览器尺寸验收在真实Chrome引擎完成，不等于iPhone/Android微信真机验收。
+
+
+## V2.0：免费 Excel 一键上传与全员同步（需要一次 Cloudflare 授权）
+
+前端仍然使用原来的 GitHub Pages：
+**https://jasonz0829vip.github.io/tv-program-weekly-share/**
+
+全员共用的后端采用 Cloudflare Workers Free + D1 Free。**没有购买服务器、云数据库、付费域名或绑定付费方案的必要**；免费额度存在每日/每月限制。如果额度耗尽，服务会暂停相应请求，不应自动升级到付费版。
+
+### 只有网站所有者需要进行的一次性操作
+
+1. 点开 **[一键部署到 Cloudflare（免费方案）](https://deploy.workers.cloudflare.com/?url=https://github.com/jasonz0829vip/tv-program-weekly-share)**。
+2. 用自己的 Cloudflare 账号登录，并按官方向导授权 GitHub。若向导要求创建新的 GitHub 项目，将其命名为 `tv-program-weekly-cloud-sync`（避免覆盖已有公开周报仓库）。
+3. 使用 Workers 免费套餐，确认配置中自动创建并绑定 D1 数据库 `tv-program-weekly-data`（绑定名 `DB`），不要选择付费升级。Cloudflare 一键部署支持按 `wrangler.jsonc` 自动配置 D1。
+4. 部署成功后，Cloudflare 会显示类似 `https://tv-program-weekly-sync.<your-subdomain>.workers.dev` 的网址。**只需要把这个网址发送到当前 ChatGPT 会话**，随后把它写入本仓库的 `sync-config.json` 的 `apiBase` 字段，原有 GitHub Pages 网址不变。
+5. 在都市频道网页上传原始 Excel，核对预览的场次、5分钟时段与金额，点击 **「确认发布 · 全员同步」**。其他同事无须登录 GitHub/Cloudflare，网页大约每45秒检查一次最新版本，页面重新获得焦点时也会刷新。
+
+特别提醒：当前 `sync-config.json` 中 `apiBase` 为空代表**未完成云端连接**。这时可以预览 Excel，但「全员同步」会保持禁用，不能声称已经上线。
+
+### 原版 Excel 上传逻辑
+
+- 兼容 `.xls/.xlsx`、节目多工作表、首播/重播、日期时间、意向金、全款金额及6段独立的5分钟扫码数据。
+- 文件在浏览器内解析；不向公网储存原始表格、客户姓名、手机号、客户订单明细。只向接口传输预定义的节目级汇总字段。
+- 新指标（如「人均客单价」）能通过财务汇总表新增列识别；基于人数加权计算各线路的平均值，不直接对已经平均过的数值做简单平均。未知业务字段需要检查具体口径，避免把类似“金额”误当成成交。
+- 默认智能合并旧场次，同一日期+线路+首播/重播+起始时间视为同一场次，不重复累加。可选择整表替换。
+- 新上传先预览再发布；后台再次验证，原始金额字段不可被5分钟扫码推算；新数据校验失败不覆盖旧数据。
+- 共享接口记录最多30个可选历史版本供一键恢复；并发更新必须重新读取最新版本。
+- 任何拥有公开网页链接的人都能提交数据（这是用户明确选择的模式）。这不提供身份认证，**也不防范故意篡改**。如将来需要保护重要数据，再增加上传密码或登录身份。
+
+### 测试
+
+- 原始用户 Excel SHA-256 `ad34b8fa4352557e793d64bdc524679476cd99d58fc0fdc3de8093c3508f51b3` 已经形成完整可追溯记录。
+- 预期：16场、5条线路、1,342人次扫码、47单意向金、489,071元累计全款实付。
+- 解析脚本：`excel-import.js`；自动同步：`shared-sync.js`；云端共享接口：`api/worker.mjs`；部署配置：`wrangler.jsonc`。
+- 当前公开网址和 `workers.dev` 在中国大陆普通网络上的可达性需真机测试，不应仅凭海外HTTP 200判定完成国内验收。
