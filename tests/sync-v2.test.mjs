@@ -12,6 +12,14 @@ const ctx={module:{exports:{}}};
 vm.runInNewContext(readFileSync(new URL('../excel-import.js',import.meta.url),'utf8'),ctx);
 const parser=ctx.module.exports;
 const draft=parser.knownSnapshot(seed,{sha256:parser.KNOWN_SHA}).snapshot;
+test('cloud-redacted provenance remains chartable without leaking original file metadata',()=>{
+ const chart={SEED:seed};vm.createContext(chart);
+ vm.runInContext(readFileSync(new URL('../five-minute.js',import.meta.url),'utf8'),chart);
+ const cloud=validateSnapshot(draft);
+ assert.equal(cloud.records.filter(r=>chart.fiveData(r).valid).length,16);
+ const r=cloud.records[0];
+ assert.equal(chart.fiveData({...r,fiveMinute:{...r.fiveMinute,source:{sheet:r.program}}}).valid,false);
+});
 
 test('Original historical xls exact source maps to 16 broadcasts, five routes and 96 real 5-min intervals',()=>{
  const v=validateSnapshot(draft);

@@ -11,7 +11,9 @@ function fiveData(r){
   const d=r.fiveMinute||seedFive(r),v=d?.values;
   if(!Array.isArray(v)||v.length!==6||v.some(n=>typeof n!=='number'||!Number.isSafeInteger(n)||n<0))return {valid:false,reason:'缺少完整的六段扫码增量，缺测不记为0。'};
   if(d.mode!=='increment')return {valid:false,reason:'需要独立分段增量，累计值不能直接绘图。'};
-  if(!d.source||!String(typeof d.source==='string'?d.source:d.source.file||'').trim())return {valid:false,reason:'缺少数据来源，请补充后再核验。'};
+  const source=d.source;
+  const hasSource=typeof source==='string'?source.trim():source&&(String(source.file||'').trim()||['sheet','valueCells','timeCells','totalCell'].every(k=>typeof source[k]==='string'&&source[k].trim()));
+  if(!hasSource)return {valid:false,reason:'缺少数据来源，请补充后再核验。'};
   if(r.first30==null||v.reduce((a,b)=>a+b,0)!==r.first30)return {valid:false,reason:'六段之和与30分钟内扫码数不符，暂不绘图。'};
   if(r.after30==null||r.first30+r.after30!==r.scans)return {valid:false,reason:'30分钟内与后续扫码之和不等于该场总量，暂不绘图。'};
   return {valid:true,values:v,source:d.source};
@@ -69,7 +71,13 @@ function fiveChart(selected,max){
 function fiveCard({r,color,data},max){
   const nums=data.valid?data.values:[null,null,null,null,null,null];
   const source=data.source;
-  const src=typeof source==='string'?h(source):source?`${h(source.file)} · ${h(source.sheet)}!${h(source.valueCells)}<br>时间区间：${h(source.timeCells)}；总量：${h(source.totalCell)}<br>D列合并合计：${h(source.mergedTotalRange)}（${h(source.mergedTotal)}）<br>${h(source.note)}<br>文件 SHA-256：${h(source.sha256)}`:'尚无可核验的六段来源';
+  const src=typeof source==='string'?h(source):source?[
+    [source.file,source.sheet&&source.sheet+'!'+(source.valueCells||'')].filter(Boolean).map(h).join(' · '),
+    source.timeCells&&'时间区间：'+h(source.timeCells)+'；总量：'+h(source.totalCell||''),
+    source.mergedTotalRange&&'D列合并合计：'+h(source.mergedTotalRange)+'（'+h(source.mergedTotal)+'）',
+    source.note&&h(source.note),source.definition&&h(source.definition),
+    source.sha256&&'文件 SHA-256：'+h(source.sha256)
+  ].filter(Boolean).join('<br>'):'尚无可核验的六段来源';
   return `<article class="five-card" style="--series:${color}"><h3>${h(r.program)}</h3><p class="five-session">${h(r.date)} · ${h(r.type)} · 扫码起点 ${h(recordedTime(r)||'待补')}</p><div class="five-totals"><span>30分钟内<b>${r.first30==null?'—':fmt(r.first30)}</b></span><span>后续扫码<b>${r.after30==null?'—':fmt(r.after30)}</b></span><span>总扫码<b>${fmt(r.scans)}</b></span></div>${data.valid?'':'<p class="five-missing">'+h(data.reason)+'</p>'}<table class="five-values"><thead><tr><th>相对区间（分钟）</th><th>人数</th><th>同刻度比较</th></tr></thead><tbody>${nums.map((n,i)=>`<tr><td>${FIVE_LABELS[i]}</td><td>${n==null?'缺测':fmt(n)}</td><td>${n==null?'—':`<i style="width:${n/max*100}%"></i>`}</td></tr>`).join('')}</tbody></table><details class="five-source"><summary>查看原始单元格与口径</summary><p>${src}</p>${source?.times?'<p>'+source.times.map((t,i)=>h(t)+'：'+nums[i]).join('<br>')+'</p>':''}</details></article>`;
 }
 const FIVE_HEADERS=['日期','节目','播出类型','扫码起始时间','0–5分钟','5–10分钟','10–15分钟','15–20分钟','20–25分钟','25–30分钟','30分钟内扫码','后续扫码','来源'];
