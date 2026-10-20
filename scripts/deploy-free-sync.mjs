@@ -2,6 +2,7 @@
 /* Run only inside the manual GitHub Actions deployment with Cloudflare credentials stored as GitHub Secrets. */
 import {execFileSync} from 'node:child_process';
 import {readFileSync, writeFileSync} from 'node:fs';
+import {waitForWorker} from './worker-health.mjs';
 
 if(!process.env.CLOUDFLARE_ACCOUNT_ID || !process.env.CLOUDFLARE_API_TOKEN){
   throw new Error('Cloudflare credentials are not configured. Add GitHub Actions secrets first.');
@@ -36,10 +37,7 @@ const output=wrangler(['deploy','--strict']);
 const workerUrls=output.match(/https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)+\.workers\.dev/gi)||[];
 if(!workerUrls.length)throw new Error('Deployment returned no workers.dev URL. Check Cloudflare account subdomain setup.');
 const url=workerUrls[workerUrls.length-1].replace(/\/+$/,'');
-const res=await fetch(url+'/api/current',{cache:'no-store'});
-if(!res.ok)throw new Error('Worker health check failed HTTP '+res.status);
-const health=await res.json();
-if(!health.ok)throw new Error('Worker D1 initialization returned an error');
+const health=await waitForWorker(url);
 console.log('Worker live with writable D1 storage. HTTPS endpoint verified.');
 
 if(!health.version){
