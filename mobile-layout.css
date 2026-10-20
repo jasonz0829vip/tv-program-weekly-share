@@ -1,0 +1,90 @@
+/* Content-first mobile layout. Keep short controls and metric units together;
+   allow descriptions and long imported names to wrap without clipping. */
+@media screen and (max-width:800px){
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  .topbar{height:auto;min-height:65px;flex-wrap:wrap;padding:12px max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));gap:10px}
+  .topbar>div:first-child{flex:1 0 100%;min-width:0}
+  .breadcrumbs strong{white-space:nowrap;font-size:14px}
+  .breadcrumbs .first{display:none}
+  .top-actions{width:100%;gap:8px;flex-wrap:wrap}
+  .top-actions button{min-height:40px;flex:1 0 auto}
+  .top-actions .updated{display:none}
+  .content{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  .page-heading>div,.date-tools,.panel-header>div{min-width:0;max-width:100%}
+  .page-heading h1{font-size:clamp(23px,5.9vw,28px);letter-spacing:0;white-space:nowrap}
+  .page-desc,.section-sub,.hero p,.schedule-reason,.schedule-next,.quality-detail{line-height:1.8;text-wrap:pretty;overflow-wrap:break-word}
+  .date-tools{width:100%;flex-direction:column;align-items:stretch;gap:10px}
+  .date-pills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(60px,1.3fr);max-width:none;width:100%;overflow:visible}
+  .date-pills button{padding:8px 2px;min-width:0;white-space:nowrap;font-size:12px}
+  .calendar-pair{flex-wrap:nowrap;padding:0;min-width:0}
+  .calendar-pair input{flex:1;width:0;min-width:0;font-size:14px;min-height:42px}
+  .hero-left{padding:20px}
+  .hero h2{text-wrap:balance}
+  .hero-kicker{letter-spacing:1px;font-size:10px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats .money-kpi{grid-column:1/-1}
+  .stat-head{align-items:flex-start;gap:5px}
+  .stat-name{font-size:12px;line-height:1.5;text-wrap:balance}
+  .stat-icon{flex:none;width:24px;height:24px}
+  .stat-val{white-space:nowrap;flex-wrap:nowrap;gap:4px;font-size:26px;letter-spacing:-.6px}
+  .stat-val>*{flex:none}
+  .stat-val small{font-size:11px}
+  .money-kpi .stat-val{font-size:34px}
+  .stat-footer,.stat-footer#kpiAvgSplit{white-space:normal;overflow:visible;font-size:11px;line-height:1.65;text-wrap:pretty}
+  .panel-header,.schedule-panel .panel-header{flex-direction:column;align-items:flex-start;gap:10px}
+  .section-title{font-size:16px;text-wrap:balance}
+  .revenue-chip,.schedule-asof,.schedule-status,.route-count,.chart-key,.legend{flex-shrink:0;white-space:nowrap}
+  .revenue-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .revenue-strip>div:first-child{grid-column:1/-1}
+  .revenue-strip>div:not(:first-child){grid-column:auto}
+  .revenue-strip strong{white-space:nowrap;font-size:23px}
+  .revenue-route-top{flex-wrap:wrap;gap:6px 12px}
+  .revenue-route-name{white-space:normal;overflow:visible;text-wrap:balance;flex:1 0 100%}
+  .revenue-route-top strong{font-size:22px}
+  .route-normalized{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 8px}
+  .route-normalized>div:first-child{grid-column:1/-1;border:0}
+  .route-normalized b{white-space:nowrap;font-size:17px}
+  .route-normalized span{font-size:11px}
+  .route-paid>span,.schedule-metrics>span{white-space:nowrap}
+  .schedule-item-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px}
+  .schedule-name{white-space:normal;overflow:visible;text-wrap:balance}
+  .schedule-status{grid-column:2;justify-self:start;margin-left:0}
+  .insight-metric-name{white-space:normal;overflow:visible;text-wrap:balance}
+  .insight-metric-value{white-space:nowrap}
+  .mini-metrics{flex-wrap:wrap}
+  .quality-intro{flex-direction:column}
+  .quality-count{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+  .quality-top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start}
+  .quality-sev{grid-column:1;justify-self:start}
+  .quality-heading{grid-column:1;min-width:0;font-size:13px;text-wrap:pretty}
+  .quality-chevron{grid-column:2;grid-row:1/3}
+  .quality-kind{display:none}
+  .modal-mask{padding:12px max(8px,env(safe-area-inset-right)) 12px max(8px,env(safe-area-inset-left))}
+  .modal{max-height:calc(100dvh - 24px - env(safe-area-inset-bottom));overflow-y:auto;min-width:0}
+  .modal-header{align-items:flex-start;gap:12px}
+  .modal-header h3{min-width:0;font-size:18px;text-wrap:balance}
+  .modal-close{flex:none}
+  .shared-excel-actions{display:grid;grid-template-columns:1fr}
+  .shared-excel-actions button{width:100%;white-space:normal;text-wrap:balance}
+  .excel-history-row{flex-wrap:wrap}
+  .excel-history-row>div{min-width:0;overflow-wrap:anywhere}
+  .five-tabs button{white-space:nowrap;padding:10px 5px}
+  .five-stat-item strong{overflow-wrap:normal;white-space:nowrap}
+  .five-stat-peak{grid-column:1/-1}
+  .five-stat-peak strong{font-size:16px}
+  .five-status{white-space:normal;text-wrap:pretty}
+  .five-chart-panel{padding:14px 10px}
+  .five-bar-label{font-size:10px;letter-spacing:-.4px;white-space:nowrap}
+  .five-values th,.five-values td{white-space:nowrap;padding-left:3px;padding-right:3px}
+  .five-values th:nth-child(2),.five-values td:nth-child(2){width:auto}
+  .five-value-share{grid-template-columns:42px minmax(0,1fr)}
+  .sidebar .nav-btn span{white-space:nowrap;font-size:12px}
+}
+@media screen and (max-width:359px){
+  .stats{grid-template-columns:1fr}
+  .stat-name{font-size:13px}
+  .stat-val{font-size:30px}
+  .insight-metrics,.insight-type-split{grid-template-columns:1fr}
+  .efficient-row{grid-template-columns:82px minmax(0,1fr) 90px;gap:5px}
+  .five-bar-label{font-size:9px}
+}
