@@ -2,7 +2,7 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101d33"><meta name="description" content="电视节目经营分析周报 — 经营总览、节目对比、场次台账和独立数据核验">
-<title>电视节目经营驾驶舱 V1.6 | 场均扫码与排播决策</title>
+<title>电视节目经营驾驶舱 V1.7 | 场次可视化图表和经营分析</title>
 <style>
 :root{--navy:#10223b;--navy2:#0b182d;--ink:#17263b;--muted:#788397;--line:#e8ecf3;--paper:#f5f7fb;--white:#fff;--blue:#4069ed;--teal:#10ae9f;--orange:#f59b5c;--red:#e26a70;--purple:#7a74ee;--radius:18px;--shadow:0 10px 35px rgba(30,46,79,.045);color-scheme:light}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);font:14px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans SC",Arial,sans-serif;color:var(--ink)}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #8ab1ff;outline-offset:2px}svg{display:block}a{color:inherit}::selection{background:#dbe6ff}
@@ -142,6 +142,28 @@
 .times-summary b{background:#eff4fa;padding:2px 4px;border-radius:4px;flex:none;font-weight:750;color:#43607f}
 @media(max-width:800px){.schedule-time-items{grid-template-columns:1fr}.schedule-time-heading{flex-wrap:wrap}.schedule-time-item{padding:9px 10px}}
 .stat-footer#kpiAvgSplit{font-size:10.5px;line-height:1.4;color:#68819a}.ledger-period-note{font-size:11px;line-height:1.7;color:#748599;margin:9px 0 12px}@media(max-width:550px){.stat-footer#kpiAvgSplit{font-size:9.5px}}
+
+/* V1.7: independent charts, zero third-party chart dependencies */
+.ledger-viz{margin:19px 0 18px}
+.ledger-viz-overview{background:linear-gradient(110deg,#142846,#173b64);color:#fff;border-radius:17px;padding:21px 23px;display:flex;justify-content:space-between;align-items:center;gap:22px;margin-bottom:15px;box-shadow:0 14px 30px rgba(17,42,77,.09)}
+.ledger-viz-overview-left{display:flex;flex-direction:column;gap:5px}.ledger-viz-overview-left strong{font-size:19px;letter-spacing:-.4px;font-weight:760}.ledger-viz-overview-left p{color:#b3c8e4;font-size:11px;line-height:1.6;margin:3px 0 0}.ledger-viz-flag{display:inline-flex;gap:7px;align-items:center;width:fit-content;font-size:10px;color:#b9d7ff;letter-spacing:1.7px;font-weight:800}.ledger-viz-pulse{width:6px;height:6px;border-radius:50%;background:#69e0c3;box-shadow:0 0 0 3px #69e0c333}
+.ledger-viz-quickmetrics{display:grid;grid-template-columns:repeat(3,minmax(90px,1fr));gap:8px;min-width:440px}.ledger-viz-quickmetrics>div{padding:11px 13px;border:1px solid rgba(205,226,255,.12);border-radius:11px;background:rgba(240,250,255,.055)}.ledger-viz-quickmetrics span{display:block;color:#b0c5e1;font-size:10px;margin-bottom:4px}.ledger-viz-quickmetrics strong{font-size:23px;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.5px}.ledger-viz-quickmetrics small{font-size:10px;color:#bcd0e9;font-weight:550;letter-spacing:0}
+.ledger-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ledger-chart-card{border-radius:17px;border:1px solid #e8edf5;background:#fff;padding:22px 23px;min-width:0;box-shadow:var(--shadow);overflow:hidden}
+.ledger-chart-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}.ledger-chart-heading h3{font-size:15px;line-height:1.2;color:#193253;font-weight:780;margin:4px 0 6px;letter-spacing:-.25px}.ledger-chart-heading p{color:#8491a4;font-size:11px;line-height:1.55;margin:0}.ledger-figure-id{font-size:10px;color:#6c93d1;font-weight:800;letter-spacing:1.4px}.ledger-chart-label{white-space:nowrap;color:#7690af;background:#f3f7fc;padding:6px 9px;border-radius:7px;font-size:10px}
+.ledger-chart-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#5c7089;font-size:11px;margin-bottom:11px}.ledger-chart-legend span{display:inline-flex;align-items:center;gap:6px}.ledger-legend-dot{display:inline-block;width:8px;height:8px;border-radius:3px;flex:none}.ledger-legend-dot.is-first{background:#5578e7}.ledger-legend-dot.is-replay{background:#48b7a9}.ledger-legend-dot.is-orange{background:#eca04b}.ledger-chart-legend .legend-secondary{color:#9ca7b6;font-size:10px}
+.ledger-chart-scroll{overflow-x:auto;overflow-y:hidden;max-width:100%;padding-bottom:6px}.ledger-chart-scroll svg{max-width:none;display:block;height:292px}
+.ledger-axis-text{font-size:10px;fill:#9cabc0}.ledger-axis-line{stroke:#eaf0f6;stroke-width:1}.ledger-chart-svg-title{font-size:11px;fill:#23466d;font-weight:700}
+.ledger-chart-empty{min-height:205px;display:grid;place-items:center;text-align:center;color:#8c9aab;font-size:12px;background:#f9fbfd;border:1px dashed #e4ebf5;border-radius:12px;padding:24px;line-height:1.8}
+.ledger-line-groups{display:grid;gap:13px}.ledger-mini-line{border:1px solid #edf1f7;background:#fbfcff;border-radius:11px;padding:12px 13px 9px;min-width:0}.ledger-mini-title{display:flex;justify-content:space-between;align-items:center;color:#637690;font-size:11px;margin-bottom:6px}.ledger-mini-title span{display:inline-flex;gap:7px;align-items:center}.ledger-mini-title strong{font-size:16px;font-variant-numeric:tabular-nums;color:#25446c}.ledger-line-svg{width:100%;overflow:hidden}.ledger-line-svg svg{width:100%;height:98px;display:block}
+.ledger-chart-toggle{display:flex;gap:2px;padding:3px;border-radius:9px;background:#f0f4fb;flex:none}.ledger-chart-toggle button{border:0;border-radius:7px;padding:6px 9px;color:#7790ad;background:transparent;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer}.ledger-chart-toggle button.is-active{color:#2458ad;background:white;box-shadow:0 2px 8px rgba(35,74,126,.09)}
+.ledger-compare-bars{display:grid;gap:11px}.ledger-compare-row{padding:9px 11px 12px;border:1px solid #ecf0f7;border-radius:11px}.ledger-compare-name{font-size:11px;font-weight:800;color:#344e70;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ledger-compare-line{display:grid;grid-template-columns:30px minmax(0,1fr) 55px;align-items:center;gap:8px;font-size:10px;color:#8a9bb0;margin-top:6px}.ledger-compare-track{height:12px;border-radius:5px;background:#f0f4fa;overflow:hidden}.ledger-compare-fill{height:100%;min-width:0;border-radius:5px;display:block}.ledger-compare-fill.first{background:linear-gradient(90deg,#86a0f4,#4c75df)}.ledger-compare-fill.replay{background:linear-gradient(90deg,#90ded2,#34b49f)}.ledger-compare-number{text-align:right;color:#385373;font-size:11px;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.ledger-scatter-plot svg{width:100%;height:auto;display:block;max-height:365px}.ledger-chart-foot{color:#8c9bab;font-size:10px;line-height:1.7;margin:5px 0 0}
+.ledger-viz-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0 13px;padding:0 3px}.ledger-viz-bottom h3{margin:0 0 4px;font-size:18px;color:#193253}.ledger-viz-bottom p{margin:0;color:#8393a7;font-size:11px;line-height:1.5}.ledger-viz-bottom>span{padding:7px 12px;background:#e8efff;border-radius:25px;color:#4470ac;font-weight:750;white-space:nowrap;font-size:11px}
+@media(max-width:1220px){.ledger-chart-grid{grid-template-columns:1fr}.ledger-viz-quickmetrics{min-width:330px}}
+@media(max-width:800px){.ledger-viz-overview{flex-direction:column;align-items:stretch;padding:17px 16px;gap:13px}.ledger-viz-quickmetrics{min-width:0;grid-template-columns:repeat(3,minmax(0,1fr))}.ledger-viz-quickmetrics>div{padding:9px 10px}.ledger-viz-quickmetrics strong{font-size:19px}.ledger-chart-grid{gap:12px}.ledger-chart-card{padding:17px 15px}.ledger-chart-heading{flex-wrap:wrap}.ledger-chart-scroll svg{height:270px}.ledger-viz-bottom{align-items:flex-start;gap:7px}.ledger-viz-bottom h3{font-size:16px}.ledger-chart-label{white-space:normal}}
+@media(max-width:410px){.ledger-viz-quickmetrics strong{font-size:16px}.ledger-viz-quickmetrics span{font-size:9px}.ledger-chart-heading h3{font-size:14px}.ledger-chart-legend{gap:7px}.ledger-chart-toggle button{font-size:10px;padding:5px 8px}}
+@media print{.ledger-chart-grid{grid-template-columns:1fr 1fr}.ledger-chart-card{break-inside:avoid}.ledger-chart-scroll{overflow:visible}.ledger-chart-scroll svg{max-width:100%}}
 </style></head><body>
 <div class="menu-shade" id="shade" onclick="toggleMenu(false)"></div>
 <div class="app"><aside class="sidebar" id="sidebar">
@@ -152,7 +174,7 @@
     <button class="nav-btn" data-view="ledger" onclick="navigate('ledger')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg><span>场次台账</span></button>
     <button class="nav-btn" data-view="quality" onclick="navigate('quality')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3 2 20h20L12 3ZM12 9v5m0 3h.01"/></svg><span>数据核验</span></button>
   </nav><div class="side-lower"><div class="secure-card"><div class="secure-head"><span class="led"></span> 仅使用脱敏汇总数据</div><p>不包含客户姓名、电话、微信标识。<br>公开站点仅展示脱敏汇总，浏览器导入的数据不会同步他人。</p></div></div>
-  <div class="side-bottom"><div>TELEVISION · PERFORMANCE</div><div>2026 WEEKLY REPORT / V1.6</div></div>
+  <div class="side-bottom"><div>TELEVISION · PERFORMANCE</div><div>2026 WEEKLY REPORT / V1.7</div></div>
 </aside>
 <main class="main"><div class="topbar"><div style="display:flex;align-items:center;gap:8px"><button class="mobile-menu" aria-label="打开菜单" onclick="toggleMenu(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><div class="breadcrumbs"><span class="first">运营中心</span><span class="first">/</span><strong>电视节目经营驾驶舱</strong></div></div><div class="top-actions"><div class="updated"><span class="dot"></span><span id="topUpdated">数据截至 10月16日</span></div><button class="outline-btn" onclick="openImport()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V3m-5 5 5-5 5 5M4 16v4h16v-4"/></svg>导入数据</button><button class="primary-btn" onclick="exportCSV()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></svg>导出报表</button></div></div>
 <div class="content"><div class="page-heading"><div><p class="eyebrow">WEEKLY PERFORMANCE REPORT</p><h1>电视节目 · 经营分析周报</h1><p class="page-desc" id="periodLabel">2026年10月12日—10月18日 · 基于场次原始记录</p></div><div class="date-tools"><div class="date-pills" id="periodTabs"><button data-preset="last" onclick="setPreset('last')">上周</button><button data-preset="current" onclick="setPreset('current')">本周</button><button data-preset="month" onclick="setPreset('month')">本月</button><button data-preset="all" class="active" onclick="setPreset('all')">全部</button><button data-preset="custom" onclick="setPreset('custom')">自定义</button></div><div class="calendar-pair" id="customDates"><input type="date" id="startDate" aria-label="开始日期" value="2026-09-23" onchange="setCustom()"><span>至</span><input type="date" id="endDate" aria-label="结束日期" value="2026-10-16" onchange="setCustom()"></div></div></div>
@@ -247,7 +269,43 @@
 <select id="comparisonSort" onchange="renderComparison(groups(getPeriod()),summary(getPeriod()))" aria-label="选择线路排名的指标">
 <option value="avgScans">场均扫码 ↓</option><option value="avgOrders">场均意向金 ↓</option><option value="ratio">订单／扫码比值 ↓</option><option value="scans">累计扫码 ↓</option><option value="orders">累计意向金 ↓</option>
 </select></label></div><div class="scroll-x" id="compareContainer"></div><p class="panel-note" style="margin:0 25px 20px">**比较口径**：场均扫码＝该线路扫码人次÷播出次数；场均意向＝意向金订单数÷播出次数；首播／重播分别独立计算。订单／扫码仅是两个同期数量的比值，不是扫码率、去重客户转化率或收入回报率。实付金额保持独立的全周期统计，不按筛选期虚构分摊。</p></article><div class="note-banner">💡 运营建议：对高扫码低订单的节目，优先审视话术和客服跟进；对低扫码高订单的节目，优先研究受众匹配、价格机制和播出时段。以上是分析方向，而非归因结论。</div></section>
-<section id="ledger" class="content-section" aria-label="场次台账"><div class="feature-strip"><div><h3>标准化场次台账</h3><p>源于各节目独立工作表，统一字段，自动汇总。可按节目、首播／重播、日期筛选并导出。</p></div><button class="light-btn" onclick="downloadTemplate()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M5 19h14"/></svg>下载录入模板</button></div><div class="action-toolbar"><div class="toolbar-side"><input id="searchInput" class="search" type="search" placeholder="搜索节目名称…" oninput="renderLedger()" aria-label="搜索节目"><select id="typeFilter" class="filter-select" onchange="renderLedger()" aria-label="播出类型"><option value="all">全部播出类型</option><option value="首播">仅首播</option><option value="重播">仅重播</option></select></div><div class="toolbar-side"><select id="sortOrder" class="filter-select" onchange="renderLedger()" aria-label="排序"><option value="date-desc">日期最新</option><option value="scans-desc">扫码最多</option><option value="orders-desc">订单最多</option><option value="date-asc">日期最早</option></select><button class="outline-btn" onclick="exportCSV()">↓ 导出所选场次</button></div></div><p class="ledger-period-note">分时口径：每期节目时长30分钟，因此「首段30分钟」覆盖整场节目的长度，不是开场效率指标；「后续跟踪」也不是另一段播出时间。原表没有可靠的5分钟扫码增量。</p><article class="panel"><div class="scroll-x" id="ledgerContainer"></div><div class="table-footer"><span id="ledgerCount">共 6 条场次</span><span>基于原始明细 · 非客户个人数据</span></div></article><div class="note-banner">数据维护入口：右上角“导入数据”支持标准 CSV 或 JSON。导入的数据仅保存至当前浏览器，<b>不会自动同步到同事设备</b>；要全员同步更新还需接入数据库和权限后端。</div></section>
+<section id="ledger" class="content-section" aria-label="场次台账"><div class="feature-strip"><div><h3>场次表现 · 图表与明细</h3><p>上方图表展示单场变化、日期趋势与节目效率；下方保留完整台账。日期、线路、首播／重播筛选可同步更新四张图。</p></div><button class="light-btn" onclick="downloadTemplate()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M5 19h14"/></svg>下载录入模板</button></div><div class="action-toolbar"><div class="toolbar-side"><select id="ledgerProgramFilter" class="filter-select" onchange="renderLedger()" aria-label="筛选线路"><option value="all">全部线路</option></select><input id="searchInput" class="search" type="search" placeholder="搜索节目名称…" oninput="renderLedger()" aria-label="搜索节目"><select id="typeFilter" class="filter-select" onchange="renderLedger()" aria-label="播出类型"><option value="all">全部播出类型</option><option value="首播">仅首播</option><option value="重播">仅重播</option></select></div><div class="toolbar-side"><select id="sortOrder" class="filter-select" onchange="renderLedger()" aria-label="排序"><option value="date-desc">日期最新</option><option value="scans-desc">扫码最多</option><option value="orders-desc">订单最多</option><option value="date-asc">日期最早</option></select><button class="outline-btn" onclick="exportCSV()">↓ 导出所选场次</button></div></div>
+<section class="ledger-viz" aria-label="场次台账可视化分析" id="ledgerVisualization">
+  <div class="ledger-viz-overview">
+    <div class="ledger-viz-overview-left"><span class="ledger-viz-flag"><span class="ledger-viz-pulse"></span> 场次分析</span><strong>先看趋势，再看每一场</strong><p id="ledgerVizScope">按所选日期、线路及播出类型展示</p></div>
+    <div class="ledger-viz-quickmetrics">
+      <div><span>筛选场次</span><strong id="lvCount">16 <small>场</small></strong></div>
+      <div><span>场均扫码</span><strong id="lvAvgScans">83.9 <small>人次</small></strong></div>
+      <div><span>场均意向金</span><strong id="lvAvgOrders">2.94 <small>单</small></strong></div>
+    </div>
+  </div>
+  <div class="ledger-chart-grid">
+    <article class="ledger-chart-card">
+      <div class="ledger-chart-heading"><div><span class="ledger-figure-id">01 / 场次</span><h3>每场扫码表现</h3><p>柱高代表扫码人次；柱顶数字代表该场意向金订单数</p></div><span class="ledger-chart-label">按播出时间先后</span></div>
+      <div class="ledger-chart-legend"><span><i class="ledger-legend-dot is-first"></i> 首播扫码</span><span><i class="ledger-legend-dot is-replay"></i> 重播扫码</span><span class="legend-secondary">柱顶橙字 = 意向金单数</span></div>
+      <div id="lvSessionBars" class="ledger-chart-scroll" aria-label="场次扫码柱状图"></div>
+    </article>
+    <article class="ledger-chart-card">
+      <div class="ledger-chart-heading"><div><span class="ledger-figure-id">02 / 时间</span><h3>日期表现趋势</h3><p>同一天多场播出合计；两条折线使用独立刻度</p></div><span class="ledger-chart-label">逐日合计</span></div>
+      <div class="ledger-line-groups">
+        <div class="ledger-mini-line"><div class="ledger-mini-title"><span><i class="ledger-legend-dot is-first"></i>扫码人次</span><strong id="lvLineScans">1,342</strong></div><div id="lvDailyScans" class="ledger-line-svg"></div></div>
+        <div class="ledger-mini-line"><div class="ledger-mini-title"><span><i class="ledger-legend-dot is-orange"></i>意向金订单</span><strong id="lvLineOrders">47</strong></div><div id="lvDailyOrders" class="ledger-line-svg"></div></div>
+      </div>
+    </article>
+    <article class="ledger-chart-card">
+      <div class="ledger-chart-heading"><div><span class="ledger-figure-id">03 / 结构</span><h3>首播与重播 · 场均对比</h3><p>按线路分别统计首播、重播；从不把累计数当作场均</p></div><div class="ledger-chart-toggle" role="group" aria-label="切换场均指标"><button type="button" id="lvMetricScans" class="is-active" onclick="setLedgerMetric('scans')">场均扫码</button><button type="button" id="lvMetricOrders" onclick="setLedgerMetric('orders')">场均意向</button></div></div>
+      <div class="ledger-chart-legend"><span><i class="ledger-legend-dot is-first"></i> 首播</span><span><i class="ledger-legend-dot is-replay"></i> 重播</span><span class="legend-secondary" id="lvMetricUnit">单位：人次/场</span></div>
+      <div id="lvFirstReplay" class="ledger-compare-bars"></div>
+    </article>
+    <article class="ledger-chart-card">
+      <div class="ledger-chart-heading"><div><span class="ledger-figure-id">04 / 效率</span><h3>节目效率矩阵</h3><p>横轴：场均扫码；纵轴：场均意向金订单</p></div><span class="ledger-chart-label">每个点 = 一条线路</span></div>
+      <div id="lvScatter" class="ledger-scatter-plot"></div>
+      <p class="ledger-chart-foot">各指标按当前筛选的场次计算；坐标参考线采用当前线路中位数。扫码不等于曝光，“意向金／扫码”不应称为真实转化率。</p>
+    </article>
+  </div>
+  <div class="ledger-viz-bottom"><div><h3>场次明细</h3><p>保持原始记录可追溯。下方表格排序不会改变上方按日期绘制的趋势。</p></div><span id="lvFilterLabel">全部场次</span></div>
+</section>
+<p class="ledger-period-note">分时口径：每期节目时长30分钟，因此「首段30分钟」覆盖整场节目的长度，不是开场效率指标；「后续跟踪」也不是另一段播出时间。原表没有可靠的5分钟扫码增量。</p><article class="panel"><div class="scroll-x" id="ledgerContainer"></div><div class="table-footer"><span id="ledgerCount">共 6 条场次</span><span>基于原始明细 · 非客户个人数据</span></div></article><div class="note-banner">数据维护入口：右上角“导入数据”支持标准 CSV 或 JSON。导入的数据仅保存至当前浏览器，<b>不会自动同步到同事设备</b>；要全员同步更新还需接入数据库和权限后端。</div></section>
 <section id="quality" class="content-section" aria-label="数据核验"><div class="quality-intro"><div><h3>数据质量检查清单</h3><p>原始工作簿存在多来源数字冲突、漏记录，以及部分需要订单系统补录的指标。看板默认采用“节目场次明细合计”，不擅自把争议数字修改为某个结论。</p></div><div class="quality-count" id="qualityNumber">7<small>项核验提醒</small></div></div><div class="quality-list" id="qualityList"></div><div class="note-banner">🔒 隐私说明：本网站仅内嵌节目、日期和聚合数值。上传的原文件中含客户咨询数据、昵称及联系方式，这些内容<b>没有</b>被放入网页。真实部署时建议至少使用账号登录、角色权限、HTTPS、操作日志及备份。</div></section>
 <div class="bottom-foot"><span>© 2026 数智节目 · TV PERFORMANCE INTELLIGENCE</span><span>独立 HTML · 无外部依赖 · 数据最后记录日期：<span id="footerDate">2026-10-16</span></span></div>
 </div></main></div>
@@ -375,8 +433,169 @@ function renderComparison(g,s){
   <td><span class="metric-green">${pct(x.orders,x.scans,2)}%</span></td></tr>`).join('');
   $('compareContainer').innerHTML=`<table class="compare-table efficiency-table"><thead><tr><th>线路</th><th>首播 / 重播</th><th>播出场数</th><th>日期与扫码起点*</th><th>累计扫码人次</th><th>场均扫码人次</th><th>首播场均扫码</th><th>重播场均扫码</th><th>累计意向金单</th><th>场均意向金单</th><th>订单 / 扫码比值</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
-function filteredLedger(){let a=getPeriod(),q=$('searchInput').value.trim().toLowerCase(),ty=$('typeFilter').value,sort=$('sortOrder').value;a=a.filter(r=>r.program.toLowerCase().includes(q)&&(ty==='all'||r.type===ty));if(sort==='date-desc')a.sort((x,y)=>y.date.localeCompare(x.date)||y.scans-x.scans);else if(sort==='date-asc')a.sort((x,y)=>x.date.localeCompare(y.date));else if(sort==='scans-desc')a.sort((x,y)=>y.scans-x.scans);else if(sort==='orders-desc')a.sort((x,y)=>y.orders-x.orders);return a}
-function renderLedger(){const a=filteredLedger();$('ledgerCount').textContent='当前筛选 '+a.length+' 条场次 · 扫码 '+fmt(sum(a,'scans'))+' 人次 · 意向金 '+fmt(sum(a,'orders'))+' 单';if(!a.length){$('ledgerContainer').innerHTML='<div class="table-empty">暂无匹配场次。请切换日期或清除搜索条件。</div>';return}const body=a.map(r=>`<tr><td>${h(r.date)}</td><td class="name">${h(r.program)}</td><td>${h(r.type)}</td><td class="ledger-time">${h(recordedTime(r)||"—")}</td><td class="num">${fmt(r.scans)}</td><td>${fmt(r.first30??0)}</td><td>${fmt(r.after30??0)}</td><td class="num">${fmt(r.orders)}</td><td class="metric-green">${pct(r.orders,r.scans,2)}%</td><td><span class="status">已录入</span></td></tr>`).join('');$('ledgerContainer').innerHTML=`<table class="compare-table"><thead><tr><th>播出日期</th><th>节目</th><th>类型</th><th>扫码起始*</th><th>扫码人次</th><th>首段30分钟扫码</th><th>后续跟踪扫码</th><th>意向金单</th><th>订单/扫码</th><th>状态</th></tr></thead><tbody>${body}</tbody></table>`}
+
+/* The ledger graphics read the SAME filtered records as its table; no duplicate data source. */
+let ledgerMetric='scans';
+function syncLedgerProgramFilter(){
+  const select=$('ledgerProgramFilter');
+  if(!select)return;
+  const names=[...new Set(records.map(r=>r.program))].sort((a,b)=>a.localeCompare(b,'zh-CN'));
+  const previous=select.value||'all';
+  const signature=names.join('|');
+  if(select.dataset.available===signature)return;
+  select.innerHTML='<option value="all">全部线路</option>'+names.map(n=>'<option value="'+h(n)+'">'+h(n)+'</option>').join('');
+  select.dataset.available=signature;
+  select.value=names.includes(previous)?previous:'all';
+}
+function ledgerRecordsForCharts(){
+  const a=filteredLedger().slice();
+  return a.sort((x,y)=>x.date.localeCompare(y.date)||recordedTime(x).localeCompare(recordedTime(y))||x.program.localeCompare(y.program,'zh-CN'));
+}
+function setLedgerMetric(mode){
+  if(!['scans','orders'].includes(mode))return;
+  ledgerMetric=mode;
+  renderLedgerCharts(ledgerRecordsForCharts());
+}
+function ledgerEmpty(message='当前筛选没有可展示的场次'){
+  return '<div class="ledger-chart-empty"><div>暂无图表数据<br><small>'+h(message)+'</small></div></div>';
+}
+function chartShortName(name){
+  return ({'新加坡·马来西亚':'新马','清远肇庆':'清远肇庆','福建泰宁':'福建泰宁','越南全景':'越南全景','拈花湾':'拈花湾'})[name]||String(name).slice(0,7);
+}
+function chartAxisMaximum(v){
+  if(!v || v<=0)return 4;
+  const raw=v/4,pow=Math.pow(10,Math.floor(Math.log10(raw)));
+  const unit=[1,2,2.5,5,10].find(n=>n*pow>=raw)||10;
+  return unit*pow*4;
+}
+function chartTicks(max,count=4){
+  return Array.from({length:count+1},(_,i)=>max*i/count);
+}
+function chartSessionBars(rows){
+  const slot=$('lvSessionBars');
+  if(!rows.length){slot.innerHTML=ledgerEmpty();return}
+  const W=Math.max(560,rows.length*61+70),H=292,L=44,T=30,B=75,R=18;
+  const plot=W-L-R,ph=H-T-B,max=chartAxisMaximum(Math.max(...rows.map(r=>r.scans),0));
+  const dx=plot/rows.length,bw=Math.min(35,dx*.62);
+  const grid=chartTicks(max).map(val=>{
+    const y=T+ph-val/max*ph;
+    return '<line class="ledger-axis-line" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/><text class="ledger-axis-text" x="'+(L-8)+'" y="'+(y+4)+'" text-anchor="end">'+fmt(val)+'</text>';
+  }).join('');
+  const columns=rows.map((r,i)=>{
+    const x=L+i*dx+(dx-bw)/2, hh=ph*r.scans/max, top=T+ph-hh;
+    const color=r.type==='首播'?'#5578e7':'#48b7a9';
+    const details=r.date+' '+recordedTime(r)+' · '+r.program+' · '+r.type+' · 扫码 '+fmt(r.scans)+' 人次 · 意向金 '+fmt(r.orders)+' 单';
+    const yTxt=Math.max(17,top-8);
+    return '<g><title>'+h(details)+'</title><rect x="'+x.toFixed(2)+'" y="'+top.toFixed(2)+'" width="'+bw.toFixed(2)+'" height="'+Math.max(1.5,hh).toFixed(2)+'" rx="5" fill="'+color+'"/>'+
+      '<text x="'+(x+bw/2).toFixed(2)+'" y="'+yTxt.toFixed(2)+'" font-size="10" font-weight="750" fill="#d39346" text-anchor="middle">'+fmt(r.orders)+'单</text>'+
+      '<text x="'+(x+bw/2).toFixed(2)+'" y="'+(T+ph+21)+'" class="ledger-axis-text" text-anchor="middle">'+h(r.date.slice(5).replace('-','/'))+'</text>'+
+      '<text x="'+(x+bw/2).toFixed(2)+'" y="'+(T+ph+36)+'" font-size="10" fill="#8496ad" text-anchor="middle">'+h(r.type)+'</text>'+
+      '<text x="'+(x+bw/2).toFixed(2)+'" y="'+(T+ph+52)+'" font-size="9" fill="#9caac0" text-anchor="middle">'+h(chartShortName(r.program))+'</text></g>';
+  }).join('');
+  slot.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="按日期排序的'+rows.length+'场节目扫码柱状图，蓝色表示首播，绿色表示重播；每场意向金订单单独标注">'+
+   '<text x="'+L+'" y="13" font-size="10" fill="#95a6ba">扫码人次</text>'+grid+columns+'</svg>';
+}
+function chartDaySeries(days,key,stroke,label){
+  if(!days.length)return ledgerEmpty();
+  const W=690,H=122,L=33,R=16,T=12,B=26,pw=W-L-R,ph=H-T-B;
+  const max=chartAxisMaximum(Math.max(...days.map(d=>d[key]),0));
+  const pts=days.map((d,i)=>({x:L+(days.length===1?pw/2:i*pw/(days.length-1)),y:T+ph-ph*d[key]/max,d}));
+  const grid=chartTicks(max,2).map(v=>{
+    const yy=T+ph-ph*v/max;
+    return '<line class="ledger-axis-line" x1="'+L+'" x2="'+(W-R)+'" y1="'+yy+'" y2="'+yy+'"/><text class="ledger-axis-text" text-anchor="end" x="'+(L-7)+'" y="'+(yy+4)+'">'+fmt(v)+'</text>';
+  }).join('');
+  const path=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+  const circles=pts.map((p,i)=>{
+    const val=p.d[key],dy=p.y>18?-9:14;
+    return '<g><title>'+h(p.d.date)+'：'+fmt(val)+' '+h(label)+'</title><circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4.6" fill="#fff" stroke="'+stroke+'" stroke-width="2.5"/>'+
+      '<text x="'+p.x.toFixed(1)+'" y="'+(p.y+dy).toFixed(1)+'" text-anchor="middle" font-size="9.7" fill="'+stroke+'" font-weight="650">'+fmt(val)+'</text></g>';
+  }).join('');
+  const dates=pts.map((p,i)=>{
+    if(days.length>9 && i%2 && i!==days.length-1)return '';
+    return '<text class="ledger-axis-text" x="'+p.x.toFixed(1)+'" y="'+(H-7)+'" text-anchor="middle">'+h(p.d.date.slice(5).replace('-','/'))+'</text>';
+  }).join('');
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+h(label)+'的按日趋势折线图"><g>'+grid+'</g><path d="'+path+'" fill="none" stroke="'+stroke+'" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/>'+circles+dates+'</svg>';
+}
+function chartDaily(rows){
+  const map=new Map();
+  rows.forEach(r=>{let d=map.get(r.date);if(!d){d={date:r.date,scans:0,orders:0};map.set(r.date,d)}d.scans+=r.scans;d.orders+=r.orders});
+  const days=[...map.values()].sort((a,b)=>a.date.localeCompare(b.date));
+  $('lvDailyScans').innerHTML=chartDaySeries(days,'scans','#5578e7','扫码人次');
+  $('lvDailyOrders').innerHTML=chartDaySeries(days,'orders','#e7a057','意向金订单');
+  $('lvLineScans').textContent=fmt(sum(rows,'scans'))+' 人次';
+  $('lvLineOrders').textContent=fmt(sum(rows,'orders'))+' 单';
+}
+function chartFirstReplay(rows){
+  const box=$('lvFirstReplay');
+  const b1=$('lvMetricScans'),b2=$('lvMetricOrders');
+  b1.classList.toggle('is-active',ledgerMetric==='scans');
+  b2.classList.toggle('is-active',ledgerMetric==='orders');
+  $('lvMetricUnit').textContent=ledgerMetric==='scans'?'单位：扫码人次/场':'单位：意向金订单/场';
+  if(!rows.length){box.innerHTML=ledgerEmpty();return}
+  const gr=groups(rows).sort((a,b)=>a.name.localeCompare(b.name,'zh-CN'));
+  const firstKey=ledgerMetric==='scans'?'liveScans':'liveOrders',replayKey=ledgerMetric==='scans'?'replayScans':'replayOrders';
+  const max=Math.max(1,...gr.flatMap(x=>[x.live?x[firstKey]/x.live:0,x.replay?x[replayKey]/x.replay:0]));
+  const line=(title,value,n,cl)=>'<div class="ledger-compare-line"><span>'+title+'</span><div class="ledger-compare-track">'+
+      (n?'<i class="ledger-compare-fill '+cl+'" style="width:'+(value/max*100).toFixed(1)+'%"></i>':'')+
+      '</div><span class="ledger-compare-number">'+(n?value.toFixed(ledgerMetric==='scans'?1:2):'—')+'</span></div>';
+  box.innerHTML=gr.map(x=>{
+    const lv=x.live?x[firstKey]/x.live:0,rv=x.replay?x[replayKey]/x.replay:0;
+    return '<div class="ledger-compare-row"><div class="ledger-compare-name">'+h(x.name)+' <span style="font-weight:500;color:#91a0b0">（首 '+x.live+' / 重 '+x.replay+' 场）</span></div>'+
+      line('首播',lv,x.live,'first')+line('重播',rv,x.replay,'replay')+'</div>';
+  }).join('');
+}
+function medianFor(vals){
+  const a=vals.slice().sort((x,y)=>x-y),i=Math.floor(a.length/2);
+  return a.length%2?a[i]:(a[i-1]+a[i])/2;
+}
+function chartEfficiency(rows){
+  const slot=$('lvScatter');
+  if(!rows.length){slot.innerHTML=ledgerEmpty();return}
+  const gr=groups(rows).map(g=>({name:g.name,x:g.scans/g.sessions,y:g.orders/g.sessions,n:g.sessions}));
+  const W=620,H=338,L=58,R=43,T=25,B=61,pw=W-L-R,ph=H-T-B;
+  const maxX=chartAxisMaximum(Math.max(...gr.map(g=>g.x),0)),maxY=chartAxisMaximum(Math.max(...gr.map(g=>g.y),0));
+  const xScale=v=>L+pw*v/maxX,yScale=v=>T+ph-ph*v/maxY;
+  const mx=medianFor(gr.map(g=>g.x)),my=medianFor(gr.map(g=>g.y));
+  const gX=chartTicks(maxX,4).map(v=>{
+    const x=xScale(v);
+    return '<line x1="'+x+'" x2="'+x+'" y1="'+T+'" y2="'+(T+ph)+'" class="ledger-axis-line"/><text x="'+x+'" y="'+(H-B+20)+'" class="ledger-axis-text" text-anchor="middle">'+fmt(v)+'</text>';
+  }).join('');
+  const gY=chartTicks(maxY,4).map(v=>{
+    const y=yScale(v);
+    return '<line x1="'+L+'" x2="'+(L+pw)+'" y1="'+y+'" y2="'+y+'" class="ledger-axis-line"/><text x="'+(L-8)+'" y="'+(y+4)+'" class="ledger-axis-text" text-anchor="end">'+v.toFixed(1)+'</text>';
+  }).join('');
+  const refs=gr.length>1?'<line x1="'+xScale(mx)+'" x2="'+xScale(mx)+'" y1="'+T+'" y2="'+(T+ph)+'" stroke="#b0c1d5" stroke-width="1.3" stroke-dasharray="5 5"/>'+
+     '<line x1="'+L+'" x2="'+(L+pw)+'" y1="'+yScale(my)+'" y2="'+yScale(my)+'" stroke="#b0c1d5" stroke-width="1.3" stroke-dasharray="5 5"/>':'';
+  const colors=['#4b7be7','#2fa993','#e2a44f','#896dd5','#3a9fb5','#d06c83'];
+  const points=gr.map((p,i)=>{
+    const x=xScale(p.x),y=yScale(p.y),color=colors[i%colors.length];
+    const anchored=x>W-180?'end':'start',ox=anchored==='end'?-12:12;
+    const oy=i%2?-12:19;
+    const label=chartShortName(p.name);
+    return '<g><title>'+h(p.name)+'：场均扫码 '+p.x.toFixed(1)+' 人次，场均意向金 '+p.y.toFixed(2)+' 单，'+p.n+' 场</title>'+
+     '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="8" fill="'+color+'" fill-opacity=".18"/>'+
+     '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="5.1" fill="'+color+'" stroke="#fff" stroke-width="1.8"/>'+
+     '<text x="'+(x+ox).toFixed(1)+'" y="'+(y+oy).toFixed(1)+'" font-size="11" font-weight="750" text-anchor="'+anchored+'" fill="#354e70">'+h(label)+'</text></g>';
+  }).join('');
+  slot.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="线路效率矩阵，横轴场均扫码，纵轴场均意向金"><g>'+gX+gY+refs+'</g>'+points+
+    '<text x="'+(L+pw/2)+'" y="'+(H-14)+'" text-anchor="middle" font-size="11" fill="#8295aa">场均扫码（人次/场）</text>'+
+    '<text transform="translate(15,'+(T+ph/2)+') rotate(-90)" text-anchor="middle" font-size="11" fill="#8295aa">场均意向金（单/场）</text></svg>';
+}
+function renderLedgerCharts(rows){
+  $('lvCount').innerHTML=fmt(rows.length)+' <small>场</small>';
+  $('lvAvgScans').innerHTML=(rows.length?decimal(sum(rows,'scans'),rows.length,1):'—')+' <small>人次</small>';
+  $('lvAvgOrders').innerHTML=(rows.length?decimal(sum(rows,'orders'),rows.length,2):'—')+' <small>单</small>';
+  const program=$('ledgerProgramFilter').value,ty=$('typeFilter').value,search=$('searchInput').value.trim();
+  const types=[program==='all'?'全部线路':program,ty==='all'?'首播+重播':ty];
+  if(search)types.push('检索：'+search);
+  const scope=types.join(' · ')+' · '+rows.length+' 场';
+  $('ledgerVizScope').textContent='基于 '+start+' 至 '+end+' · '+scope;
+  $('lvFilterLabel').textContent=scope;
+  chartSessionBars(rows);chartDaily(rows);chartFirstReplay(rows);chartEfficiency(rows);
+}
+
+function filteredLedger(){let a=getPeriod(),q=$('searchInput').value.trim().toLowerCase(),ty=$('typeFilter').value,sort=$('sortOrder').value,program=$('ledgerProgramFilter').value;a=a.filter(r=>r.program.toLowerCase().includes(q)&&(program==='all'||r.program===program)&&(ty==='all'||r.type===ty));if(sort==='date-desc')a.sort((x,y)=>y.date.localeCompare(x.date)||y.scans-x.scans);else if(sort==='date-asc')a.sort((x,y)=>x.date.localeCompare(y.date));else if(sort==='scans-desc')a.sort((x,y)=>y.scans-x.scans);else if(sort==='orders-desc')a.sort((x,y)=>y.orders-x.orders);return a}
+function renderLedger(){syncLedgerProgramFilter();const a=filteredLedger();renderLedgerCharts(ledgerRecordsForCharts());$('ledgerCount').textContent='当前筛选 '+a.length+' 条场次 · 扫码 '+fmt(sum(a,'scans'))+' 人次 · 意向金 '+fmt(sum(a,'orders'))+' 单';if(!a.length){$('ledgerContainer').innerHTML='<div class="table-empty">暂无匹配场次。请切换日期或清除搜索条件。</div>';return}const body=a.map(r=>`<tr><td>${h(r.date)}</td><td class="name">${h(r.program)}</td><td>${h(r.type)}</td><td class="ledger-time">${h(recordedTime(r)||"—")}</td><td class="num">${fmt(r.scans)}</td><td>${fmt(r.first30??0)}</td><td>${fmt(r.after30??0)}</td><td class="num">${fmt(r.orders)}</td><td class="metric-green">${pct(r.orders,r.scans,2)}%</td><td><span class="status">已录入</span></td></tr>`).join('');$('ledgerContainer').innerHTML=`<table class="compare-table"><thead><tr><th>播出日期</th><th>节目</th><th>类型</th><th>扫码起始*</th><th>扫码人次</th><th>首段30分钟扫码</th><th>后续跟踪扫码</th><th>意向金单</th><th>订单/扫码</th><th>状态</th></tr></thead><tbody>${body}</tbody></table>`}
 function renderQuality(){$('qualityNumber').innerHTML=issues.length+'<small>项核验提醒</small>';$('qualityList').innerHTML=issues.map((x,i)=>`<article class="quality-item" id="issue-${x.id}"><button class="quality-top" aria-expanded="false" onclick="toggleIssue('${x.id}')"><span class="quality-sev ${x.severity}">${x.severity==='high'?'重点核验':x.severity==='medium'?'需要核验':'待完善'}</span><span class="quality-heading">${h(x.title)}</span><span class="quality-kind">${h(x.kind)}</span><span class="quality-chevron">›</span></button><div class="quality-detail"><div><b>核验发现：</b>${h(x.detail)}</div><div><b>涉及原表：</b>${h(x.source)}</div><div><b>影响指标：</b>${h(x.affects)}</div><div class="fix"><b>建议动作：</b>${h(x.action)}</div></div></article>`).join('')}
 function toggleIssue(id){let el=$('issue-'+id),open=el.classList.toggle('open');el.querySelector('button').setAttribute('aria-expanded',String(open))}
 function emptyHTML(title,subtitle){return `<div class="empty-state"><div class="empty-illustration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="15" rx="2"/><path d="M7 15l3-3 3 2 4-5"/></svg></div><h3>${h(title)}</h3><p>${h(subtitle)}</p></div>`}
