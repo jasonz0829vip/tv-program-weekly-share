@@ -40,11 +40,11 @@ function coord(col,row){
 }
 function dateLabel(text,assumedYear=2026){
   const s=str(text).replace(/[ \u3000]/g,'');
-  let m=s.match(/(20[0-9]{2})[年\/.\-](0?[1-9]|1[0-2])[月\/.\-](0?[1-9]|[12][0-9]|3[01])/);
+  let m=s.match(/(20[0-9]{2})[年\/.\-](1[0-2]|0?[1-9])[月\/.\-](3[01]|[12][0-9]|0?[1-9])(?=[^0-9]|$)/);
   let year,month,day;
   if(m){year=+m[1];month=+m[2];day=+m[3]}
   else{
-    m=s.match(/(?:^|[^0-9])(0?[1-9]|1[0-2])[月\/.\-](0?[1-9]|[12][0-9]|3[01])(?:日|号)?/);
+    m=s.match(/(?:^|[^0-9])(1[0-2]|0?[1-9])[月\/.\-](3[01]|[12][0-9]|0?[1-9])(?=日|号|[^0-9]|$)/);
     if(!m)return null;
     year=assumedYear;month=+m[1];day=+m[2];
   }
