@@ -2,7 +2,7 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101d33"><meta name="description" content="电视节目经营分析周报 — 经营总览、节目对比、场次台账和独立数据核验">
-<title>电视节目经营驾驶舱 V1.3 | 五条线路首播重播与场均效率</title>
+<title>电视节目经营驾驶舱 V1.4 | 排播建议与场均效率</title>
 <style>
 :root{--navy:#10223b;--navy2:#0b182d;--ink:#17263b;--muted:#788397;--line:#e8ecf3;--paper:#f5f7fb;--white:#fff;--blue:#4069ed;--teal:#10ae9f;--orange:#f59b5c;--red:#e26a70;--purple:#7a74ee;--radius:18px;--shadow:0 10px 35px rgba(30,46,79,.045);color-scheme:light}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);font:14px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans SC",Arial,sans-serif;color:var(--ink)}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #8ab1ff;outline-offset:2px}svg{display:block}a{color:inherit}::selection{background:#dbe6ff}
@@ -97,6 +97,32 @@
 @media(max-width:1280px){.efficient-row{grid-template-columns:110px minmax(0,1fr) 100px}.insight-metrics{grid-template-columns:1fr 1fr}}
 @media(max-width:800px){.efficient-row{grid-template-columns:94px minmax(0,1fr) 100px;gap:8px}.insight-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.insight-metric{padding:10px}.insight-metric-value{font-size:21px}}
 @media(max-width:420px){.efficient-row{grid-template-columns:88px minmax(0,1fr) 90px}.efficient-row .bar-right strong{font-size:10px}.efficient-row .bar-right span{font-size:9px}.insight-metric-value{font-size:20px}.route-normalized b{font-size:15px}.route-paid{font-size:10px}}
+
+.schedule-panel{margin-bottom:22px}
+.schedule-panel .panel-header{align-items:center}
+.schedule-asof{background:#f1f5fa;border:1px solid #e1eaf4;padding:6px 12px;border-radius:50px;font-size:11px;font-weight:700;color:#58708c;white-space:nowrap}
+.schedule-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.schedule-item{border:1px solid #e5ebf2;background:linear-gradient(180deg,#fff 0%,#fcfdff 100%);border-radius:13px;padding:16px 17px;min-width:0;border-left:4px solid #d0d7e1}
+.schedule-primary{border-left-color:#3c77ea;background:linear-gradient(140deg,#f6f9ff,#fff)}
+.schedule-test{border-left-color:#26a88d}
+.schedule-observe{border-left-color:#d98f36}
+.schedule-pause{border-left-color:#a8afbc}
+.schedule-item-head{display:flex;align-items:center;gap:9px;margin-bottom:12px;min-width:0}
+.schedule-n{font-size:12px;font-weight:800;color:#a2afc1}
+.schedule-name{font-size:15px;letter-spacing:-.2px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.schedule-status{margin-left:auto;white-space:nowrap;border-radius:40px;padding:4px 10px;background:#eaf1ff;color:#356dd3;font-size:11px;font-weight:800}
+.schedule-test .schedule-status{background:#e7f7f2;color:#218976}
+.schedule-observe .schedule-status{background:#fff5e6;color:#ad7123}
+.schedule-pause .schedule-status{background:#f1f3f6;color:#727f8c}
+.schedule-metrics{display:flex;gap:7px 14px;flex-wrap:wrap;color:#728399;font-size:11px;padding-bottom:12px;border-bottom:1px solid #edf0f5}
+.schedule-metrics b{font-weight:800;color:#294566;font-variant-numeric:tabular-nums}
+.schedule-reason{font-size:12px;line-height:1.85;color:#56677b;margin:12px 0 8px}
+.schedule-next{font-size:12px;line-height:1.8;color:#203c5e;margin:0}
+.schedule-next b{color:#1a5fc3}
+.schedule-footnote{font-size:11px;line-height:1.85;color:#8390a2;margin:14px 0 0}
+@media(max-width:1050px){.schedule-list{grid-template-columns:1fr}}
+@media(max-width:800px){.schedule-asof{font-size:9px}.schedule-item{padding:14px}.schedule-name{font-size:14px}.schedule-panel .panel-header{gap:7px}.schedule-metrics{gap:6px 10px}}
+
 </style></head><body>
 <div class="menu-shade" id="shade" onclick="toggleMenu(false)"></div>
 <div class="app"><aside class="sidebar" id="sidebar">
@@ -107,7 +133,7 @@
     <button class="nav-btn" data-view="ledger" onclick="navigate('ledger')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg><span>场次台账</span></button>
     <button class="nav-btn" data-view="quality" onclick="navigate('quality')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3 2 20h20L12 3ZM12 9v5m0 3h.01"/></svg><span>数据核验</span></button>
   </nav><div class="side-lower"><div class="secure-card"><div class="secure-head"><span class="led"></span> 仅使用脱敏汇总数据</div><p>不包含客户姓名、电话、微信标识。<br>公开站点仅展示脱敏汇总，浏览器导入的数据不会同步他人。</p></div></div>
-  <div class="side-bottom"><div>TELEVISION · PERFORMANCE</div><div>2026 WEEKLY REPORT / V1.3</div></div>
+  <div class="side-bottom"><div>TELEVISION · PERFORMANCE</div><div>2026 WEEKLY REPORT / V1.4</div></div>
 </aside>
 <main class="main"><div class="topbar"><div style="display:flex;align-items:center;gap:8px"><button class="mobile-menu" aria-label="打开菜单" onclick="toggleMenu(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><div class="breadcrumbs"><span class="first">运营中心</span><span class="first">/</span><strong>电视节目经营驾驶舱</strong></div></div><div class="top-actions"><div class="updated"><span class="dot"></span><span id="topUpdated">数据截至 10月16日</span></div><button class="outline-btn" onclick="openImport()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V3m-5 5 5-5 5 5M4 16v4h16v-4"/></svg>导入数据</button><button class="primary-btn" onclick="exportCSV()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></svg>导出报表</button></div></div>
 <div class="content"><div class="page-heading"><div><p class="eyebrow">WEEKLY PERFORMANCE REPORT</p><h1>电视节目 · 经营分析周报</h1><p class="page-desc" id="periodLabel">2026年10月12日—10月18日 · 基于场次原始记录</p></div><div class="date-tools"><div class="date-pills" id="periodTabs"><button data-preset="last" onclick="setPreset('last')">上周</button><button data-preset="current" onclick="setPreset('current')">本周</button><button data-preset="month" onclick="setPreset('month')">本月</button><button data-preset="all" class="active" onclick="setPreset('all')">全部</button><button data-preset="custom" onclick="setPreset('custom')">自定义</button></div><div class="calendar-pair" id="customDates"><input type="date" id="startDate" aria-label="开始日期" value="2026-09-23" onchange="setCustom()"><span>至</span><input type="date" id="endDate" aria-label="结束日期" value="2026-10-16" onchange="setCustom()"></div></div></div>
@@ -122,6 +148,73 @@
 <div class="revenue-grid" id="revenueRoutes" aria-live="polite"></div>
 <p class="revenue-remark">**金额与场次的关系**：每播次均摊实付参考值＝该线路全款实付累计÷历史播出场数，仅用于消除“播得多、总额自然更大”的展示偏差，**不是某次播出实际收款**，无法证明每次播出带来了多少收入。实付不等于扣除退款后的净营收，累计金额不随日期筛选变化。</p>
 </article>
+
+<article class="panel panel-pad schedule-panel" aria-label="下一轮电视节目排播建议">
+  <div class="panel-header">
+    <div><h3 class="section-title">下一轮排播建议</h3><p class="section-sub">基于原始全部16场的阶段性判断 · 五条线路逐项给出行动与原因</p></div>
+    <span class="schedule-asof">样本截至 2026.10.16</span>
+  </div>
+  <div class="schedule-list">
+    
+    <div class="schedule-item schedule-primary">
+      <div class="schedule-item-head"><span class="schedule-n">01</span><strong class="schedule-name">新加坡·马来西亚</strong><span class="schedule-status">优先续播</span></div>
+      <div class="schedule-metrics">
+        <span>首播 <b>1</b> · 重播 <b>3</b></span>
+        <span>场均扫码 <b>86.0</b></span>
+        <span>场均意向 <b>3.50 单</b></span>
+        <span>全款累计 <b>¥272,625</b> · <b>17单</b></span>
+      </div>
+      <p class="schedule-reason">累计全款实付和全款订单数领先；3次重播共取得11单意向金，但最近两次重播分别为10单与0单，必须优化场次内容并观察波动。</p>
+      <p class="schedule-next"><b>下一步：</b>建议继续排播1场，验证后决定是否追加。</p>
+    </div>
+    <div class="schedule-item schedule-test">
+      <div class="schedule-item-head"><span class="schedule-n">02</span><strong class="schedule-name">福建泰宁</strong><span class="schedule-status">继续测试</span></div>
+      <div class="schedule-metrics">
+        <span>首播 <b>1</b> · 重播 <b>2</b></span>
+        <span>场均扫码 <b>60.7</b></span>
+        <span>场均意向 <b>4.00 单</b></span>
+        <span>全款累计 <b>¥54,694</b> · <b>7单</b></span>
+      </div>
+      <p class="schedule-reason">订单／扫码数量之比在五条线路中最高，场均意向金也较高；但最近一场仅10人次扫码，不宜直接增加大量重播。</p>
+      <p class="schedule-next"><b>下一步：</b>建议再播1场，重点跟踪意向金到全款的成交。</p>
+    </div>
+    <div class="schedule-item schedule-test">
+      <div class="schedule-item-head"><span class="schedule-n">03</span><strong class="schedule-name">拈花湾</strong><span class="schedule-status">继续测试</span></div>
+      <div class="schedule-metrics">
+        <span>首播 <b>1</b> · 重播 <b>1</b></span>
+        <span>场均扫码 <b>153.5</b></span>
+        <span>场均意向 <b>4.50 单</b></span>
+        <span>全款累计 <b>¥16,217</b> · <b>4单</b></span>
+      </div>
+      <p class="schedule-reason">场均扫码与场均意向金均领先；只有2场历史样本、累计全款金额较低，先补充样本，再决定是否扩大频次。</p>
+      <p class="schedule-next"><b>下一步：</b>建议再播1场，重点验证实付转化。</p>
+    </div>
+    <div class="schedule-item schedule-observe">
+      <div class="schedule-item-head"><span class="schedule-n">04</span><strong class="schedule-name">越南全景</strong><span class="schedule-status">控制频次</span></div>
+      <div class="schedule-metrics">
+        <span>首播 <b>1</b> · 重播 <b>3</b></span>
+        <span>场均扫码 <b>84.5</b></span>
+        <span>场均意向 <b>2.50 单</b></span>
+        <span>全款累计 <b>¥95,150</b> · <b>7单</b></span>
+      </div>
+      <p class="schedule-reason">累计实付和扫码规模不低，但已经播4场，场均意向金仅2.50单；宜控制频次，而不是因累计量高继续密集重播。</p>
+      <p class="schedule-next"><b>下一步：</b>建议保留低频排播，调整开场和成交机制后复盘。</p>
+    </div>
+    <div class="schedule-item schedule-pause">
+      <div class="schedule-item-head"><span class="schedule-n">05</span><strong class="schedule-name">清远肇庆</strong><span class="schedule-status">暂缓重播</span></div>
+      <div class="schedule-metrics">
+        <span>首播 <b>1</b> · 重播 <b>2</b></span>
+        <span>场均扫码 <b>57.0</b></span>
+        <span>场均意向 <b>0.67 单</b></span>
+        <span>全款累计 <b>¥50,385</b> · <b>5单</b></span>
+      </div>
+      <p class="schedule-reason">3场仅2单意向金，场均0.67单；最近一次重播扫码19人次、意向金0单，新增产出偏弱。</p>
+      <p class="schedule-next"><b>下一步：</b>建议暂缓，待选题、福利与产品机制调整后再验证。</p>
+    </div>
+  </div>
+  <p class="schedule-footnote">决策口径：场均＝该线路总量÷播出次数；全款金额和全款订单为历史累计，无法严格归因到某一场。尚无节目成本、退款及毛利，所列为排播优先级，不是净利润结论。建议基于截至10月16日原始场次作出，不随顶部日期筛选变化；新增数据后需重新评估。</p>
+</article>
+
 <div class="panel-grid"><article class="panel panel-pad"><div class="panel-header"><div><h3 class="section-title">节目效果对比</h3><p class="section-sub">改用每场平均扫码比较，避免多播几次造成的累计数字优势</p></div><div class="chart-key"><span class="legend"><i></i>扫码</span><span class="legend orders"><i></i>意向金</span></div></div><div id="programBars" class="bar-table"></div><p class="panel-note">本图以场均扫码排序：场均扫码 = 当前筛选期扫码人次合计 ÷ 当前筛选期实际播出次数。累计量和首播/重播次数同时列出。</p></article>
 <article class="panel panel-pad"><div class="insight-header"><div><h3 class="section-title">经营洞察</h3><p class="section-sub">按不同指标比较线路表现</p></div><span class="pill">分指标，不评综合冠军</span></div><div id="insightPane"></div></article></div>
 <div class="bottom-grid"><article class="panel panel-pad"><div class="panel-header"><div><h3 class="section-title">场次表现趋势</h3><p class="section-sub">按播出日期聚合 · 扫码人次趋势</p></div><span class="chart-key" id="trendInfo">按日统计</span></div><div id="trendChart" class="trend-plot" role="img" aria-label="扫码趋势图"></div></article>
