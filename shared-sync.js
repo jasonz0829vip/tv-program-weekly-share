@@ -1,7 +1,8 @@
 /* 都市频道共享周报 V2: upload original XLS/XLSX locally, publish de-identified data to D1. */
 'use strict';
 (function(){
-const API={base:'',enabled:false,currentVersion:null,snapshot:null,updatedAt:'',preview:null,sourceFile:null,parseResult:null,polling:false,sheetLoader:null,localPreview:false};
+const API={base:'',enabled:false,currentVersion:null,snapshot:null,updatedAt:'',preview:null,sourceFile:null,parseResult:null,polling:false,sheetLoader:null,localPreview:false,online:false};
+const CLOUD_CACHE_KEY='urban-channel-last-confirmed-shared-v1';
 const UI=id=>document.getElementById(id);
 const text=(id,value)=>{const el=UI(id);if(el)el.textContent=String(value??'')};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -22,12 +23,12 @@ function feedback(message,style='neutral'){
 function showModal(){const modal=UI('excelSyncModal');if(modal){modal.classList.add('show');UI('excelFilePicker')?.focus()}}
 function hideModal(){UI('excelSyncModal')?.classList.remove('show')}
 function openExcelUploader(){
-  showModal();feedback(API.enabled?'选择原始 .xls / .xlsx 文件即可开始解析。':'可以先解析、预览 Excel；全员共享还需一次免费云端连接。');
+  showModal();feedback(API.online?'选择原始 .xls / .xlsx 文件即可开始解析，完成核验后可发布给所有人。':API.enabled?'当前网络无法连接共享接口。Excel仍可在本机解析预览，但不能宣称已发布给所有人。':'可以先解析、预览 Excel；全员共享还需连接免费云端服务。');
   updatePublishButton();
 }
 function setRunning(b){
   const btn=UI('excelSyncPublish');
-  if(btn){btn.disabled=b||!API.enabled||!API.preview;btn.textContent=b?'正在同步…':'确认发布 · 全员同步'}
+  if(btn){btn.disabled=b||!API.online||!API.preview;btn.textContent=b?'正在同步…':'确认发布 · 全员同步'}
   const demo=UI('excelLocalPreview');if(demo)demo.disabled=b||!API.preview;
   const file=UI('excelFilePicker');if(file)file.disabled=b;
 }
@@ -152,7 +153,7 @@ async function handleExcelFile(event){
   finally{setRunning(false)}
 }
 async function publishExcel(){
-  if(!API.enabled){feedback('需要先把免费共享服务与网站连接，当前文件不会冒充已经全员更新。','error');return}
+  if(!API.online){feedback('当前网络无法连接全员共享接口。请先恢复网络连接；你仍可以使用「应用到本机预览」。','error');return}
   const data=evaluateDraft();if(!data){feedback('当前文件无法通过核验，请检查预览。','error');return}
   if(!confirm('确认把本次核验后的经营汇总发布给所有能够打开网页的同事？\n原始Excel不会上传，任何访客都可以发布下一个版本。'))return;
   setRunning(true);feedback('正在发布共享周报数据…');
@@ -281,6 +282,7 @@ async function refreshShared(force=false){
   API.polling=true;
   try{
     const result=await request('/api/current');
+    API.online=true;
     if(result.version&&result.snapshot){
       if(force||result.version!==API.currentVersion){
         API.localPreview=false;
@@ -289,6 +291,7 @@ async function refreshShared(force=false){
         API.snapshot=result.snapshot;
         API.currentVersion=result.version;
         API.updatedAt=result.updatedAt||'';
+        try{localStorage.setItem(CLOUD_CACHE_KEY,JSON.stringify({version:result.version,updatedAt:result.updatedAt,snapshot:result.snapshot}))}catch(e){}
       }
       if(!API.localPreview){safeStatus('共享数据已连接 · 自动同步中','connected');
       text('sharedCurrentAt','最新共享版本 · '+(result.updatedAt||'').replace('T',' ').slice(0,16)+' UTC');}
@@ -297,9 +300,13 @@ async function refreshShared(force=false){
       text('sharedCurrentAt','尚无已发布共享数据，可上传首份Excel');
     }
   }catch(error){
-    if(!API.localPreview)safeStatus('共享服务暂不可达 · 当前显示上次数据','error');
-    text('sharedCurrentAt','网络暂不可达：'+error.message);
-  }finally{API.polling=false}
+    API.online=false;
+    if(!API.localPreview){
+      safeStatus('共享接口连接失败 · 暂不能全员上传','error');
+      const detail=API.base.endsWith('.workers.dev')?'Cloudflare workers.dev 在国内网络可能无法直接访问。':'当前网络无法访问共享服务。';
+      text('sharedCurrentAt',detail+(API.snapshot?'目前显示本设备最近成功同步的版本。':'目前显示网站内置历史数据。')+' 仍可在本机预览 Excel。');
+    }
+  }finally{API.polling=false;updatePublishButton()}
 }
 async function showHistory(){
   const box=UI('excelHistory');if(!box)return;
@@ -335,6 +342,13 @@ async function initialize(){
     API.base=cleanBase(conf.apiBase);
     if(API.base){
       API.enabled=true;
+      try{
+        const cached=JSON.parse(localStorage.getItem(CLOUD_CACHE_KEY)||'null');
+        if(cached?.snapshot?.records?.length && cached.version && !API.localPreview){
+          applySnapshot(cached.snapshot,cached.version,cached.updatedAt||'',{clearLegacyCache:false});
+          API.snapshot=cached.snapshot;API.currentVersion=cached.version;API.updatedAt=cached.updatedAt||'';
+        }
+      }catch(e){}
       safeStatus('连接共享数据…','pending');
       await refreshShared(true);
       setInterval(()=>{if(!document.hidden)refreshShared()},Math.max(30000,Number(conf.pollSeconds||45)*1000));
