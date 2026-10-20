@@ -406,7 +406,7 @@
 <div id="toast" class="fab-toast" role="status"></div>
 <div class="modal-mask" id="excelSyncModal" onclick="if(event.target===this)closeExcelUploader()">
  <div class="modal shared-excel-modal" role="dialog" aria-modal="true" aria-labelledby="excelSyncTitle">
-   <div class="modal-header"><h3 id="excelSyncTitle">上传原始 Excel · 自动更新经营周报</h3><button class="modal-close" type="button" aria-label="关闭上传窗口" onclick="closeExcelUploader()">×</button></div>
+   <div class="modal-header"><h3 id="excelSyncTitle"><span>上传原始 Excel</span><span class="upload-title-detail">自动更新经营周报</span></h3><button class="modal-close" type="button" aria-label="关闭上传窗口" onclick="closeExcelUploader()">×</button></div>
    <p class="shared-excel-intro">直接上传日常使用的 <b>.xls 或 .xlsx</b>，无需转换 CSV。网页先在本机解析全部工作表，仅把节目经营指标提交到免费共享数据库；客户个人资料不进入公网数据源。</p>
    <label class="shared-file-drop" for="excelFilePicker"><span class="shared-file-icon">▤</span><strong>点这里选择原始 Excel</strong><small>支持 .xls / .xlsx · 12 MB 以下 · 手机文件管理器也能选择</small><input id="excelFilePicker" type="file" accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="handleExcelFile(event)"></label>
    <details class="shared-advanced-settings"><summary>更新方式 · 默认智能合并</summary><label>上传后数据处理<select id="excelSyncMode" onchange="recomputeExcelPreview()"><option value="merge">智能合并（建议）：旧场次保留，同一场使用新文件数据</option><option value="replace">整表替换：以此次 Excel 为准</option></select></label><p>历史版本仍可恢复。全款金额按线路覆盖，不会将旧金额与新金额重复相加。</p></details>

@@ -1,5 +1,6 @@
 /* Content-first mobile layout. Keep short controls and metric units together;
    allow descriptions and long imported names to wrap without clipping. */
+.upload-title-detail::before{content:' · '}
 @media screen and (max-width:800px){
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .topbar{height:auto;min-height:65px;flex-wrap:wrap;padding:12px max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));gap:10px}
@@ -63,6 +64,8 @@
   .modal{max-height:calc(100dvh - 24px - env(safe-area-inset-bottom));overflow-y:auto;min-width:0}
   .modal-header{align-items:flex-start;gap:12px}
   .modal-header h3{min-width:0;font-size:18px;text-wrap:balance}
+  #excelSyncTitle>span{display:block}
+  .upload-title-detail::before{content:none}
   .modal-close{flex:none}
   .shared-excel-actions{display:grid;grid-template-columns:1fr}
   .shared-excel-actions button{width:100%;white-space:normal;text-wrap:balance}
