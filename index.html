@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#101d33"><meta name="description" content="都市频道经营分析周报 — 经营总览、节目对比、场次台账和独立数据核验">
+<meta name="theme-color" content="#101d33">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2215%22%20fill%3D%22%23132846%22%2F%3E%3Cpath%20d%3D%22M11%2034h10l7-18%209%2031%206-15h10%22%20fill%3D%22none%22%20stroke%3D%22%2377c7f4%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E"><meta name="description" content="都市频道经营分析周报 — 经营总览、节目对比、场次台账和独立数据核验">
 <title>都市频道经营驾驶舱</title>
 <link rel="stylesheet" href="five-minute.css?v=2.1.0">
 <style>
@@ -398,7 +399,7 @@
   </div>
   <div class="ledger-viz-bottom"><div><h3>场次明细</h3><p>保持原始记录可追溯。下方表格排序不会改变上方按日期绘制的趋势。</p></div><span id="lvFilterLabel">全部场次</span></div>
 </section>
-<p class="ledger-period-note">分时口径：每期节目时长30分钟，因此「首段30分钟」覆盖整场节目的长度，不是开场效率指标；「后续跟踪」也不是另一段播出时间。每5分钟增量已按原表C列逐格核对，见上方「每5分钟扫码统计」。</p><article class="panel"><div class="scroll-x" id="ledgerContainer"></div><div class="table-footer"><span id="ledgerCount">共 6 条场次</span><span>基于原始明细 · 非客户个人数据</span></div></article><div class="note-banner">数据维护入口：右上角“导入数据”支持标准 CSV 或 JSON。导入的数据仅保存至当前浏览器，<b>不会自动同步到同事设备</b>；要全员同步更新还需接入数据库和权限后端。</div></div></section>
+<p class="ledger-period-note">分时口径：每期节目时长30分钟，因此「首段30分钟」覆盖整场节目的长度，不是开场效率指标；「后续跟踪」也不是另一段播出时间。每5分钟增量已按原表C列逐格核对，见上方「每5分钟扫码统计」。</p><article class="panel"><div class="scroll-x" id="ledgerContainer"></div><div class="table-footer"><span id="ledgerCount">共 6 条场次</span><span>基于原始明细 · 非客户个人数据</span></div></article><div class="note-banner">数据更新入口：点击“上传 Excel”，选择原始 .xls 或 .xlsx 文件，核对解析结果后再点“确认发布 · 全员同步”。只有显示发布成功才会更新全部设备；“本机预览”不会同步其他人。历史版本可在上传窗口查看和恢复。</div></div></section>
 <section id="quality" class="content-section" aria-label="数据核验"><div class="quality-intro"><div><h3>数据质量检查清单</h3><p id="qualityIntroText">原始工作簿可能存在需要核验的金额或数据口径；本页独立显示核验事项，不在首页弹出。</p></div><div class="quality-count" id="qualityNumber">7<small>项核验提醒</small></div></div><div class="quality-list" id="qualityList"></div><div class="note-banner">🔒 隐私说明：本网站仅内嵌节目、日期和聚合数值。上传的原文件中含客户咨询数据、昵称及联系方式，这些内容<b>没有</b>被放入网页。真实部署时建议至少使用账号登录、角色权限、HTTPS、操作日志及备份。</div></section>
 <div class="bottom-foot"><span>© 2026 都市频道 · TV PERFORMANCE INTELLIGENCE</span><span><span id="sharedDataFooter">当前为内置历史数据</span> · 数据截至 <span id="footerDate">2026-10-16</span></span></div>
 </div></main></div>
