@@ -5,25 +5,25 @@ import path from 'node:path';
 
 const url=process.env.SITE_URL||'https://jasonz0829vip.github.io/tv-program-weekly-share/?smoke=20261020';
 const chrome=process.env.CHROME_BIN||'/usr/bin/google-chrome';
-const port=19224;
+const port=Number(process.env.SMOKE_PORT||19224);
 const dir=mkdtempSync(path.join(os.tmpdir(),'urban-channel-browser-'));
 const proc=spawn(chrome,[
   '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
   '--no-first-run','--disable-features=TranslateUI',
   '--remote-debugging-port='+port,'--user-data-dir='+dir,'about:blank'
-],{stdio:['ignore','ignore','pipe']});
+],{stdio:['ignore','ignore','pipe'],env:{...process.env,DBUS_SESSION_BUS_ADDRESS:''}});
 let chromeError='';
 proc.stderr.on('data',d=>{chromeError+=String(d).slice(0,300)});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function json(url){const r=await fetch(url,{signal:AbortSignal.timeout(1700)});return r.json()}
 let tab,ws,reqId=0,pending=new Map(),errors=[],failedRequests=[],consoleErrors=[],badStatus=[];
 async function connect(){
-  for(let i=0;i<50;i++){
+  for(let i=0;i<150;i++){
     try{const list=await json('http://127.0.0.1:'+port+'/json/list');tab=list.find(t=>t.type==='page');if(tab?.webSocketDebuggerUrl)break}catch(e){}
     if(proc.exitCode!==null)throw Error('Chrome exited with '+proc.exitCode+' '+chromeError);
     await sleep(200);
   }
-  if(!tab?.webSocketDebuggerUrl)throw Error('Chrome DevTools did not become available '+chromeError);
+  if(!tab?.webSocketDebuggerUrl)throw Error('Chrome DevTools did not become available within 30 seconds '+chromeError);
   ws=new WebSocket(tab.webSocketDebuggerUrl);
   await new Promise((resolve,reject)=>{ws.addEventListener('open',resolve,{once:true});ws.addEventListener('error',reject,{once:true})});
   ws.addEventListener('message',evt=>{
