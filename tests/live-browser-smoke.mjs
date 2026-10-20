@@ -68,6 +68,18 @@ async function main(){
   assert(before.title==='都市频道经营驾驶舱','exact page title: '+before.title);
   assert(before.heading==='都市频道经营驾驶舱','exact heading');
   assert(before.mobileNavCount===4,'four navigation items must remain');
+
+  const schedule=await evaluate("({items:[...document.querySelectorAll('.schedule-list .schedule-item')].map(x=>({program:x.querySelector('.schedule-name')?.textContent,status:x.querySelector('.schedule-status')?.textContent,summary:x.querySelector('.schedule-metrics')?.textContent,times:x.querySelectorAll('.schedule-time-item').length})),footer:document.querySelector('.schedule-footnote')?.textContent,errors:window.__clientExceptions})");
+  console.log('Revenue-first schedule diagnostic:',JSON.stringify(schedule));
+  assert(schedule.items.length===5,'all five programs should have economically grounded decisions');
+  assert(schedule.items.map(x=>x.program).join('|')==='新加坡·马来西亚|越南全景|福建泰宁|清远肇庆|拈花湾','ranking must reflect paid production outcome');
+  assert(schedule.items[0].status==='优先续播','top revenue route priority should remain');
+  assert(schedule.items[4].status==='暂缓追加排播','high-scanning but lowest paid output must NOT recommend extra broadcasts');
+  assert(schedule.items[4].summary.includes('8,109')&&schedule.items[4].summary.includes('16,217'),'lowest paid outputs must be visible in recommendation card');
+  assert(schedule.items[4].times===2,'historical first/replay date/time must remain visible');
+  assert(schedule.footer.includes('不是单场归因收入'),'footnote must distinguish allocation from attributed earnings');
+  assert(schedule.errors.length===0,'recommendation refresh must not throw');
+
   await evaluate("navigate('ledger')");
   await sleep(400);
   const ledger=await evaluate("({programCount:document.querySelector('#fiveProgram')?.options.length,sessionCount:document.querySelector('#fiveSelect0')?.options.length,minuteBars:document.querySelectorAll('.five-bar-slot').length,originalCharts:!!document.querySelector('#lvSessionBars svg'),fiveStats:document.querySelectorAll('.five-stat-item').length,minuteInvalid:document.querySelector('#fiveChart')?.textContent,errors:window.__clientExceptions})");
