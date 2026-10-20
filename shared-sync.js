@@ -1,0 +1,330 @@
+/* 都市频道共享周报 V2: upload original XLS/XLSX locally, publish de-identified data to D1. */
+'use strict';
+(function(){
+const API={base:'',enabled:false,currentVersion:null,snapshot:null,updatedAt:'',preview:null,sourceFile:null,parseResult:null,polling:false,sheetLoader:null};
+const UI=id=>document.getElementById(id);
+const text=(id,value)=>{const el=UI(id);if(el)el.textContent=String(value??'')};
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const total=(rows,key)=>rows.reduce((n,r)=>n+(Number(r[key])||0),0);
+const dates=(rows)=>rows.map(r=>r.date).sort();
+const sessionKey=r=>[r.date,r.program,r.type,r.startTime||''].join('|');
+const fmtNumber=n=>Number(n||0).toLocaleString('zh-CN');
+const safeStatus=(label,type)=>{
+  const badge=UI('sharedSyncBadge');
+  if(!badge)return;
+  badge.textContent=label;
+  badge.dataset.state=type||'pending';
+};
+function feedback(message,style='neutral'){
+  const el=UI('excelSyncFeedback');
+  if(el){el.textContent=message;el.dataset.level=style}
+}
+function showModal(){const modal=UI('excelSyncModal');if(modal){modal.classList.add('show');UI('excelFilePicker')?.focus()}}
+function hideModal(){UI('excelSyncModal')?.classList.remove('show')}
+function openExcelUploader(){
+  showModal();feedback(API.enabled?'选择原始 .xls / .xlsx 文件即可开始解析。':'可以先解析、预览 Excel；全员共享还需一次免费云端连接。');
+  updatePublishButton();
+}
+function setRunning(b){
+  const btn=UI('excelSyncPublish');
+  if(btn){btn.disabled=b||!API.enabled||!API.preview;btn.textContent=b?'正在同步…':'确认发布 · 全员同步'}
+  const file=UI('excelFilePicker');if(file)file.disabled=b;
+}
+function updatePublishButton(){setRunning(false)}
+function cleanBase(s){
+  const val=String(s||'').trim().replace(/\/+$/,'');
+  if(!val)return '';
+  try{const u=new URL(val);return u.protocol==='https:'&&u.hostname&&!u.username&&!u.password&&!u.search&&!u.hash?val:''}catch{return ''}
+}
+async function request(path,options={}){
+  if(!API.base)throw Error('尚未配置共享数据服务');
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),16000);
+  try{
+    const res=await fetch(API.base+path,{...options,signal:controller.signal,cache:'no-store'});
+    let body;try{body=await res.json()}catch{throw Error('共享接口返回了非JSON内容，请检查云端部署')}
+    if(!res.ok||body?.ok===false)throw Error(body.error||'同步失败：HTTP '+res.status);
+    return body;
+  }catch(error){
+    if(error.name==='AbortError')throw Error('网络请求超时，请检查服务连通性');
+    throw error;
+  }finally{clearTimeout(timeout)}
+}
+async function loadSheetJS(){
+  if(window.XLSX?.read)return window.XLSX;
+  if(API.sheetLoader)return API.sheetLoader;
+  const urls=[
+    'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js',
+    'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+  ];
+  API.sheetLoader=(async()=>{
+    for(const url of urls){
+      try{
+        await new Promise((resolve,reject)=>{
+          const script=document.createElement('script');
+          let finished=false;
+          const timer=setTimeout(()=>{if(!finished){finished=true;script.remove();reject(Error('加载超时'))}},12000);
+          script.src=url;script.async=true;
+          script.onload=()=>{if(!finished){finished=true;clearTimeout(timer);resolve()}};
+          script.onerror=()=>{if(!finished){finished=true;clearTimeout(timer);script.remove();reject(Error('加载失败'))}};
+          document.head.appendChild(script);
+        });
+        if(window.XLSX?.read)return window.XLSX;
+      }catch(e){console.warn('Excel parser CDN retry:',e.message)}
+    }
+    throw Error('Excel解析组件无法加载，请切换网络后重试；原始文件不曾上传到任何服务器。');
+  })();
+  try{return await API.sheetLoader}finally{API.sheetLoader=null}
+}
+function mergeSnapshots(incoming,mode){
+  if(mode==='replace')return incoming;
+  const base=API.snapshot||{
+    records:SEED.records,paymentSummary:SEED.paymentSummary,metrics:[],source:{notes:'历史内置周报'}
+  };
+  const recordMap=new Map();
+  (base.records||[]).forEach(r=>recordMap.set(sessionKey(r),r));
+  (incoming.records||[]).forEach(r=>recordMap.set(sessionKey(r),r));
+  const paidMap=new Map();
+  (base.paymentSummary||[]).forEach(p=>paidMap.set(p.program,p));
+  (incoming.paymentSummary||[]).forEach(p=>paidMap.set(p.program,p));
+  const metricsMap=new Map();
+  (base.metrics||[]).forEach(m=>metricsMap.set(m.key,m));
+  (incoming.metrics||[]).forEach(m=>{
+    const prev=metricsMap.get(m.key);
+    metricsMap.set(m.key,{...m,valuesByProgram:{...(prev?.valuesByProgram||{}),...m.valuesByProgram}});
+  });
+  return {...incoming,
+    records:[...recordMap.values()].sort((a,b)=>a.date.localeCompare(b.date)||a.program.localeCompare(b.program)),
+    paymentSummary:[...paidMap.values()],
+    metrics:[...metricsMap.values()],
+    source:{...incoming.source,notes:'智能合并新旧场次；同场次采用最新数据；全款同线路覆盖，不重复累加'}
+  };
+}
+function evaluateDraft(){
+  if(!API.parseResult||API.parseResult.blocking?.length)return null;
+  const mode=UI('excelSyncMode')?.value||'merge';
+  return mergeSnapshots(API.parseResult.snapshot,mode);
+}
+function renderFilePreview(){
+  const result=API.parseResult, box=UI('excelSyncPreview');
+  if(!result||!box)return;
+  if(result.blocking?.length){
+    API.preview=null;
+    box.innerHTML='<div class="excel-preview-error"><b>发现需要核实的字段，禁止发布</b>'+result.blocking.slice(0,12).map(x=>'<div>'+esc(x)+'</div>').join('')+'</div>';
+    feedback('请核对原始 Excel：存在 '+result.blocking.length+' 项必须修复的错误。','error');
+    updatePublishButton();return;
+  }
+  const d=evaluateDraft();API.preview=d;
+  const r=d.records,groupSet=new Set(r.map(x=>x.program));
+  const p=d.paymentSummary||[],metrics=d.metrics||[];
+  const validFive=r.filter(x=>Array.isArray(x.fiveMinute?.values)&&x.fiveMinute.values.length===6
+    &&x.fiveMinute.values.reduce((a,b)=>a+b,0)===x.first30).length;
+  const original=result.snapshot.records.length;
+  const warnings=result.warnings||[];
+  box.innerHTML='<div class="excel-preview-overline">自动识别结果 · '+esc(UI('excelSyncMode')?.selectedOptions?.[0]?.textContent||'智能合并')+'</div>'+
+   '<div class="excel-preview-grid"><div><span>本次文件场次</span><strong>'+original+'</strong></div><div><span>发布后场次</span><strong>'+r.length+'</strong></div><div><span>线路</span><strong>'+groupSet.size+'</strong></div><div><span>5分钟完整数据</span><strong>'+validFive+' / '+r.length+'</strong></div></div>'+
+   '<div class="excel-preview-summary"><span>扫码累计 <b>'+fmtNumber(total(r,'scans'))+'</b> 人次</span><span>意向金 <b>'+fmtNumber(total(r,'orders'))+'</b> 单</span><span>全款实付 <b>'+(p.length?'¥'+fmtNumber(total(p,'amount')):'待补')+'</b></span></div>'+
+   '<div class="excel-preview-programs">'+[...groupSet].map(x=>'<span>'+esc(x)+'</span>').join('')+'</div>'+
+   (metrics.length?'<div class="excel-preview-metrics">识别到新增指标：'+metrics.map(m=>'<b>'+esc(m.label)+'</b>').join('、')+'</div>':'')+
+   (warnings.length?'<details class="excel-preview-warnings"><summary>有 '+warnings.length+' 条数据提醒（点开核对）</summary>'+warnings.slice(0,15).map(x=>'<p>'+esc(x)+'</p>').join('')+'</details>':'')+
+   '<p class="excel-preview-foot">仅向共享服务提交节目、场次、金额等经过字段白名单处理的汇总数据；原始文件和客户明细不会上传。发布后其他人自动看到同一版本。</p>';
+  feedback(API.enabled?'解析完成。请检查数字，确认后向全员发布。':'解析已完成。本机预览可用；云端服务尚未连接，因此暂时不能全员发布。',API.enabled?'success':'neutral');
+  updatePublishButton();
+}
+async function handleExcelFile(event){
+  const file=event.target?.files?.[0];if(!file)return;
+  API.sourceFile=file;API.preview=null;API.parseResult=null;
+  UI('excelSyncPreview').innerHTML='';
+  feedback('正在读取 Excel 的工作表和公式汇总，请勿关闭上传窗口。');
+  setRunning(true);
+  try{
+    if(!window.TVExcel?.parseFile)throw Error('Excel本地解析模块未加载');
+    let result;
+    try{result=await window.TVExcel.parseFile(file,SEED,window.XLSX)}
+    catch(error){
+      if(!/Excel解析组件未加载/.test(error.message))throw error;
+      await loadSheetJS();
+      result=await window.TVExcel.parseFile(file,SEED,window.XLSX);
+    }
+    API.parseResult=result;
+    renderFilePreview();
+  }catch(error){feedback('无法解析：'+error.message,'error');API.preview=null}
+  finally{setRunning(false)}
+}
+async function publishExcel(){
+  if(!API.enabled){feedback('需要先把免费共享服务与网站连接，当前文件不会冒充已经全员更新。','error');return}
+  const data=evaluateDraft();if(!data){feedback('当前文件无法通过核验，请检查预览。','error');return}
+  if(!confirm('确认把本次核验后的经营汇总发布给所有能够打开网页的同事？\n原始Excel不会上传，任何访客都可以发布下一个版本。'))return;
+  setRunning(true);feedback('正在发布共享周报数据…');
+  try{
+    let body={baseVersion:API.currentVersion,snapshot:data};
+    const current=API.snapshot;
+    if(current && data.records.length < Math.ceil(current.records.length/2)){
+      if(!confirm('新数据的场次数量少于现有版本的一半，确定要覆盖？'))return;
+      body.confirmReplaceSmaller=true;
+    }
+    const result=await request('/api/publish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    API.preview=null;API.parseResult=null;
+    UI('excelSyncPreview').innerHTML='';
+    const input=UI('excelFilePicker');if(input)input.value='';
+    await refreshShared(true);
+    feedback(result.unchanged?'与当前共享版本完全一致，无需重复发布。':'已向全员发布成功，正在使用同一份最新周报。','success');
+    setTimeout(()=>hideModal(),850);
+  }catch(error){feedback('发布失败，旧数据仍保留：'+error.message,'error')}
+  finally{setRunning(false)}
+}
+function programGroups(rows){
+  const map=new Map();
+  rows.forEach(r=>{
+    let g=map.get(r.program);
+    if(!g){g={name:r.program,n:0,live:0,replay:0,scans:0,orders:0,first30:0,after30:0};map.set(r.program,g)}
+    g.n++;g[r.type==='首播'?'live':'replay']++;g.scans+=r.scans;g.orders+=r.orders;
+    g.first30+=r.first30||0;g.after30+=r.after30||0;
+  });return [...map.values()];
+}
+function refreshScheduleAdvice(){
+  const box=document.querySelector('.schedule-list');if(!box)return;
+  const paid=new Map(PAYMENT_ROUTES.map(p=>[p.program,p]));
+  const names=programGroups(records);
+  const suggestions=names.map(g=>{
+    const avgOrders=g.orders/g.n,avgScans=g.scans/g.n,paidInfo=paid.get(g.name);
+    let tier='test',status='继续测试',next='保留一场测试，观察意向金向全款的转化';
+    if(g.n<2){status='补充场次验证';next='建议再播一场，补足首播和重播样本'}
+    else if(avgOrders>=3.0&&avgScans>=75 && paidInfo?.fullOrders>=5 && g.n>=3){
+      tier='primary';status='优先续播';next='建议安排一场重播，对比同一产品不同时段的订单与扫码';
+    }else if(avgOrders<1){tier='pause';status='暂缓重播';next='优先优化内容和权益，再以单场测试重新验证'}
+    else if(avgOrders<3){tier='observe';status='控制频次';next='先优化优惠机制与客服承接，控制重复播出密度'}
+    const paidText=paidInfo?'¥'+fmtNumber(paidInfo.amount)+' · 全款'+fmtNumber(paidInfo.fullOrders)+'单':'待补金额数据';
+    return {...g,avgOrders,avgScans,paidInfo,paidText,tier,status,next,
+      reason:'基于 '+g.n+' 场（首播 '+g.live+' / 重播 '+g.replay+'）、场均扫码 '+avgScans.toFixed(1)+
+      ' 人次、场均意向金 '+avgOrders.toFixed(2)+' 单。'+
+      (paidInfo?'累计实付 '+fmtNumber(paidInfo.amount)+' 元，属于跟踪全周期金额，不等于场次净利润。':'暂无已核验的实付金额，不据此推定成交强弱。')};
+  }).sort((a,b)=>(
+    ({primary:3,test:2,observe:1,pause:0}[b.tier])-({primary:3,test:2,observe:1,pause:0}[a.tier]) ||
+    b.avgOrders-a.avgOrders));
+  box.innerHTML=suggestions.map((g,i)=>
+    '<div class="schedule-item schedule-'+g.tier+'"><div class="schedule-item-head">'+
+    '<span class="schedule-n">'+String(i+1).padStart(2,'0')+'</span><strong class="schedule-name">'+esc(g.name)+
+    '</strong><span class="schedule-status">'+g.status+'</span></div>'+
+    '<div class="schedule-metrics"><span>首播 <b>'+g.live+'</b> · 重播 <b>'+g.replay+'</b></span>'+
+    '<span>场均扫码 <b>'+g.avgScans.toFixed(1)+'</b></span><span>场均意向 <b>'+
+    g.avgOrders.toFixed(2)+' 单</b></span><span>全款累计 <b>'+esc(g.paidText)+'</b></span></div>'+
+    '<div class="schedule-times" data-program="'+esc(g.name)+'"></div>'+
+    '<p class="schedule-reason">'+esc(g.reason)+'</p><p class="schedule-next"><b>下一步：</b>'+
+    esc(g.next)+'</p></div>').join('');
+  const header=document.querySelector('.schedule-panel .section-sub');
+  if(header)header.textContent='自动计算的参考排播建议 · 以最新全周期场均及成交数据为依据，非利润预测';
+}
+function refreshNewMetrics(metrics){
+  let box=UI('sharedNewMetrics');
+  if(!box)return;
+  if(!Array.isArray(metrics)||!metrics.length){box.hidden=true;box.innerHTML='';return}
+  box.hidden=false;
+  box.innerHTML='<div class="shared-metrics-heading"><h3>Excel 新增经营指标</h3><span>自动识别 · '+metrics.length+' 类指标</span></div>'+
+    '<div class="shared-metrics-grid">'+metrics.map(m=>{
+      const entries=Object.entries(m.valuesByProgram||{});
+      return '<article class="shared-metric-card"><div class="shared-metric-name">'+esc(m.label)+
+        ' <small>'+esc(m.unit)+'</small></div>'+entries.map(([name,value])=>
+          '<div class="shared-metric-row"><span>'+esc(name)+'</span><b>'+fmtNumber(value)+' '+esc(m.unit)+'</b></div>').join('')+
+        '<p>'+esc(m.note||m.source||'来自新版Excel')+'</p></article>';
+    }).join('')+'</div>';
+}
+function applySnapshot(snapshot,version,updatedAt){
+  if(!snapshot?.records?.length)return;
+  records=snapshot.records;
+  PAYMENT_ROUTES=Array.isArray(snapshot.paymentSummary)?snapshot.paymentSummary:[];
+  issues=[];
+  try{localStorage.removeItem(storageKey)}catch{}
+  const datesSorted=dates(records);
+  if(preset==='all'){start=datesSorted[0];end=datesSorted[datesSorted.length-1]}
+  else if(preset==='custom'&&start>end){start=datesSorted[0];end=datesSorted[datesSorted.length-1]}
+  // Shared data supersedes cached local CSV. The original embedded sample remains as offline fallback.
+  refreshScheduleAdvice();
+  render();
+  refreshNewMetrics(snapshot.metrics||[]);
+  text('sharedCurrentAt','共享版本 '+String(version||'').slice(0,19).replace('T',' ')+' · 数据截至 '+datesSorted[datesSorted.length-1]);
+  text('sharedDataFooter','云端更新时间 '+(updatedAt?updatedAt.replace('T',' ').slice(0,19):'未记录')+'（UTC）');
+  const title=UI('qualityIntroText');
+  if(title)title.textContent='已发布数据通过格式与数值校验。如有业务定义差异，请回查原Excel和本页核验项。';
+}
+async function refreshShared(force=false){
+  if(!API.enabled||API.polling)return;
+  API.polling=true;
+  try{
+    const result=await request('/api/current');
+    if(result.version&&result.snapshot){
+      if(force||result.version!==API.currentVersion){
+        applySnapshot(result.snapshot,result.version,result.updatedAt);
+        API.snapshot=result.snapshot;
+        API.currentVersion=result.version;
+        API.updatedAt=result.updatedAt||'';
+      }
+      safeStatus('共享数据已连接 · 自动同步中','connected');
+      text('sharedCurrentAt','最新共享版本 · '+(result.updatedAt||'').replace('T',' ').slice(0,16)+' UTC');
+    }else{
+      safeStatus('共享服务已连接 · 尚未发布新版','connected');
+      text('sharedCurrentAt','尚无已发布共享数据，可上传首份Excel');
+    }
+  }catch(error){
+    safeStatus('共享服务暂不可达 · 当前显示上次数据','error');
+    text('sharedCurrentAt','网络暂不可达：'+error.message);
+  }finally{API.polling=false}
+}
+async function showHistory(){
+  const box=UI('excelHistory');if(!box)return;
+  box.hidden=false;box.textContent='正在读取最近30个共享版本…';
+  if(!API.enabled){box.textContent='尚未连接共享服务';return}
+  try{
+    const data=await request('/api/versions');
+    const entries=data.versions||[];
+    box.innerHTML=entries.length?entries.map(v=>'<div class="excel-history-row"><div><strong>'+esc(v.file_name||'Excel经营周报')+
+      '</strong><small>'+esc((v.created_at||'').replace('T',' ').slice(0,19))+
+      ' UTC · '+Number(v.session_count||0)+' 场</small></div>'+
+      '<button class="outline-btn" type="button" data-revert="'+esc(v.version)+'" '+(v.version===data.currentVersion?'disabled':'')+'>'
+      +(v.version===data.currentVersion?'当前版本':'恢复此版')+'</button></div>').join(''):'还没有历史版本';
+    for(const b of box.querySelectorAll('button[data-revert]')){
+      b.addEventListener('click',()=>restoreVersion(b.dataset.revert));
+    }
+  }catch(error){box.textContent='历史版本读取失败：'+error.message}
+}
+async function restoreVersion(version){
+  if(!API.enabled||!version)return;
+  if(!confirm('确认将全员看到的数据恢复至这个历史版本？\n这会影响所有访问者。'))return;
+  try{
+    await request('/api/restore',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({version,baseVersion:API.currentVersion})});
+    await refreshShared(true);await showHistory();
+    feedback('全员已切回指定历史版本','success');
+  }catch(e){feedback('恢复失败：'+e.message,'error')}
+}
+async function initialize(){
+  try{
+    const res=await fetch('sync-config.json?_=20261020',{cache:'no-store'});
+    const conf=res.ok?await res.json():{};
+    API.base=cleanBase(conf.apiBase);
+    if(API.base){
+      API.enabled=true;
+      safeStatus('连接共享数据…','pending');
+      await refreshShared(true);
+      setInterval(()=>{if(!document.hidden)refreshShared()},Math.max(30000,Number(conf.pollSeconds||45)*1000));
+      document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshShared()});
+      window.addEventListener('focus',()=>refreshShared());
+    }else{
+      safeStatus('待连接免费共享服务 · 可先预览Excel','pending');
+      text('sharedCurrentAt','当前使用内置历史记录；尚未连接云端共享数据库');
+    }
+  }catch(error){
+    safeStatus('共享配置暂不可用 · 本机预览仍可使用','error');
+    text('sharedCurrentAt','共享配置加载失败：'+error.message);
+  }
+  updatePublishButton();
+}
+window.openExcelUploader=openExcelUploader;
+window.closeExcelUploader=hideModal;
+window.handleExcelFile=handleExcelFile;
+window.recomputeExcelPreview=renderFilePreview;
+window.publishExcel=publishExcel;
+window.showExcelHistory=showHistory;
+window.UrbanSync={api:API,initialize,refreshShared,applySnapshot,mergeSnapshots,handleExcelFile};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
+else initialize();
+})();
