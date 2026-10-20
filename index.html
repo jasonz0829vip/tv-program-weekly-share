@@ -123,7 +123,7 @@
 <p class="revenue-remark">**金额与场次的关系**：每播次均摊实付参考值＝该线路全款实付累计÷历史播出场数，仅用于消除“播得多、总额自然更大”的展示偏差，**不是某次播出实际收款**，无法证明每次播出带来了多少收入。实付不等于扣除退款后的净营收，累计金额不随日期筛选变化。</p>
 </article>
 <div class="panel-grid"><article class="panel panel-pad"><div class="panel-header"><div><h3 class="section-title">节目效果对比</h3><p class="section-sub">改用每场平均扫码比较，避免多播几次造成的累计数字优势</p></div><div class="chart-key"><span class="legend"><i></i>扫码</span><span class="legend orders"><i></i>意向金</span></div></div><div id="programBars" class="bar-table"></div><p class="panel-note">本图以场均扫码排序：场均扫码 = 当前筛选期扫码人次合计 ÷ 当前筛选期实际播出次数。累计量和首播/重播次数同时列出。</p></article>
-<article class="panel panel-pad"><div class="insight-header"><div><h3 class="section-title">经营洞察</h3><p class="section-sub">按不同指标选出领先线路，并解释入选原因</p></div><span class="pill">分指标，不评综合冠军</span></div><div id="insightPane"></div></article></div>
+<article class="panel panel-pad"><div class="insight-header"><div><h3 class="section-title">经营洞察</h3><p class="section-sub">按不同指标比较线路表现</p></div><span class="pill">分指标，不评综合冠军</span></div><div id="insightPane"></div></article></div>
 <div class="bottom-grid"><article class="panel panel-pad"><div class="panel-header"><div><h3 class="section-title">场次表现趋势</h3><p class="section-sub">按播出日期聚合 · 扫码人次趋势</p></div><span class="chart-key" id="trendInfo">按日统计</span></div><div id="trendChart" class="trend-plot" role="img" aria-label="扫码趋势图"></div></article>
 </div></section>
 <section id="comparison" class="content-section" aria-label="节目对比"><div class="feature-strip"><div><h3>节目横向对比</h3><p>以播出次数为分母衡量效率；累计产出和场均产出分开展示，首播与重播不能混算为同一个结论。</p></div><div class="mini-metrics"><div><b id="cmpShows">3</b><small>节目数</small></div><div><b id="cmpSessions">6</b><small>总场次</small></div></div></div><article class="panel"><div class="panel-header" style="padding:24px 25px 0"><div><h3 class="section-title">节目经营排行榜</h3><p class="section-sub">默认按场均扫码排序；首播、重播、单场效率均以当前日期筛选为准</p></div><label class="comparison-sort">排序指标
@@ -212,7 +212,7 @@ function renderInsights(a,s,g){
     ${ratioCard}
     <div class="insight-metric revenue-leader"><div class="insight-metric-kicker">全周期累计实付最多</div><div class="insight-metric-name">${h(byRevenue.program)}</div><div class="insight-metric-value"><small>¥</small>${fmt(byRevenue.amount)}</div><p>累计 ${totalRevenueShows?totalRevenueShows.sessions:'—'} 场 · 按播次均摊参考 ¥${totalRevenueShows?moneyAvg(byRevenue.amount/totalRevenueShows.sessions):'—'}；不是单场归因收入</p></div>
   </div>
-  <div class="insight-explainer">📌 <b>为什么会突出「${byRatio?h(byRatio.name):'某线路'}」？</b>因为它在“订单数／扫码人次”的<b>这一项</b>排名最高，而不是累计扫码最多、全款实付最多或所有维度最佳。若想判断获客规模看场均扫码；判断意向订单产出看场均订单；判断支付贡献看全款实付与退款核验。</div>
+  
   <div class="insight-type-split"><div><span>首播</span><strong>${live.length} 场</strong><small>场均扫码 ${decimal(liveScans,live.length,1)} · 场均意向 ${decimal(sum(live,'orders'),live.length,2)} 单</small></div><div><span>重播</span><strong>${replay.length} 场</strong><small>场均扫码 ${decimal(replayScans,replay.length,1)} · 场均意向 ${decimal(sum(replay,'orders'),replay.length,2)} 单</small></div></div>
   <p class="insight-disclaimer">样本量与播出时长不同，简单场均只能消除播出次数影响，仍不能消除直播/重播时段、流量、观众构成与价格差异；暂无曝光人数，因此不能计算“扫码率”。</p>`;
 }
