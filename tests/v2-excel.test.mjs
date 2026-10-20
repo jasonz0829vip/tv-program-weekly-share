@@ -12,6 +12,21 @@ const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const embedded=html.match(/<script id="seed-data" type="application\/json">([\s\S]*?)<\/script>/);
 assert.ok(embedded,'Source HTML should embed the verified 2026 season');
 const seed=JSON.parse(embedded[1]);
+test('actual aggregate workbook layout includes long follow-up intervals, shifted order columns and unfilled templates',()=>{
+ const matrices=JSON.parse(fs.readFileSync(new URL('./fixtures/original-aggregate-layout.json',import.meta.url),'utf8'));
+ const parsed=parser.parseMatrices(matrices,{year:2026});
+ assert.deepEqual(parsed.blocking,[]);
+ const checked=validateSnapshot(parsed.snapshot);
+ assert.deepEqual(checked.totals,{sessions:16,programs:5,scans:1342,orders:47,amount:489071});
+ assert.equal(checked.records.flatMap(r=>r.fiveMinute.values).length,96);
+ for(const r of checked.records){
+   const original=seed.records.find(s=>s.date===r.date&&s.program===r.program&&s.type===r.type);
+   assert.ok(original);
+   for(const field of ['scans','orders','first30','after30'])assert.equal(r[field],original[field]);
+   assert.deepEqual(r.fiveMinute.values,original.fiveMinute.values);
+ }
+ assert.ok(parsed.warnings.some(w=>w.includes('西葡')&&w.includes('未填')));
+});
 
 const syntheticWorkbook=(withMoney=true)=>{
   const program='最新海南线路';
@@ -92,7 +107,7 @@ test('V2 upload UI and every existing navigation/chart remain available',()=>{
     'fiveMinutePanel','lvSessionBars','lvDailyScans','lvFirstReplay','lvScatter']){
     assert.ok(html.includes('id="'+id+'"'),id+' missing');
   }
-  assert.ok(html.includes('script src="excel-import.js"'));
+  assert.match(html,/<script src="excel-import\.js(?:\?v=[0-9.]+)?"/);
   assert.ok(html.includes('script src="shared-sync.js"'));
   assert.ok(html.includes('--mobile-safe-bottom:env(safe-area-inset-bottom)'));
   assert.ok(!html.includes('为什么会突出'));

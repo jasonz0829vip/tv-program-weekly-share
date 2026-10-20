@@ -53,14 +53,18 @@ function dateLabel(text,assumedYear=2026){
   return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===value?value:null;
 }
 function labelType(s){return /首播/.test(s)?'首播':/重播|复播/.test(s)?'重播':null}
-function timeRange(text){
+function intervalRange(text){
   const raw=str(text).replace(/[～〜－—–至]/g,'-');
-  const m=raw.match(/(?:^|[^0-9])([01]?[0-9]|2[0-3]):([0-5][0-9])\s*-\s*([01]?[0-9]|2[0-3]):([0-5][0-9])/);
+  const m=raw.match(/(?:^|[^0-9])([01]?[0-9]|2[0-3]):([0-5][0-9])\s*-\s*([01]?[0-9]|2[0-4]):([0-5][0-9])/);
   if(!m)return null;
   const from=(+m[1])*60+(+m[2]),to=(+m[3])*60+(+m[4]);
   const length=(to-from+1440)%1440;
-  if(length!==5)return null;
+  if((+m[3]===24&&+m[4]!==0)||length===0)return null;
   return {from,to,startTime:String(+m[1]).padStart(2,'0')+':'+m[2],label:m[1]+':'+m[2]+'-'+m[3]+':'+m[4]};
+}
+function timeRange(text){
+  const range=intervalRange(text);
+  return range&&(range.to-range.from+1440)%1440===5?range:null;
 }
 function findAnchorRows(rows){
   const candidates=[];
@@ -93,7 +97,7 @@ function sessionEntries(sheetName,rows,context){
     const start=anchors[ix],end=ix+1<anchors.length?anchors[ix+1]:rows.length;
     const series=[];
     for(let i=start;i<end;i++){
-      const tr=timeRange(get(rows[i],1));
+      const tr=intervalRange(get(rows[i],1));
       if(tr)series.push({index:i,time:tr,value:safeNumber(get(rows[i],2))});
     }
     if(series.length<6)continue;
@@ -102,6 +106,10 @@ function sessionEntries(sheetName,rows,context){
     const type=findTypeNear(rows,start);
     if(!date||!type){
       context.blocking.push(sheetName+'!'+coord(0,start+1)+' 无法可靠识别播出日期或首播/重播');
+      continue;
+    }
+    if(series.every(s=>s.value===null)){
+      context.warnings.push(program+' '+date+' 扫码明细未填，跳过待填模板，不将公式合计0当成实绩');
       continue;
     }
     const six=series.slice(0,6),startMinute=six[0].time.from;
@@ -118,7 +126,7 @@ function sessionEntries(sheetName,rows,context){
     // The first non-time row after a contiguous set usually carries the C-column total.
     let lastTime=series[series.length-1].index;
     for(let i=lastTime+1;i<Math.min(end,lastTime+5);i++){
-      if(timeRange(get(rows[i],1)))continue;
+      if(intervalRange(get(rows[i],1)))continue;
       const v=safeNumber(get(rows[i],2));
       if(v!==null&&isInteger(v)){totalCell=v;totalIndex=i;hasTotal=true;break}
     }
@@ -132,9 +140,15 @@ function sessionEntries(sheetName,rows,context){
     if(control!==null&&isInteger(control)&&control!==first30&&control!==scans)
       context.warnings.push(program+' '+date+' D列合计 '+control+' 覆盖范围与30分钟分段不同，已独立核对');
     if(!hasSegments)context.warnings.push(program+' '+date+' 六段5分钟数据有缺失，保留场次但不画分时曲线');
+    let orderColumn=4;
+    let headerRow=null;
+    for(let i=start;i>=Math.max(0,start-3);i--){
+      const col=(rows[i]||[]).findIndex(v=>/意向金.*订单|订单.*意向金/.test(str(v)));
+      if(col>=0){orderColumn=col;headerRow=rows[i];break}
+    }
     const candidates=[];
     for(let i=start;i<end;i++){
-      const v=safeNumber(get(rows[i],4));
+      const v=safeNumber(get(rows[i],orderColumn));
       if(v!==null&&isInteger(v)&&v<10000)candidates.push({row:i,value:v});
     }
     let orders=0;
@@ -148,9 +162,14 @@ function sessionEntries(sheetName,rows,context){
       context.blocking.push(program+' '+date+' 重复场次');continue;
     }
     context.seen.add(date+'|'+program+'|'+type+'|'+six[0].time.startTime);
+    const aggregateCount=pattern=>{
+      const col=(headerRow||[]).findIndex(v=>pattern.test(str(v)));
+      const value=col>=0&&totalIndex>=0?safeNumber(get(rows[totalIndex],col)):null;
+      return isInteger(value)?value:null;
+    };
     out.push({
       date,program,type,startTime:six[0].time.startTime,scans,orders,
-      first30,after30,phone:null,group:null,
+      first30,after30,phone:aggregateCount(/留手机号.*客户数/),group:aggregateCount(/进群人数/),
       fiveMinute:hasSegments&&first30!==null&&after30!==null&&scans===first30+after30?
         {mode:'increment',values,source:{sheet:sheetName,valueCells:'C'+(start+1)+':C'+(start+6),
           timeCells:'B'+(start+1)+':B'+(start+6),totalCell:hasTotal?'C'+(totalIndex+1):'',
@@ -292,7 +311,7 @@ async function parseFile(file,seed,xlsx){
   const matrices={};
   for(const name of book.SheetNames){
     const sheet=book.Sheets[name];
-    matrices[name]=xlsx.utils.sheet_to_json(sheet,{header:1,raw:false,defval:null,blankrows:false});
+    matrices[name]=xlsx.utils.sheet_to_json(sheet,{header:1,raw:false,defval:null,blankrows:true});
   }
   let year=new Date(file.lastModified||Date.now()).getFullYear();
   const yyyy=file.name.match(/20[0-9]{2}/);

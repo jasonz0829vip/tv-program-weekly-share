@@ -1,7 +1,7 @@
 {
   "name": "urban-channel-weekly-dashboard",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.0.2",
   "type": "module",
   "description": "GitHub Pages visual dashboard and Cloudflare D1 public synchronization",
   "scripts": {
