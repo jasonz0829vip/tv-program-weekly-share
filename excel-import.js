@@ -142,7 +142,7 @@ function sessionEntries(sheetName,rows,context){
       const match=candidates.find(x=>x.row===totalIndex)||candidates[candidates.length-1];
       orders=match.value;
     }else{
-      context.warnings.push(program+' '+date+' 意向金订单列没有明确数字，按0暂存，请复核');
+      context.blocking.push(program+' '+date+' 意向金订单缺少有效原始数值，不能将缺失当成0');
     }
     if(context.seen.has(date+'|'+program+'|'+type+'|'+six[0].time.startTime)){
       context.blocking.push(program+' '+date+' 重复场次');continue;
@@ -171,9 +171,20 @@ function sniffProgram(text,names){
 }
 function recognizeMetrics(rows){
   const result=[];
-  for(let col=0;col<Math.min(36,Math.max(0,...rows.slice(0,4).map(r=>r?.length||0)));col++){
-    const label=rows.slice(0,4).map(r=>str(get(r,col))).join(' ');
-    const def=MONEY_FIELDS.find(f=>f.re.test(label));
+  const maxCols=Math.min(36,Math.max(0,...rows.slice(0,4).map(r=>r?.length||0)));
+  for(let col=0;col<maxCols;col++){
+    const parts=rows.slice(0,4).map(r=>str(get(r,col))).filter(Boolean);
+    const label=parts.join(' ');
+    let def=MONEY_FIELDS.find(f=>f.re.test(label));
+    // Future financial columns: recognize only safe, business-like numeric fields,
+    // display them as provisional indicators without guessing a formula.
+    if(!def&&col>=8){
+      const candidate=parts.find(p=>/人均|客单|复购|毛利|净收|退款|营收|成交|支付|实付|咨询|有效|转化|订单|会员|留资|满意度|取消率|成本/.test(p));
+      if(candidate&&candidate.length<28&&!/姓名|手机号|电话|证件|身份证|地址|客户姓名|联系人|微信|备注|客户列表/.test(candidate)){
+        const unit=/%|比例|率/.test(candidate)?'%':/金额|营收|收入|客单|成本|实付|付款|人均/.test(candidate)?'元':/人数|人次|会员/.test(candidate)?'人':/订单|单数/.test(candidate)?'单':'数值';
+        def={key:'custom_excel_col_'+col,label:candidate,unit,re:/.*/};
+      }
+    }
     if(def&&!result.some(r=>r.def.key===def.key))result.push({col,def});
   }
   return result;
@@ -193,6 +204,7 @@ function paymentData(rows,names,context){
   });
   for(let i=0;i<rows.length;i++){
     const row=rows[i]||[],amount=safeNumber(get(row,7)),order=safeNumber(get(row,5)),people=safeNumber(get(row,6));
+    if(/(?:全部合计|总计|合计总额|总金额合计)/.test(row.slice(0,5).join(' ')))continue;
     if(!isInteger(amount)||!isInteger(order)||!isInteger(people))continue;
     let name=sniffProgram(row.slice(0,5).join(' '),names);
     if(!name){
@@ -218,7 +230,7 @@ function paymentData(rows,names,context){
     for(const r of matched){
       const value=safeNumber(get(r.row,col));
       if(value===null||!Number.isFinite(value)||value<0)continue;
-      const weight=def.key==='average_price_per_person'?r.people:1;
+      const weight=def.key==='average_price_per_person'?Math.max(1,r.people):/%|率/.test(def.unit)?Math.max(1,r.amount):1;
       let a=accum.get(r.name)||{weighted:0,weight:0};
       a.weighted+=value*(weight||1);a.weight+=(weight||1);accum.set(r.name,a);
     }
@@ -226,7 +238,7 @@ function paymentData(rows,names,context){
       const valuesByProgram={};
       for(const [name,a] of accum)valuesByProgram[name]=Math.round(100*a.weighted/a.weight)/100;
       metrics.push({key:def.key,label:def.label,unit:def.unit,valuesByProgram,source:'Excel 汇总数据 '+coord(col,1)+' 列',
-        note:def.key==='average_price_per_person'?'原表人均指标；分段数据按付费人数加权，不能对线路均值直接求平均。':'识别自原表新增业务字段'});
+        note:def.key==='average_price_per_person'?'原表人均指标；多批次按付费人数加权，不能直接平均。':'新识别字段，按原表同线路数据汇总；如业务口径不明应核对后使用。'});
     }
   }
   return {paymentSummary:[...groups.values()],metrics};
