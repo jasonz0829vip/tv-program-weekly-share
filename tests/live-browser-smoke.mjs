@@ -89,7 +89,16 @@ async function main(){
   console.log('HTTP >=400:',JSON.stringify(badStatus.slice(0,20)));
   assert(errors.length===0&&mobile.errors.length===0,'JavaScript runtime errors present');
   assert(badStatus.length===0,'The live site returned HTTP errors: '+JSON.stringify(badStatus));
-  console.log('PASS: live desktop/mobile smoke test');
+  await cdp('Network.setBlockedURLs',{urls:['*workers.dev*']});
+  await cdp('Page.navigate',{url:url+(url.includes('?')?'&':'?')+'mainland_mock=1'});
+  await sleep(9500);
+  const china=await evaluate("({title:document.title,mirror:window.UrbanSync?.api?.mirrorLoaded,version:window.UrbanSync?.api?.currentVersion,staticVersion:window.UrbanSync?.api?.mirrorVersion,cloudOnline:window.UrbanSync?.api?.online,rows:records.length,scans:records.reduce((n,r)=>n+r.scans,0),issues:window.__clientExceptions})");
+  console.log('Mainland Worker-block simulation:',JSON.stringify(china));
+  assert(china.title==='都市频道经营驾驶舱'&&china.mirror,'mainland user should still load shared report without workers.dev');
+  assert(china.version===china.staticVersion&&china.rows===16&&china.scans===1342,'public mirror must remain consistent');
+  assert(china.cloudOnline===false,'upload must remain disabled if no write endpoint works');
+  assert(china.issues.length===0,'no JS errors on workers.dev-blocked network');
+  console.log('PASS: live desktop/mobile and simulated mainland static fallback');
 }
 try{await main()}catch(error){
   console.error('BROWSER CHECK FAILED:',error.message);
