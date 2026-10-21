@@ -1,14 +1,14 @@
 {
   "ok": true,
-  "version": "2026-10-20T10-15-07-929Z-12f1721a",
-  "updatedAt": "2026-10-20T10:15:07.929Z",
-  "mirroredAt": "2026-10-20T15:04:36.237Z",
+  "version": "2026-10-21T01-38-29-045Z-8b1c3461",
+  "updatedAt": "2026-10-21T01:38:29.045Z",
+  "mirroredAt": "2026-10-21T01:56:15.133Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "2287759909b6c5277062224696b5f4cab42240775627025a45edc33240e7aa73",
-      "sheets": 12,
+      "hash": "80a3f5beb810dd4eea9d1592cce662b6b9153b8d7f8e59c24437e6a23f2d7def",
+      "sheets": 7,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
     "records": [
@@ -491,6 +491,36 @@
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
+      },
+      {
+        "date": "2026-10-20",
+        "program": "西葡（马进巴回）",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 18,
+        "orders": 0,
+        "first30": 16,
+        "after30": 2,
+        "phone": 1,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            3,
+            6,
+            5,
+            2,
+            0,
+            0
+          ],
+          "source": {
+            "sheet": "西葡（马进巴回）",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       }
     ],
     "paymentSummary": [
@@ -546,11 +576,11 @@
         "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
       }
     ],
-    "sourceLastRecorded": "2026-10-16",
+    "sourceLastRecorded": "2026-10-20",
     "totals": {
-      "sessions": 16,
-      "programs": 5,
-      "scans": 1342,
+      "sessions": 17,
+      "programs": 6,
+      "scans": 1360,
       "orders": 47,
       "amount": 489071
     }
