@@ -1,14 +1,14 @@
 {
   "ok": true,
-  "version": "2026-10-21T05-19-47-717Z-d9dd0d98",
-  "updatedAt": "2026-10-21T05:19:47.717Z",
-  "mirroredAt": "2026-10-21T05:20:38.222Z",
+  "version": "2026-10-22T02-03-47-328Z-7af63a58",
+  "updatedAt": "2026-10-22T02:03:47.328Z",
+  "mirroredAt": "2026-10-22T02:31:09.118Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "b777f411cde052bbc5827cf4de8672409e6b9fcf3fdc23e62ceed7ac8dc654a9",
-      "sheets": 7,
+      "hash": "254933ca412d6e32dd94fb65902f9dc7dcbe4fd002103d6f5e90f96a57e51732",
+      "sheets": 8,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
     "records": [
@@ -524,6 +524,36 @@
       },
       {
         "date": "2026-10-21",
+        "program": "港深惠",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 101,
+        "orders": 8,
+        "first30": 92,
+        "after30": 9,
+        "phone": 2,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            1,
+            8,
+            10,
+            17,
+            32,
+            24
+          ],
+          "source": {
+            "sheet": "港深惠",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-21",
         "program": "西葡（马进巴回）",
         "type": "重播",
         "startTime": "09:30",
@@ -608,10 +638,10 @@
     ],
     "sourceLastRecorded": "2026-10-21",
     "totals": {
-      "sessions": 18,
-      "programs": 6,
-      "scans": 1373,
-      "orders": 47,
+      "sessions": 19,
+      "programs": 7,
+      "scans": 1474,
+      "orders": 55,
       "amount": 489071
     }
   }
