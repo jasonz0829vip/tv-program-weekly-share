@@ -10,9 +10,9 @@ function render(paidCount){
  ctx.renderRevenue();return elements;
 }
 test('seven routes display actual coverage and never call partial payment data complete',()=>{
- const full=render(7);assert.equal(full.revenueCoverage.textContent,'实付数据 7 / 7 条线路');
- const partial=render(6);assert.equal(partial.revenueCoverage.textContent,'实付数据 6 / 7 条线路');
+ const full=render(7);assert.equal(full.revenueCoverage.textContent,'实付数据已覆盖全部线路');
+ const partial=render(6);assert.equal(partial.revenueCoverage.textContent,'1 条线路实付待补');
  assert.match(partial.revenueScope.textContent,/1 条线路未提供/);
- assert.equal(partial.kpiRevenue.textContent,'600');assert.match(partial.revenueKpiScope.textContent,/6 条线路/);
- const empty=render(0);assert.equal(empty.kpiRevenue.textContent,'—');assert.equal(empty.revenueCoverage.textContent,'实付数据 0 / 7 条线路');
+ assert.equal(partial.kpiRevenue.textContent,'600');assert.equal(partial.revenueKpiScope.textContent,'按已提供的实付数据累计');
+ const empty=render(0);assert.equal(empty.kpiRevenue.textContent,'—');assert.equal(empty.revenueCoverage.textContent,'7 条线路实付待补');
 });

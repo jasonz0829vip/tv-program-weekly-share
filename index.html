@@ -429,8 +429,8 @@ function renderRevenue(){
   const all=PAYMENT_ROUTES,total=sum(all,'amount'),hasPaid=all.length>0;
   const programNames=new Set([...records.map(r=>r.program),...all.map(r=>r.program)]);
   const paidCount=new Set(all.map(r=>r.program)).size,missing=programNames.size-paidCount;
-  $('revenueCoverage').textContent='实付数据 '+paidCount+' / '+programNames.size+' 条线路';
-  $('revenueKpiScope').textContent=paidCount?'已提供实付数据的 '+paidCount+' 条线路累计':'暂无可核验实付数据';
+  $('revenueCoverage').textContent=missing?missing+' 条线路实付待补':paidCount?'实付数据已覆盖全部线路':'暂无可核验实付数据';
+  $('revenueKpiScope').textContent=paidCount?'按已提供的实付数据累计':'暂无可核验实付数据';
   $('revenueScope').textContent='全款实付及播出次数为全周期口径，与上方日期筛选独立。'+(missing?'另有 '+missing+' 条线路未提供实付数据，未计入金额合计。':'');
   $('kpiRevenue').textContent=hasPaid?fmt(total):'—';
   $('revenuePanelTotal').textContent=hasPaid?fmt(total):'—';
