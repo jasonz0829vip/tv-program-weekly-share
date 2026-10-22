@@ -1,8 +1,8 @@
 {
   "ok": true,
-  "version": "2026-10-22T07-22-02-324Z-b343e3e2",
-  "updatedAt": "2026-10-22T07:22:02.324Z",
-  "mirroredAt": "2026-10-22T07:30:55.314Z",
+  "version": "2026-10-22T09-42-34-492Z-d8b7ca8d",
+  "updatedAt": "2026-10-22T09:42:34.492Z",
+  "mirroredAt": "2026-10-22T09:43:23.220Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
@@ -655,6 +655,13 @@
         "fullOrders": 1,
         "fullPersons": 2,
         "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "西葡（马进巴回）",
+        "amount": 0,
+        "fullOrders": 0,
+        "fullPersons": 0,
+        "source": "业务负责人确认：截至2026-10-22无全款成交"
       }
     ],
     "metrics": [
