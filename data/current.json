@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-10-22T09-42-34-492Z-d8b7ca8d",
-  "updatedAt": "2026-10-22T09:42:34.492Z",
-  "mirroredAt": "2026-10-22T09:43:23.220Z",
+  "version": "2026-10-22T13-00-56-339Z-bcf104e8",
+  "updatedAt": "2026-10-22T13:00:56.339Z",
+  "mirroredAt": "2026-10-22T13:27:43.424Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "f03e41d38acc206897f7457ea8160edaa4744da67da8b7a1bec8a09c0135c8e6",
+      "hash": "daabd5ac8f6062f21292b4cbe5d69288b595cd6e54b49538031340b9f093f7fa",
       "sheets": 9,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -611,6 +611,36 @@
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
+      },
+      {
+        "date": "2026-10-22",
+        "program": "南非一地",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 26,
+        "orders": 0,
+        "first30": 24,
+        "after30": 2,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            0,
+            5,
+            5,
+            12,
+            0,
+            2
+          ],
+          "source": {
+            "sheet": "南非一地",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       }
     ],
     "paymentSummary": [
@@ -683,9 +713,9 @@
     ],
     "sourceLastRecorded": "2026-10-22",
     "totals": {
-      "sessions": 20,
-      "programs": 7,
-      "scans": 1528,
+      "sessions": 21,
+      "programs": 8,
+      "scans": 1554,
       "orders": 56,
       "amount": 497069
     }
