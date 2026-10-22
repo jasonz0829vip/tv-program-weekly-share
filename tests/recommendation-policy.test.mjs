@@ -55,6 +55,13 @@ test('Missing paid records may never automatically trigger more broadcasts',()=>
  assert.equal(result.tier,'review');
  assert.match(result.reason,/不能仅凭扫码与意向金推荐/);
 });
+test('explicit no-sale confirmation is a known zero, not a missing paid record',()=>{
+ const paid=current.paymentSummary.map(p=>p.program==='拈花湾'?{...p,amount:0,fullOrders:0,fullPersons:0}:p);
+ const item=policy.evaluate(current.records,paid).items.find(x=>x.name==='拈花湾');
+ assert.equal(item.paid.amount,0);
+ assert.equal(item.revenuePerBroadcast,0);
+ assert.notEqual(item.status,'成交待核验');
+});
 test('No hard-coded permanent punishment: future verified paid outcomes can change the decision',()=>{
  const rows=[...current.records,
    {date:'2026-10-18',program:'拈花湾',type:'重播',scans:110,orders:6},
