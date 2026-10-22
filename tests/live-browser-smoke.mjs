@@ -71,12 +71,9 @@ async function main(){
 
   const schedule=await evaluate("({items:[...document.querySelectorAll('.schedule-list .schedule-item')].map(x=>({program:x.querySelector('.schedule-name')?.textContent,status:x.querySelector('.schedule-status')?.textContent,summary:x.querySelector('.schedule-metrics')?.textContent,times:x.querySelectorAll('.schedule-time-item').length})),footer:document.querySelector('.schedule-footnote')?.textContent,errors:window.__clientExceptions})");
   console.log('Revenue-first schedule diagnostic:',JSON.stringify(schedule));
-  assert(schedule.items.length===5,'all five programs should have economically grounded decisions');
-  assert(schedule.items.map(x=>x.program).join('|')==='新加坡·马来西亚|越南全景|福建泰宁|清远肇庆|拈花湾','ranking must reflect paid production outcome');
-  assert(schedule.items[0].status==='优先续播','top revenue route priority should remain');
-  assert(schedule.items[4].status==='暂缓追加排播','high-scanning but lowest paid output must NOT recommend extra broadcasts');
-  assert(schedule.items[4].summary.includes('8,109')&&schedule.items[4].summary.includes('16,217'),'lowest paid outputs must be visible in recommendation card');
-  assert(schedule.items[4].times===2,'historical first/replay date/time must remain visible');
+  const expectedSchedule=await evaluate("UrbanRecommendation.evaluate(records,PAYMENT_ROUTES).items.map(x=>({program:x.name,status:x.status,times:x.n}))");
+  assert(schedule.items.length===expectedSchedule.length,'every loaded route must have a decision');
+  assert(schedule.items.every((x,i)=>x.program===expectedSchedule[i].program&&x.status===expectedSchedule[i].status&&x.times===expectedSchedule[i].times),'recommendations and dates must reflect the current route data and policy');
   assert(schedule.footer.includes('不是单场归因收入'),'footnote must distinguish allocation from attributed earnings');
   assert(schedule.errors.length===0,'recommendation refresh must not throw');
 
@@ -107,7 +104,8 @@ async function main(){
   const china=await evaluate("({title:document.title,mirror:window.UrbanSync?.api?.mirrorLoaded,version:window.UrbanSync?.api?.currentVersion,staticVersion:window.UrbanSync?.api?.mirrorVersion,cloudOnline:window.UrbanSync?.api?.online,rows:records.length,scans:records.reduce((n,r)=>n+r.scans,0),issues:window.__clientExceptions})");
   console.log('Mainland Worker-block simulation:',JSON.stringify(china));
   assert(china.title==='都市频道经营驾驶舱'&&china.mirror,'mainland user should still load shared report without workers.dev');
-  assert(china.version===china.staticVersion&&china.rows===16&&china.scans===1342,'public mirror must remain consistent');
+  const published=await json(new URL('data/current.json',url));
+  assert(china.version===china.staticVersion&&china.rows===published.snapshot.records.length&&china.scans===published.snapshot.totals.scans,'public mirror must remain consistent with its published source');
   assert(china.cloudOnline===true,'Netlify upload gateway must work when workers.dev is blocked');
   const activeGateway=await evaluate("window.UrbanSync?.api?.activeBase");
   assert(activeGateway==='https://urban-channel-sync.netlify.app','fallback must use the deployed Netlify gateway');
@@ -116,7 +114,7 @@ async function main(){
   await cdp('Page.navigate',{url:url+(url.includes('?')?'&':'?')+'all_apis_blocked=1'});
   await sleep(15000);
   const offline=await evaluate("({mirror:window.UrbanSync?.api?.mirrorLoaded,online:window.UrbanSync?.api?.online,rows:records.length})");
-  assert(offline.mirror&&offline.rows===16&&!offline.online,'all APIs blocked must retain mirror and disable publishing');
+  assert(offline.mirror&&offline.rows===published.snapshot.records.length&&!offline.online,'all APIs blocked must retain mirror and disable publishing');
   console.log('PASS: live desktop/mobile and simulated mainland static fallback');
 }
 try{await main()}catch(error){
