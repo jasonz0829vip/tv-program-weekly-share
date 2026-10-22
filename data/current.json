@@ -1,14 +1,14 @@
 {
   "ok": true,
-  "version": "2026-10-22T05-05-55-041Z-4cccf2d4",
-  "updatedAt": "2026-10-22T05:05:55.041Z",
-  "mirroredAt": "2026-10-22T05:27:49.069Z",
+  "version": "2026-10-22T07-22-02-324Z-b343e3e2",
+  "updatedAt": "2026-10-22T07:22:02.324Z",
+  "mirroredAt": "2026-10-22T07:30:55.314Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "dfb8f041cff1bb2e50d4e43f0efee30e854dd0e638c337bf25bcd9bb1447f073",
-      "sheets": 8,
+      "hash": "f03e41d38acc206897f7457ea8160edaa4744da67da8b7a1bec8a09c0135c8e6",
+      "sheets": 9,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
     "records": [
@@ -524,7 +524,7 @@
       },
       {
         "date": "2026-10-21",
-        "program": "港深惠",
+        "program": "港珠澳",
         "type": "首播",
         "startTime": "17:30",
         "scans": 101,
@@ -544,7 +544,7 @@
             24
           ],
           "source": {
-            "sheet": "港深惠",
+            "sheet": "港珠澳",
             "valueCells": "C2:C7",
             "timeCells": "B2:B7",
             "totalCell": "C14",
@@ -584,7 +584,7 @@
       },
       {
         "date": "2026-10-22",
-        "program": "港深惠",
+        "program": "港珠澳",
         "type": "重播",
         "startTime": "09:30",
         "scans": 54,
@@ -604,7 +604,7 @@
             2
           ],
           "source": {
-            "sheet": "港深惠",
+            "sheet": "港珠澳",
             "valueCells": "C18:C23",
             "timeCells": "B18:B23",
             "totalCell": "C28",
@@ -648,6 +648,13 @@
         "fullOrders": 4,
         "fullPersons": 8,
         "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "港珠澳",
+        "amount": 7998,
+        "fullOrders": 1,
+        "fullPersons": 2,
+        "source": "汇总数据 F:G:H"
       }
     ],
     "metrics": [
@@ -660,7 +667,8 @@
           "新加坡·马来西亚": 8018.41,
           "福建泰宁": 2879,
           "越南全景": 5597.24,
-          "拈花湾": 2027
+          "拈花湾": 2027,
+          "港珠澳": 3999
         },
         "source": "Excel 汇总数据 I1 列",
         "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
@@ -672,7 +680,7 @@
       "programs": 7,
       "scans": 1528,
       "orders": 56,
-      "amount": 489071
+      "amount": 497069
     }
   }
 }
