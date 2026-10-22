@@ -1,15 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {validateSnapshot} from '../api/worker.mjs';
 
 const source=readFileSync(new URL('../recommendation-policy.js',import.meta.url),'utf8');
 const module={exports:{}};
 const policy=Function('module',source+'\nreturn module.exports;')(module);
-const current=JSON.parse(readFileSync(new URL('../data/current.json',import.meta.url),'utf8')).snapshot;
 const site=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+// Original recommendation expectations use the fixed historical fixture, not the growing live mirror.
+const current=validateSnapshot(JSON.parse(site.match(/<script id="seed-data" type="application\/json">([\s\S]*?)<\/script>/)[1]));
 const sync=readFileSync(new URL('../shared-sync.js',import.meta.url),'utf8');
 
-test('Data reconciliation: 5 routes, 16 sessions and ¥489071 full paid across the published data',()=>{
+test('Historical fixture reconciliation: 5 routes, 16 sessions and ¥489071 full paid',()=>{
  const snapshot=current;
  assert.equal(snapshot.totals.sessions,16);
  assert.equal(snapshot.totals.amount,489071);

@@ -16,9 +16,8 @@ test('Mainland-readable static JSON mirrors a full validated cloud version, neve
   assert.ok(mirror.snapshot);
   const validated=validateSnapshot(mirror.snapshot);
   assert.equal(validated.totals.sessions,mirror.snapshot.records.length);
-  assert.equal(validated.totals.programs,5);
-  assert.equal(validated.totals.scans,1342);
-  assert.equal(validated.totals.amount,489071);
+  assert.equal(validated.totals.programs,new Set(mirror.snapshot.records.map(r=>r.program)).size);
+  assert.deepEqual(validated.totals,mirror.snapshot.totals);
   const serialized=JSON.stringify(mirror);
   assert.doesNotMatch(serialized,/(客户手机号|客户电话|full_client_detail|13800000000)/);
   assert.ok(!('workbook' in mirror)&&!('rawExcel' in mirror));
