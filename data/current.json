@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-10-22T13-00-56-339Z-bcf104e8",
-  "updatedAt": "2026-10-22T13:00:56.339Z",
-  "mirroredAt": "2026-10-22T13:27:43.424Z",
+  "version": "2026-10-23T05-42-44-591Z-70ece42c",
+  "updatedAt": "2026-10-23T05:42:44.591Z",
+  "mirroredAt": "2026-10-23T05:43:42.928Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "daabd5ac8f6062f21292b4cbe5d69288b595cd6e54b49538031340b9f093f7fa",
+      "hash": "5a61ce957058eb851f92c5e07dcdf8500dffe54c16a437062c0a337173885910",
       "sheets": 9,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -641,6 +641,36 @@
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
+      },
+      {
+        "date": "2026-10-23",
+        "program": "南非一地",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 15,
+        "orders": 1,
+        "first30": 15,
+        "after30": 0,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            2,
+            5,
+            8,
+            0,
+            0,
+            0
+          ],
+          "source": {
+            "sheet": "南非一地",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       }
     ],
     "paymentSummary": [
@@ -681,9 +711,9 @@
       },
       {
         "program": "港珠澳",
-        "amount": 7998,
-        "fullOrders": 1,
-        "fullPersons": 2,
+        "amount": 16396,
+        "fullOrders": 2,
+        "fullPersons": 4,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -692,6 +722,13 @@
         "fullOrders": 0,
         "fullPersons": 0,
         "source": "业务负责人确认：截至2026-10-22无全款成交"
+      },
+      {
+        "program": "南非一地",
+        "amount": 0,
+        "fullOrders": 0,
+        "fullPersons": 0,
+        "source": "汇总数据 F:G:H"
       }
     ],
     "metrics": [
@@ -705,19 +742,19 @@
           "福建泰宁": 2879,
           "越南全景": 5597.24,
           "拈花湾": 2027,
-          "港珠澳": 3999
+          "港珠澳": 4099
         },
         "source": "Excel 汇总数据 I1 列",
         "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
       }
     ],
-    "sourceLastRecorded": "2026-10-22",
+    "sourceLastRecorded": "2026-10-23",
     "totals": {
-      "sessions": 21,
+      "sessions": 22,
       "programs": 8,
-      "scans": 1554,
-      "orders": 56,
-      "amount": 497069
+      "scans": 1569,
+      "orders": 57,
+      "amount": 505467
     }
   }
 }
