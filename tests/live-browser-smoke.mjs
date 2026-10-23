@@ -69,6 +69,9 @@ async function main(){
   assert(before.heading==='都市频道经营驾驶舱','exact heading');
   assert(before.mobileNavCount===4,'four navigation items must remain');
 
+  const initialSchedule=await evaluate("({shown:document.querySelectorAll('.schedule-item').length,total:UrbanRecommendation.evaluate(records,PAYMENT_ROUTES).items.length,open:document.querySelectorAll('.schedule-item[open]').length})");
+  assert(initialSchedule.shown===Math.min(5,initialSchedule.total)&&initialSchedule.open===0,'default five collapsed scheduling recommendations');
+  await evaluate("document.querySelector('.schedule-pagination button')?.click()");
   const schedule=await evaluate("({items:[...document.querySelectorAll('.schedule-list .schedule-item')].map(x=>({program:x.querySelector('.schedule-name')?.textContent,status:x.querySelector('.schedule-status')?.textContent,summary:x.querySelector('.schedule-metrics')?.textContent,times:x.querySelectorAll('.schedule-time-item').length})),footer:document.querySelector('.schedule-footnote')?.textContent,errors:window.__clientExceptions})");
   console.log('Revenue-first schedule diagnostic:',JSON.stringify(schedule));
   const expectedSchedule=await evaluate("UrbanRecommendation.evaluate(records,PAYMENT_ROUTES).items.map(x=>({program:x.name,status:x.status,times:x.n}))");
