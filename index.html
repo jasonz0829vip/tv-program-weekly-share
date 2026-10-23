@@ -100,6 +100,36 @@
 @media(max-width:800px){.efficient-row{grid-template-columns:94px minmax(0,1fr) 100px;gap:8px}.insight-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.insight-metric{padding:10px}.insight-metric-value{font-size:21px}}
 @media(max-width:420px){.efficient-row{grid-template-columns:88px minmax(0,1fr) 90px}.efficient-row .bar-right strong{font-size:10px}.efficient-row .bar-right span{font-size:9px}.insight-metric-value{font-size:20px}.route-normalized b{font-size:15px}.route-paid{font-size:10px}}
 
+.schedule-controls{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin:18px 0 14px}
+.schedule-filters{display:flex;gap:6px;flex-wrap:wrap}
+.schedule-filters button,.schedule-pagination button{font:inherit;font-size:12px;border:1px solid #dce4ef;background:#fff;color:#435a77;border-radius:8px;padding:9px 12px;cursor:pointer;min-height:40px}
+.schedule-filters button[aria-pressed="true"]{background:#eaf1ff;border-color:#96b2ec;color:#2255b4;font-weight:700}
+.schedule-filters button span{margin-left:5px;font-variant-numeric:tabular-nums}
+.schedule-search{font-size:12px;color:#435a77;display:flex;align-items:center;gap:9px}
+.schedule-search input{font:inherit;width:180px;padding:10px 12px;border:1px solid #cbd6e5;border-radius:8px;background:#fff;color:#203c5e}
+.schedule-search input::placeholder{color:#61728a}
+.schedule-panel .schedule-list{display:block;border-top:1px solid #e1e8f1}
+.schedule-panel .schedule-item{padding:0;border:0;border-bottom:1px solid #e1e8f1;border-radius:0;background:#fff}
+.schedule-item>summary{display:grid;grid-template-columns:minmax(180px,1.2fr) minmax(230px,1fr) minmax(160px,1fr) 90px;align-items:center;gap:16px;list-style:none;padding:18px 4px;cursor:pointer}
+.schedule-item>summary::-webkit-details-marker{display:none}
+.schedule-panel .schedule-item-head{display:flex;flex-wrap:wrap;gap:7px;margin:0}
+.schedule-panel .schedule-name{white-space:normal;overflow-wrap:anywhere}
+.schedule-panel .schedule-status{margin-left:0}
+.schedule-compact-metrics{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:#56677b}
+.schedule-compact-metrics b{display:block;margin-top:4px;font-size:14px;color:#203c5e;font-variant-numeric:tabular-nums}
+.schedule-action{font-size:12px;line-height:1.7;color:#435a77}
+.schedule-disclosure{display:flex;align-items:center;justify-content:flex-end;gap:4px;font-size:12px;color:#2255b4}
+.schedule-item:not([open]) .when-open,.schedule-item[open] .when-closed{display:none}
+.schedule-item[open]>.schedule-disclosure svg,.schedule-item[open]>summary .schedule-disclosure svg{transform:rotate(180deg)}
+.schedule-detail{padding:4px 16px 18px;background:#f8faff}
+.schedule-detail .schedule-metrics{padding-top:14px;color:#56677b}
+.schedule-history{margin-top:14px;color:#435a77;font-size:12px}
+.schedule-history>summary{cursor:pointer;padding:8px 0}
+.schedule-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;font-size:12px;color:#56677b}
+.schedule-controls :focus-visible,.schedule-item summary:focus-visible,.schedule-pagination button:focus-visible{outline:2px solid #2255b4;outline-offset:3px}
+.schedule-filters button:hover,.schedule-pagination button:hover,.schedule-item>summary:hover{background:#f3f7fd}
+@media(max-width:1050px){.schedule-item>summary{grid-template-columns:minmax(160px,1fr) minmax(200px,1fr) 90px}.schedule-action{grid-column:1/3;grid-row:2}.schedule-disclosure{grid-column:3;grid-row:1/3}}
+@media(max-width:600px){.schedule-controls{display:block}.schedule-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.schedule-filters button{padding:8px 5px;font-size:11px}.schedule-search{margin-top:12px}.schedule-search input{flex:1;min-width:0;width:auto}.schedule-item>summary{grid-template-columns:minmax(0,1fr) 82px;gap:10px;padding:16px 0}.schedule-panel .schedule-item-head{grid-column:1/-1}.schedule-compact-metrics{grid-column:1;gap:20px}.schedule-disclosure{grid-column:2;grid-row:2}.schedule-action{grid-column:1/-1;grid-row:3}.schedule-detail{padding:2px 10px 14px}}
 .schedule-panel{margin-bottom:22px}
 .schedule-panel .panel-header{align-items:center}
 .schedule-asof{background:#f1f5fa;border:1px solid #e1eaf4;padding:6px 12px;border-radius:50px;font-size:11px;font-weight:700;color:#58708c;white-space:nowrap}
@@ -684,5 +714,5 @@ navigateFromHash();
 </script>
 <script src="excel-import.js?v=2.0.2" defer></script>
 <script src="recommendation-policy.js?v=20261021" defer></script>
-<script src="shared-sync.js?v=20261021-recommendations-2" defer></script>
+<script src="shared-sync.js?v=20261023-compact-schedule" defer></script>
 </body></html>

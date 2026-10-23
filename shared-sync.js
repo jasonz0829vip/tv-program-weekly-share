@@ -200,6 +200,7 @@ function programGroups(rows){
     g.first30+=r.first30||0;g.after30+=r.after30||0;
   });return [...map.values()];
 }
+const scheduleView={category:'all',query:'',expanded:false,open:new Set()};
 function refreshScheduleAdvice(){
   const box=document.querySelector('.schedule-list');
   if(!box)return;
@@ -213,7 +214,21 @@ function refreshScheduleAdvice(){
     box.innerHTML='<div class="table-empty">当前没有已核验的播出场次，不生成排播建议。</div>';
     return;
   }
-  box.innerHTML=cards.map((g,i)=>{
+  let controls=document.querySelector('.schedule-controls');
+  if(!controls){
+    controls=document.createElement('div');controls.className='schedule-controls';
+    controls.innerHTML='<div class="schedule-filters" role="group" aria-label="排播建议分类"></div><label class="schedule-search">搜索线路<input type="search" placeholder="输入线路名称" aria-label="搜索排播线路"></label>';
+    box.before(controls);
+    controls.querySelector('input').addEventListener('input',e=>{scheduleView.query=e.target.value;scheduleView.expanded=false;scheduleView.draw()});
+  }
+  function draw(){
+  const categories=[['all','全部'],['primary','优先续播'],['observe','控制与验证'],['pause','暂缓排播'],['review','待核验']];
+  const filters=controls.querySelector('.schedule-filters');
+  filters.innerHTML=categories.map(([key,label])=>'<button type="button" data-category="'+key+'" aria-pressed="'+(scheduleView.category===key)+'">'+label+' <span>'+cards.filter(g=>key==='all'||g.tier===key).length+'</span></button>').join('');
+  filters.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{scheduleView.category=button.dataset.category;scheduleView.expanded=false;draw();controls.querySelector('[data-category="'+scheduleView.category+'"]').focus()}));
+  const matches=cards.filter(g=>(scheduleView.category==='all'||g.tier===scheduleView.category)&&g.name.toLocaleLowerCase().includes(scheduleView.query.trim().toLocaleLowerCase()));
+  const visible=scheduleView.expanded?matches:matches.slice(0,5);
+  box.innerHTML=visible.map((g,i)=>{
     const paid=g.paid;
     const paidText=paid?'¥'+fmtNumber(paid.amount):'待核验';
     const orderText=paid?fmtNumber(paid.fullOrders)+'单':'—';
@@ -221,9 +236,12 @@ function refreshScheduleAdvice(){
     const paidPerPerson=paid&&g.paidPerPerson!==null?'¥'+fmtNumber(Math.round(g.paidPerPerson))+'/人':'—';
     const perShow=paid?'¥'+fmtNumber(Math.round(g.revenuePerBroadcast))+'/场':'—';
     const perScan=g.paidPerScan===null?'—':'¥'+Number(g.paidPerScan).toFixed(2)+'/人次';
-    return '<div class="schedule-item schedule-'+g.tier+'"><div class="schedule-item-head">'+
-      '<span class="schedule-n">'+String(i+1).padStart(2,'0')+'</span><strong class="schedule-name">'+esc(g.name)+
-      '</strong><span class="schedule-status">'+esc(g.status)+'</span></div>'+
+    const action={primary:'优先安排1场验证性续播',observe:g.n<2?'补足样本后再决定排期':'低频验证，核对真实成交与退款',pause:g.status==='暂缓重播'?'先调整产品权益和转化链路':'核查成交与成本，改善前不追加',review:'补齐成交数据后再决定排播'}[g.tier];
+    return '<details class="schedule-item schedule-'+g.tier+'" data-route="'+esc(g.name)+'"'+(scheduleView.open.has(g.name)?' open':'')+'><summary><span class="schedule-item-head">'+
+      '<strong class="schedule-name">'+esc(g.name)+
+      '</strong><span class="schedule-status">'+esc(g.status)+'</span></span>'+
+      '<span class="schedule-compact-metrics"><span>累计实付 <b>'+esc(paidText)+'</b></span><span>播次均摊 <b>'+esc(perShow)+'</b></span></span>'+
+      '<span class="schedule-action">'+esc(action)+'</span><span class="schedule-disclosure"><span class="when-closed">查看依据</span><span class="when-open">收起详情</span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span></summary><div class="schedule-detail">'+
       '<div class="schedule-metrics">'+
       '<span>首播 <b>'+g.live+'</b> · 重播 <b>'+g.replay+'</b></span>'+
       '<span>场均扫码 <b>'+g.avgScans.toFixed(1)+' 人次</b></span>'+
@@ -232,10 +250,18 @@ function refreshScheduleAdvice(){
       '<span>全款付费人数 <b>'+esc(personsText)+'</b> · 人均实付 <b>'+esc(paidPerPerson)+'</b></span>'+
       '<span>按播次均摊实付 <b>'+esc(perShow)+'</b></span>'+
       '<span>按扫码规模折算实付 <b>'+esc(perScan)+'</b></span></div>'+
-      '<div class="schedule-times" data-program="'+esc(g.name)+'" aria-label="'+esc(g.name)+'历次播出时间"></div>'+
       '<p class="schedule-reason">'+esc(g.reason)+'</p>'+
-      '<p class="schedule-next"><b>下一步：</b>'+esc(g.next)+'</p></div>';
-  }).join('');
+      '<p class="schedule-next"><b>下一步：</b>'+esc(g.next)+'</p><details class="schedule-history"><summary>历次播出记录（'+g.n+'场）</summary><div class="schedule-times" data-program="'+esc(g.name)+'" aria-label="'+esc(g.name)+'历次播出时间"></div></details></div></details>';
+  }).join('')||'<p class="table-empty" role="status">没有符合条件的线路，请切换分类或搜索名称。</p>';
+  box.querySelectorAll('details[data-route]').forEach(detail=>detail.addEventListener('toggle',()=>{if(detail.open)scheduleView.open.add(detail.dataset.route);else scheduleView.open.delete(detail.dataset.route)}));
+  let footer=document.querySelector('.schedule-pagination');
+  if(!footer){footer=document.createElement('div');footer.className='schedule-pagination';box.after(footer)}
+  footer.innerHTML='<span role="status">显示 '+visible.length+' / '+matches.length+' 条线路</span>'+(matches.length>5?'<button type="button">'+(scheduleView.expanded?'收起为5条':'查看全部 '+matches.length+' 条')+'</button>':'');
+  footer.querySelector('button')?.addEventListener('click',()=>{scheduleView.expanded=!scheduleView.expanded;draw();footer.querySelector('button')?.focus()});
+  if(typeof renderScheduleTimes==='function')renderScheduleTimes();
+  }
+  scheduleView.draw=draw;
+  draw();
   const header=document.querySelector('.schedule-panel .section-sub');
   if(header)header.textContent='成交产出优先 · 已纳入全款实付、订单和播次均摊；扫码及意向仅作过程诊断';
   const asOf=document.querySelector('.schedule-asof');
