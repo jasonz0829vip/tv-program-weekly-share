@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-10-23T05-42-44-591Z-70ece42c",
-  "updatedAt": "2026-10-23T05:42:44.591Z",
-  "mirroredAt": "2026-10-23T05:43:42.928Z",
+  "version": "2026-10-23T06-04-46-982Z-9753384d",
+  "updatedAt": "2026-10-23T06:04:46.982Z",
+  "mirroredAt": "2026-10-23T06:15:21.141Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "5a61ce957058eb851f92c5e07dcdf8500dffe54c16a437062c0a337173885910",
+      "hash": "98356835d85a949402d44aa9b7f149d5bbdb0751bb57684108450c0d35137658",
       "sheets": 9,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -711,9 +711,9 @@
       },
       {
         "program": "港珠澳",
-        "amount": 16396,
-        "fullOrders": 2,
-        "fullPersons": 4,
+        "amount": 8398,
+        "fullOrders": 1,
+        "fullPersons": 2,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -742,7 +742,7 @@
           "福建泰宁": 2879,
           "越南全景": 5597.24,
           "拈花湾": 2027,
-          "港珠澳": 4099
+          "港珠澳": 4199
         },
         "source": "Excel 汇总数据 I1 列",
         "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
@@ -754,7 +754,7 @@
       "programs": 8,
       "scans": 1569,
       "orders": 57,
-      "amount": 505467
+      "amount": 497469
     }
   }
 }
