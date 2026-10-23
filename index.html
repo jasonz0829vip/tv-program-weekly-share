@@ -264,6 +264,100 @@
 @media(max-width:550px){.shared-excel-modal{width:calc(100vw - 16px);max-height:calc(90dvh - env(safe-area-inset-bottom));padding:15px}.shared-sync-copy strong{font-size:15px}.shared-excel-actions button{flex:1}.excel-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shared-file-drop{padding:17px 10px}}
 .shared-cta-tools{display:flex;flex-direction:column;align-items:stretch;gap:8px;flex:none}.shared-local-reset{min-height:32px!important;font-size:11px!important;opacity:.9}.shared-local-reset[hidden]{display:none!important}#sharedSyncBadge[data-state=preview]{background:#fff1dd;color:#ad702c}.shared-excel-actions #excelLocalPreview{background:#e8f0fd;border-color:#a8c5ee;color:#275896}
 .schedule-loading{grid-column:1/-1;border:1px dashed #d5dfeb;background:#f7faff;border-radius:12px;padding:22px;color:#6e819c;font-size:13px}.schedule-review{border-left-color:#d5ad57}.schedule-review .schedule-status{background:#fbf4e4;color:#947326}.schedule-metrics b{font-variant-numeric:tabular-nums}
+
+/* Compact paid-route ranking: totals remain full-cycle and independent of display. */
+#revenueRoutes{display:block}
+.revenue-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.revenue-tools label{display:flex;align-items:center;gap:9px;font-size:12px;color:#435a77}
+.revenue-search{font:inherit;padding:10px 12px;width:200px;border:1px solid #cbd6e5;border-radius:8px;color:#203c5e;background:#fff}
+.revenue-search::placeholder{color:#61728a}
+.revenue-count,.revenue-more{font-size:12px;color:#56677b}
+.revenue-ranking{border-top:1px solid #e1e8f1}
+.revenue-ranking .revenue-route{border:0;border-bottom:1px solid #e1e8f1;border-radius:0;padding:0}
+.revenue-route>summary{list-style:none;cursor:pointer;padding:16px 4px}
+.revenue-route>summary::-webkit-details-marker{display:none}
+.revenue-route>summary:hover{background:#f5f8fd}
+.revenue-ranking .revenue-route-name{white-space:normal;overflow-wrap:anywhere}
+.revenue-ranking .revenue-route-top strong{font-size:18px}
+.revenue-route-track{display:block}
+.revenue-route-track i{min-height:7px}
+.revenue-rank-note{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:#56677b}
+.revenue-disclosure{display:flex;align-items:center;gap:4px;color:#2255b4;white-space:nowrap}
+.revenue-route:not([open]) .revenue-open,.revenue-route[open] .revenue-closed{display:none}
+.revenue-route[open] .revenue-disclosure svg{transform:rotate(180deg)}
+.revenue-details{padding:4px 14px 16px;background:#f8faff}
+.revenue-zero{display:inline-block;margin-left:8px;font-size:10px;color:#52647a;background:#eef2f6;border-radius:4px;padding:3px 6px;font-weight:500}
+.revenue-more{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+.revenue-more button{font:inherit;color:#2255b4;border:1px solid #dce4ef;border-radius:8px;background:#fff;min-height:40px;padding:9px 12px;cursor:pointer}
+.revenue-pending{border-top:1px solid #e1e8f1;margin-top:20px;padding-top:16px}
+.revenue-pending h4{font-size:13px;margin:0 0 8px;color:#435a77}
+.revenue-pending p{font-size:11px;line-height:1.7;color:#56677b;margin:6px 0}
+.revenue-pending-row{display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:12px;padding:12px 4px;color:#435a77;border-bottom:1px solid #edf0f5}
+.revenue-pending-row span{white-space:nowrap;color:#826323}
+#revenueRoutes :focus-visible{outline:2px solid #2255b4;outline-offset:3px}
+@media(max-width:600px){.revenue-tools{display:block}.revenue-tools label{width:100%}.revenue-search{flex:1;min-width:0;width:auto}.revenue-count{display:block;margin-top:10px}.revenue-details{padding:4px 10px 14px}.revenue-ranking .revenue-route-top strong{font-size:17px}.revenue-ranking .route-paid{flex-wrap:wrap;gap:8px}}
+
+/* Revenue uses a horizontal chart; scheduling keeps its decision-list layout. */
+#revenueRoutes .revenue-tools{align-items:flex-start;margin:22px 0 8px}
+.revenue-chart-title{display:block;font-size:14px;color:#203c5e;margin-bottom:6px}
+#revenueRoutes .revenue-count{display:block;margin:0;font-size:11px}
+.revenue-chart-help{font-size:11px;color:#56677b;margin:0 0 18px}
+.revenue-search-toggle{font-size:12px;color:#2255b4;max-width:100%}
+.revenue-search-toggle>summary{cursor:pointer;padding:8px;min-height:36px}
+#revenueRoutes .revenue-search-toggle label{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:11px;color:#435a77}
+#revenueRoutes .revenue-ranking{border:0;background:linear-gradient(90deg,transparent 24.9%,#edf1f7 25%,transparent 25.1%,transparent 49.9%,#edf1f7 50%,transparent 50.1%,transparent 74.9%,#edf1f7 75%,transparent 75.1%);padding:4px 0}
+#revenueRoutes .revenue-route{background:transparent;border:0;margin:0 0 10px}
+#revenueRoutes .revenue-route>summary{display:grid;grid-template-columns:150px minmax(0,1fr) 135px 16px;gap:16px;align-items:center;padding:10px 4px;min-height:58px;border-radius:6px}
+#revenueRoutes .revenue-route-name{font-size:12px;white-space:normal;overflow-wrap:anywhere;flex:none;line-height:1.6}
+#revenueRoutes .revenue-route-track{height:26px;margin:0;border-radius:3px;background:transparent;overflow:hidden}
+#revenueRoutes .revenue-route-track i{height:26px;border-radius:3px;background:#4679df}
+.revenue-chart-value{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.revenue-chart-value strong{display:block;font-size:17px;color:#172e54}
+.revenue-chart-value small{display:block;margin-top:4px;font-size:10px;color:#56677b}
+#revenueRoutes .revenue-zero{display:block;width:fit-content;margin:4px 0 0}
+#revenueRoutes .revenue-details{margin:0 0 14px;background:#f8faff}
+#revenueRoutes .revenue-more{margin-top:16px}
+@media(max-width:600px){
+ #revenueRoutes .revenue-tools{display:flex;gap:8px}
+ #revenueRoutes .revenue-search-toggle[open]{width:100%}
+ #revenueRoutes .revenue-search-toggle label{width:100%}
+ #revenueRoutes .revenue-route>summary{grid-template-columns:minmax(0,1fr) 110px 14px;gap:7px 10px;padding:8px 0}
+ #revenueRoutes .revenue-route-name{grid-column:1;grid-row:1}
+ #revenueRoutes .revenue-route-track{grid-column:1/3;grid-row:2;height:22px}
+ #revenueRoutes .revenue-route-track i{height:22px}
+ .revenue-chart-value{grid-column:2;grid-row:1}
+ .revenue-chart-value strong{font-size:16px}
+ #revenueRoutes .revenue-disclosure{grid-column:3;grid-row:1/3}
+ #revenueRoutes .revenue-route{margin-bottom:16px}
+}
+
+/* One chart, one shared detail area. No independently expanding chart rows. */
+#revenueRoutes .revenue-ranking{background:none;padding:0}
+.revenue-chart-row{font:inherit;display:grid;grid-template-columns:150px minmax(0,1fr) 135px;gap:16px;align-items:center;width:100%;border:0;border-radius:0;padding:14px 4px;background:transparent;text-align:left;cursor:pointer;min-height:60px}
+#revenueRoutes .revenue-chart-row .revenue-route-track{background:linear-gradient(90deg,#e4ebf5 1px,transparent 1px);background-size:25% 100%;border-radius:0;height:28px}
+#revenueRoutes .revenue-chart-row .revenue-route-track i{height:28px;border-radius:0 3px 3px 0}
+.revenue-chart-row:hover{background:#f5f8fd}
+.revenue-chart-row[aria-pressed="true"]{background:#edf3ff}
+.revenue-chart-row[aria-pressed="true"] .revenue-route-name{color:#2255b4}
+.revenue-axis{display:grid;grid-template-columns:150px minmax(0,1fr) 135px;gap:16px;font-size:10px;color:#56677b;margin-top:4px;padding:0 4px}
+.revenue-axis>div{display:flex;justify-content:space-between;border-top:1px solid #b9c9df;padding-top:8px;font-variant-numeric:tabular-nums}
+.revenue-selected{margin-top:18px;background:#f5f8fd;padding:16px;border-radius:10px}
+.revenue-selection-hint{font-size:12px;line-height:1.7;margin:0;color:#56677b}
+.revenue-detail-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.revenue-detail-heading h4{margin:0;font-size:14px;color:#203c5e}
+.revenue-close{font:inherit;font-size:11px;border:0;background:transparent;color:#2255b4;cursor:pointer;padding:8px;white-space:nowrap;min-height:36px}
+#revenueRoutes .revenue-selected .revenue-details{padding:0;margin:0;background:transparent}
+@media(max-width:600px){
+ .revenue-chart-row{grid-template-columns:minmax(0,1fr) 112px;gap:8px;padding:14px 0}
+ #revenueRoutes .revenue-chart-row .revenue-route-name{grid-column:1;grid-row:1}
+ #revenueRoutes .revenue-chart-row .revenue-chart-value{grid-column:2;grid-row:1}
+ #revenueRoutes .revenue-chart-row .revenue-route-track{grid-column:1/-1;grid-row:2;height:24px}
+ #revenueRoutes .revenue-chart-row .revenue-route-track i{height:24px}
+ .revenue-axis{display:block;padding:0}
+ .revenue-axis>span{display:block;margin:6px 0}
+ .revenue-axis>span:last-child{display:none}
+ .revenue-selected{padding:12px}
+}
 </style><link rel="stylesheet" href="mobile-layout.css?v=20261020-2"></head><body>
 <div class="menu-shade" id="shade" onclick="toggleMenu(false)"></div>
 <div class="app"><aside class="sidebar" id="sidebar">
@@ -468,21 +562,60 @@ function renderRevenue(){
   $('kpiPaidPersons').textContent=hasPaid?fmt(sum(all,'fullPersons')):'—';
   const broadcast=groups(records),map=new Map(broadcast.map(x=>[x.name,x]));
   const merged=all.map(x=>({...x,stats:map.get(x.program)||{sessions:0,live:0,replay:0,scans:0,orders:0,liveScans:0,replayScans:0}}));
-  if(!hasPaid){$('revenueRoutes').innerHTML='<div class="table-empty">新报表未提供完整可核验的全款实付金额，此处不展示估算收入。</div>';return}
+  const view=renderRevenue.view||(renderRevenue.view={query:'',expanded:false,selected:null});
+  const host=$('revenueRoutes');
+  if(!host.querySelector('.revenue-search')){
+    host.innerHTML='<div class="revenue-tools"><div><strong class="revenue-chart-title">实付金额分布</strong><span class="revenue-count"></span></div><details class="revenue-search-toggle"><summary>查找线路</summary><label>线路名称<input class="revenue-search" type="search" aria-label="搜索实付线路" placeholder="输入线路名称"></label></details></div><p class="revenue-chart-help">按实付金额排序 · 点击横条查看明细</p><div class="revenue-ranking" role="group" aria-label="线路实付金额横条图"></div><div class="revenue-axis"></div><div class="revenue-more"></div><section class="revenue-selected" aria-label="选中线路实付详情" aria-live="polite"></section><section class="revenue-pending" aria-label="实付待核验线路"></section>';
+    host.querySelector('.revenue-search').addEventListener('input',e=>{view.query=e.target.value;view.expanded=false;view.draw()});
+  }
+  const sorted=[...merged].sort((a,b)=>b.amount-a.amount||a.program.localeCompare(b.program,'zh-CN'));
+  const paidNames=new Set(all.map(x=>x.program));
+  const pending=[...programNames].filter(name=>!paidNames.has(name));
   const max=Math.max(1,...all.map(x=>x.amount));
-  $('revenueRoutes').innerHTML=[...merged].sort((a,b)=>b.amount-a.amount).map(x=>{
+  const axisMax=Math.max(4,Math.ceil(max/4/10000)*10000*4);
+  function routeRow(x,rank){
     const g=x.stats,n=g.sessions,realAvg=n?x.amount/n:null;
     const amountNote=realAvg!==null?'¥'+moneyAvg(realAvg)+'/播次':'—';
-    return `<div class="revenue-route">
-      <div class="revenue-route-top"><span class="revenue-route-name">${h(x.program)}</span><strong>¥${fmt(x.amount)}</strong></div>
-      <div class="route-count">首播 <b>${g.live}</b> 场 · 重播 <b>${g.replay}</b> 场 · 合计 <b>${n}</b> 场</div>
-      <div class="revenue-route-track"><i style="width:${(x.amount/max*100).toFixed(1)}%"></i></div>
+    return `<button type="button" class="revenue-chart-row" data-revenue-route="${h(x.program)}" aria-pressed="${view.selected===x.program}" aria-controls="revenueSelectedDetail" aria-label="${h(x.program)}，实付¥${fmt(x.amount)}，查看图下详情">
+      <span class="revenue-route-name">${h(x.program)}${x.amount===0?'<small class="revenue-zero">已确认零成交</small>':''}</span>
+      <span class="revenue-route-track"><i style="width:${(x.amount/axisMax*100).toFixed(3)}%"></i></span>
+      <span class="revenue-chart-value"><strong>¥${fmt(x.amount)}</strong><small>占总实付 ${total>0?(x.amount/total*100).toFixed(1):'0.0'}%</small></span></button>`;
+  }
+  function routeDetail(x){
+    const g=x.stats,n=g.sessions,amountNote=n?'¥'+moneyAvg(x.amount/n)+'/播次':'—';
+    return `<div id="revenueSelectedDetail"><div class="revenue-detail-heading"><h4>${h(x.program)} · 实付明细</h4><button type="button" class="revenue-close">关闭详情</button></div>
+      <div class="revenue-details"><div class="route-count">首播 <b>${g.live}</b> 场 · 重播 <b>${g.replay}</b> 场 · 合计 <b>${n}</b> 场</div>
       <div class="route-normalized"><div><span>累计扫码</span><b>${fmt(g.scans)}</b></div><div><span>场均扫码</span><b>${decimal(g.scans,n,1)}</b></div><div><span>场均意向金</span><b>${decimal(g.orders,n,2)} 单</b></div></div>
       <div class="route-broadcast-types">首播扫码 ${g.live?decimal(g.liveScans,g.live,1)+'/场':'—'} <span>·</span> 重播扫码 ${g.replay?decimal(g.replayScans,g.replay,1)+'/场':'—'}</div>
-      <div class="route-paid">全款 ${fmt(x.fullOrders)} 单 <span>按播次均摊实付参考 <strong>${amountNote}</strong></span></div>
+      <div class="route-paid">全款 ${fmt(x.fullOrders)} 单 · 付费 ${fmt(x.fullPersons)} 人 <span>按播次均摊实付参考 <strong>${amountNote}</strong></span></div></div>
     </div>`;
-  }).join('');
+  }
+  function draw(){
+    const query=view.query.trim().toLocaleLowerCase();
+    const matches=sorted.filter(x=>x.program.toLocaleLowerCase().includes(query));
+    const visible=view.expanded?matches:matches.slice(0,5);
+    host.querySelector('.revenue-count').textContent='已核验 '+all.length+' 条 · 其中零成交 '+all.filter(x=>x.amount===0).length+' 条';
+    host.querySelector('.revenue-ranking').innerHTML=visible.map(x=>routeRow(x,sorted.indexOf(x)+1)).join('')||'<p class="table-empty" role="status">'+(query?'没有符合搜索条件的已核验线路。':'暂无可核验实付数据，不展示估算收入。')+'</p>';
+    host.querySelector('.revenue-axis').innerHTML='<span>金额刻度（元）</span><div>'+Array.from({length:5},(_,i)=>'<span>'+fmt(axisMax*i/4)+'</span>').join('')+'</div><span></span>';
+    if(!visible.some(x=>x.program===view.selected))view.selected=null;
+    function showDetail(){
+      const selected=visible.find(x=>x.program===view.selected);
+      const pane=host.querySelector('.revenue-selected');
+      pane.innerHTML=selected?routeDetail(selected):'<p class="revenue-selection-hint">点击图中线路，在这里查看播次、扫码与成交明细。</p>';
+      host.querySelectorAll('button[data-revenue-route]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.revenueRoute===view.selected)));
+      pane.querySelector('.revenue-close')?.addEventListener('click',()=>{const name=view.selected;view.selected=null;showDetail();[...host.querySelectorAll('button[data-revenue-route]')].find(button=>button.dataset.revenueRoute===name)?.focus()});
+    }
+    host.querySelectorAll('button[data-revenue-route]').forEach(button=>button.addEventListener('click',()=>{view.selected=button.dataset.revenueRoute;showDetail()}));
+    showDetail();
+    const more=host.querySelector('.revenue-more');
+    more.innerHTML='<span role="status">显示 '+visible.length+' / '+matches.length+' 条已核验线路</span>'+(matches.length>5?'<button type="button">'+(view.expanded?'收起为5条':'查看全部 '+matches.length+' 条')+'</button>':'');
+    more.querySelector('button')?.addEventListener('click',()=>{view.expanded=!view.expanded;draw();more.querySelector('button')?.focus()});
+    const unknown=pending.filter(name=>name.toLocaleLowerCase().includes(query));
+    host.querySelector('.revenue-pending').innerHTML='<h4>实付待核验 <span>'+pending.length+'</span></h4><p>未计入金额合计与排行；待核验不代表零成交。</p>'+(unknown.length?unknown.map(name=>'<div class="revenue-pending-row"><strong>'+h(name)+'</strong><span>待核验</span></div>').join(''):'<p>'+(query&&pending.length?'没有符合搜索条件的待核验线路。':'暂无待核验线路。')+'</p>');
+  }
+  view.draw=draw;draw();
 }
+
 function renderBars(g){
   if(!g.length){$('programBars').innerHTML=emptyHTML('本期暂无节目','试试「上周」或「全部」时间范围');return}
   const sorted=[...g].sort((a,b)=>b.scans/b.sessions-a.scans/a.sessions), max=Math.max(...sorted.map(x=>x.scans/x.sessions),1);
