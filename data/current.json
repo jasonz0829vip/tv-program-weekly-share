@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-10-23T06-04-46-982Z-9753384d",
-  "updatedAt": "2026-10-23T06:04:46.982Z",
-  "mirroredAt": "2026-10-23T06:15:21.141Z",
+  "version": "2026-10-26T01-25-20-651Z-e0ea74db",
+  "updatedAt": "2026-10-26T01:25:20.651Z",
+  "mirroredAt": "2026-10-26T01:30:57.522Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "98356835d85a949402d44aa9b7f149d5bbdb0751bb57684108450c0d35137658",
+      "hash": "73ffd39976b30933bfa8f2267718f72bc7192402940ddeb107d1a05a6eb300c6",
       "sheets": 9,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -671,6 +671,36 @@
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
+      },
+      {
+        "date": "2026-10-25",
+        "program": "拈花湾",
+        "type": "重播",
+        "startTime": "23:20",
+        "scans": 34,
+        "orders": 0,
+        "first30": 34,
+        "after30": 0,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            15,
+            4,
+            6,
+            8,
+            1,
+            0
+          ],
+          "source": {
+            "sheet": "不一样的拈花湾",
+            "valueCells": "C32:C37",
+            "timeCells": "B32:B37",
+            "totalCell": "C40",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       }
     ],
     "paymentSummary": [
@@ -748,11 +778,11 @@
         "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
       }
     ],
-    "sourceLastRecorded": "2026-10-23",
+    "sourceLastRecorded": "2026-10-25",
     "totals": {
-      "sessions": 22,
+      "sessions": 23,
       "programs": 8,
-      "scans": 1569,
+      "scans": 1603,
       "orders": 57,
       "amount": 497469
     }
