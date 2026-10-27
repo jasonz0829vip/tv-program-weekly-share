@@ -1,0 +1,20 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import {validateSnapshot} from '../api/worker.mjs';
+const parser=Function('module',fs.readFileSync(new URL('../excel-import.js',import.meta.url),'utf8')+'\nreturn module.exports')({exports:{}});
+const session=[['2026年10月20日 首播'],[null,'17:30-17:35',1],[null,'17:35-17:40',1],[null,'17:40-17:45',1],[null,'17:45-17:50',1],[null,'17:50-17:55',1],[null,'17:55-18:00',1],[null,null,6,null,1]];
+const merge=(start,end,c)=>({s:{r:start,c},e:{r:end,c}});
+function fixture(){const rows=Array.from({length:10},()=>Array(13).fill(null));rows[0]=['产品名称',null,null,null,null,null,null,null,null,'明确不需要','跟进中','不回复或未明确','其他消费'];rows[1]=['合成线路甲',null,4,null,null,1,2,100,null,1,2,2,null];rows[2][2]=2;rows[3][2]=6;rows[5]=['合成零成交产品',null,3,null,null,0,0,0,null,1,0,2,0];rows[7]=['合成待填产品'];rows[9][2]=0;return {rows,merges:[merge(1,3,0),merge(1,3,7),merge(1,3,9),merge(5,6,0),merge(5,6,7),merge(5,6,9),merge(7,9,0),merge(7,9,7),merge(7,9,9)],formulas:{C4:true,C10:true}}}
+const parse=f=>parser.parseMatrices({'合成线路甲':session,'汇总数据':f.rows},{year:2026,sheetMerges:{汇总数据:f.merges},sheetFormulaCells:{汇总数据:f.formulas}});
+test('new columns preserve exact raw product, zero-sale status and blank pending batch',()=>{const p=parse(fixture());assert.deepEqual(p.blocking,[]);const r=p.snapshot.followUpSummary.rows;assert.equal(r.length,3);assert.equal(r[0].scanCount,6);assert.equal(r[0].paidByOrder,1);assert.equal(r[0].followingUp,2);assert.equal(r[1].paidAmount,0);assert.equal(r[1].scanCount,3);assert.equal(r[1].sourceProduct,'合成零成交产品');assert.equal(r[2].scanCount,null);assert.equal(r[2].paidByOrder,null);assert.equal(r[2].otherConsumptionAmount,null)});
+test('new fields survive existing JSON snapshot validator roundtrip without raw cells',()=>{const p=parse(fixture());const r=validateSnapshot(p.snapshot);assert.deepEqual(r.followUpSummary,p.snapshot.followUpSummary);assert.ok(!JSON.stringify(r).includes('C4'));assert.ok(!JSON.stringify(r).includes('SUM('))});
+test('zero, missing and decimal other consumption stay distinct',()=>{const f=fixture();f.rows[1][12]=12.34;const rows=parse(f).snapshot.followUpSummary.rows;assert.deepEqual(rows.map(r=>r.otherConsumptionAmount),[12.34,0,null]);assert.equal(validateSnapshot(parse(f).snapshot).followUpSummary.rows[0].otherConsumptionAmount,12.34)});
+test('cached formula mismatch and negative states block import',()=>{for(const [col,value] of [[11,9],[10,-1]]){const f=fixture();f.rows[1][col]=value;assert.ok(parse(f).blocking.length)}});
+test('covered merge cells never create extra financial/status batch',()=>{const f=fixture();f.rows[2][7]=100;f.rows[2][9]=1;assert.equal(parse(f).snapshot.followUpSummary.rows.length,3)});
+test('old sheets do not invent followup state',()=>{const f=fixture();f.rows.forEach(r=>r.splice(9));assert.equal(parse(f).snapshot.followUpSummary,undefined)});
+test('parseFile preserves formula-cache metadata for batch scan subtotal',async()=>{const f=fixture();const book={SheetNames:['合成线路甲','汇总数据'],Sheets:{'合成线路甲':{rows:session},'汇总数据':{rows:f.rows,'!merges':f.merges,C4:{f:'SUM(C2:C3)',v:6},C10:{f:'SUM(C8:C9)',v:0}}}};const file=new File([new Uint8Array([3])],'synthetic-2026.xls',{lastModified:Date.UTC(2026,9,20)});const p=await parser.parseFile(file,null,{read:()=>book,utils:{sheet_to_json:s=>s.rows}});assert.deepEqual(p.blocking,[]);assert.equal(p.snapshot.followUpSummary.rows[0].scanCount,6);assert.equal(p.snapshot.followUpSummary.rows[2].scanCount,null)});
+
+test('literal and formula scan subtotals coexist without counting detail twice',()=>{
+ const f=fixture();f.rows[3][1]='合计';delete f.formulas.C4;
+ f.rows[6][1]='小计';f.rows[6][2]=3;f.formulas.C7=true;
+ const p=parse(f);assert.deepEqual(p.blocking,[]);assert.deepEqual(p.snapshot.followUpSummary.rows.map(r=>r.scanCount),[6,3,null]);
+});
+test('explicit subtotal mismatch remains blocking rather than silently using detail',()=>{const f=fixture();f.rows[3][1]='合计';f.rows[3][2]=7;delete f.formulas.C4;assert.ok(parse(f).blocking.some(x=>x.includes('四类合计')))});
