@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {validateSnapshot} from '../api/worker.mjs';
+const base=()=>({records:[{date:'2026-10-01',program:'合成线路甲',type:'首播',startTime:'09:00',scans:10,orders:1,first30:null,after30:null}],paymentSummary:[],metrics:[],source:{}});
+const row=()=>({sourceProduct:'合成原表产品甲',sourceRow:2,scanCount:10,paidByOrder:1,followingUp:2,notInterested:3,unclassifiedRemainder:4,paidAmount:100,otherConsumptionAmount:null});
+test('old snapshots remain valid without inventing followup fields',()=>assert.equal(validateSnapshot(base()).followUpSummary,undefined));
+test('new aggregate data survives backend round trip; client fields are discarded',()=>{const input=base();input.followUpSummary={schemaVersion:1,rows:[{...row(),customerPhone:'do not retain'}]};const out=validateSnapshot(input);assert.deepEqual(out.followUpSummary.rows,[row()]);assert.deepEqual(validateSnapshot(out).followUpSummary,out.followUpSummary)});
+test('zero differs from missing other consumption',()=>{const input=base();input.followUpSummary={schemaVersion:1,rows:[row(),{...row(),sourceRow:3,otherConsumptionAmount:0}]};assert.deepEqual(validateSnapshot(input).followUpSummary.rows.map(r=>r.otherConsumptionAmount),[null,0])});
+test('unfilled product stays null even when a workbook total cache is zero',()=>{const input=base();const pending={sourceProduct:'合成待填产品',sourceRow:9,...Object.fromEntries(['scanCount','paidByOrder','followingUp','notInterested','unclassifiedRemainder','paidAmount','otherConsumptionAmount'].map(k=>[k,null]))};input.followUpSummary={schemaVersion:1,rows:[pending]};assert.deepEqual(validateSnapshot(input).followUpSummary.rows,[pending])});
+test('inconsistent totals and duplicate source anchors fail',()=>{for(const rows of [[{...row(),followingUp:20}],[row(),row()]]){const input=base();input.followUpSummary={schemaVersion:1,rows};assert.throws(()=>validateSnapshot(input))}});
