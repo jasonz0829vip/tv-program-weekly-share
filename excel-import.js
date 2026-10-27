@@ -295,13 +295,52 @@ function paymentData(rows,names,context,merges=null){
   }
   return {paymentSummary:[...groups.values()],metrics};
 }
+// Aggregate-only follow-up batches. Formula text and raw client cells never leave parsing.
+function followUpData(rows,merges,formulaCells,context){
+  if(!rows.some(r=>/明确不需要|暂不考虑|跟进中|不回复|其他消费/.test((r||[]).slice(9,13).join(' '))))return null;
+  if(merges.some(m=>!m?.s||!m?.e)){context.blocking.push('跟进汇总合并范围无效');return {schemaVersion:1,rows:[]}}
+  const rowsOut=[],covered=(row,col)=>merges.some(m=>m.s.c<=col&&m.e.c>=col&&m.s.r<row&&m.e.r>=row);
+  const num=(row,col)=>safeNumber(get(rows[row],col));
+  for(let i=0;i<rows.length;i++){
+    if(covered(i,7)||covered(i,9))continue;
+    if(/全部合计|总计|合计总额|总金额合计/.test((rows[i]||[]).slice(0,5).join(' ')))continue;
+    const owner=programOwner(rows,i,merges);
+    const values=[5,7,9,10,11,12].map(c=>num(i,c));
+    const isAnchor=merges.some(m=>m.s.r===i&&[7,9,10,11,12].includes(m.s.c));
+    const ownLabel=str(get(rows[i],0));
+    if(!owner||(!values.some(v=>v!==null)&&!isAnchor&&!ownLabel))continue;
+    // Header labels are not pending product records.
+    if(/^(产品|线路|节目)(名称)?$/.test(owner)||/扫码|全款订单|明确不需要|跟进中/.test(owner))continue;
+    const end=Math.max(i,...merges.filter(m=>m.s.r===i&&[7,9,10,11,12].includes(m.s.c)).map(m=>m.e.r));
+    const paidByOrder=num(i,5),paidAmount=num(i,7),notInterested=num(i,9),followingUp=num(i,10),unclassifiedRemainder=num(i,11),otherConsumptionAmount=num(i,12);
+    const allMissing=values.every(v=>v===null);
+    let scanCount=null;
+    if(!allMissing){
+      // A batch subtotal can be either a cached formula or a literal number.
+      // Prefer its explicit B-column label within this exact merged batch.
+      const subtotalRows=[];
+      for(let r=i;r<=end;r++)if(/^(?:本批次|本批|扫码)?(?:合计|小计|总计)[：:]?$/.test(str(get(rows[r],1)).replace(/\s/g,'')))subtotalRows.push(r);
+      if(subtotalRows.length>1)context.blocking.push('汇总数据第'+(i+1)+'行批次存在多个扫码小计，需核对');
+      if(subtotalRows.length===1)scanCount=num(subtotalRows[0],2);
+      else if(formulaCells?.[coord(2,end+1)])scanCount=num(end,2);
+      else {const detail=[];for(let r=i;r<=end;r++)if(!formulaCells?.[coord(2,r+1)]){const n=num(r,2);if(n!==null)detail.push(n)}scanCount=detail.length?detail.reduce((a,b)=>a+b,0):null;}
+    }
+    const row={sourceProduct:owner,sourceRow:i+1,scanCount,paidByOrder,followingUp,notInterested,unclassifiedRemainder,paidAmount,otherConsumptionAmount};
+    for(const [key,value] of Object.entries(row))if(!['sourceProduct','sourceRow'].includes(key)&&value!==null&&!(key==='otherConsumptionAmount'?Number.isFinite(value)&&value>=0&&Math.abs(value*100-Math.round(value*100))<0.000001:isInteger(value)))context.blocking.push('汇总数据第'+(i+1)+'行跟进数值无效：'+key);
+    const states=[paidByOrder,followingUp,notInterested,unclassifiedRemainder];
+    if(states.every(v=>v!==null)&&scanCount!==null&&states.reduce((a,b)=>a+b,0)!==scanCount)context.blocking.push('汇总数据第'+(i+1)+'行四类合计与扫码小计不一致');
+    if(!allMissing&&states.some(v=>v===null))context.warnings.push('汇总数据第'+(i+1)+'行跟进状态未填完整，缺失项保留待补充');
+    rowsOut.push(row);
+  }
+  return {schemaVersion:1,rows:rowsOut};
+}
 function parseMatrices(matrices,options={}){
   const context={year:options.year||2026,warnings:[],blocking:[],seen:new Set()},records=[];
   const names=[];
-  let totalRows=null,totalMerges=null;
+  let totalRows=null,totalMerges=null,totalFormulas={};
   for(const [sheet,rows] of Object.entries(matrices)){
     if(!Array.isArray(rows))continue;
-    if(totalSheetPattern.test(sheet)){if(!totalRows||/汇总数据/.test(sheet)){totalRows=rows;totalMerges=options.sheetMerges?options.sheetMerges[sheet]||[]:null;}continue}
+    if(totalSheetPattern.test(sheet)){if(!totalRows||/汇总数据/.test(sheet)){totalRows=rows;totalMerges=options.sheetMerges?options.sheetMerges[sheet]||[]:null;totalFormulas=options.sheetFormulaCells?.[sheet]||{};}continue}
     if(excludedNames.test(sheet))continue;
     const found=sessionEntries(sheet,rows,context);
     if(found.length){records.push(...found);names.push(canonical(sheet))}
@@ -310,7 +349,8 @@ function parseMatrices(matrices,options={}){
   const p=paymentData(totalRows||[],[...new Set(names)],context,totalMerges);
   if(totalRows===null)context.warnings.push('未找到财务汇总表，全款金额不会自动编造');
   records.sort((a,b)=>a.date.localeCompare(b.date)||a.program.localeCompare(b.program));
-  const snapshot={schemaVersion:2,records,paymentSummary:p.paymentSummary,metrics:p.metrics,
+  const followUpSummary=Array.isArray(totalMerges)?followUpData(totalRows||[],totalMerges,totalFormulas,context):null;
+  const snapshot={schemaVersion:2,records,paymentSummary:p.paymentSummary,metrics:p.metrics,...(followUpSummary?{followUpSummary}:{}),
     source:{name:'Excel文件',hash:options.sha256||'',sheets:Object.keys(matrices).length,notes:'浏览器内读取，上传到共享服务的仅为脱敏节目汇总'}};
   return {snapshot,warnings:context.warnings,blocking:context.blocking,recognizedSheets:[...new Set(names)]};
 }
@@ -341,19 +381,21 @@ async function parseFile(file,seed,xlsx){
   if(sha256===KNOWN_SHA && seed?.records?.length===16)return knownSnapshot(seed,{sha256});
   if(!xlsx?.read||!xlsx?.utils?.sheet_to_json)throw new Error('Excel解析组件未加载，请检查网络后重试');
   const book=xlsx.read(bytes,{type:'array',cellDates:false,cellText:true,cellNF:true});
-  const matrices={},sheetMerges={};
+  const matrices={},sheetMerges={},sheetFormulaCells={};
   for(const name of book.SheetNames){
     const sheet=book.Sheets[name];
     sheetMerges[name]=sheet['!merges']||[];
+    sheetFormulaCells[name]=Object.fromEntries(Object.entries(sheet).filter(([cell,value])=>/^[A-M][0-9]+$/.test(cell)&&value?.f).map(([cell])=>[cell,true]));
     matrices[name]=xlsx.utils.sheet_to_json(sheet,{header:1,raw:false,defval:null,blankrows:true});
   }
   let year=new Date(file.lastModified||Date.now()).getFullYear();
   const yyyy=file.name.match(/20[0-9]{2}/);
   if(yyyy)year=+yyyy[0];
-  const parsed=parseMatrices(matrices,{year,sha256,sheetMerges});
+  const parsed=parseMatrices(matrices,{year,sha256,sheetMerges,sheetFormulaCells});
   parsed.snapshot.source.name='Excel上传（'+(file.name.toLowerCase().endsWith('.xlsx')?'xlsx':'xls')+'）';
   return parsed;
 }
 return {KNOWN_SHA,parseFile,parseMatrices,knownSnapshot,dateLabel,timeRange,canonical,recognizeMetrics};
 });
+
 
