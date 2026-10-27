@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-10-26T23-53-58-334Z-4eb0ab02",
-  "updatedAt": "2026-10-26T23:53:58.334Z",
-  "mirroredAt": "2026-10-26T23:55:15.472Z",
+  "version": "2026-10-27T04-45-33-549Z-8f2b45da",
+  "updatedAt": "2026-10-27T04:45:33.549Z",
+  "mirroredAt": "2026-10-27T05:01:43.957Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "6f2f2771fd7de20a43c04dc82c49839448fe2ec90069994ce764cfc5d270fe0a",
+      "hash": "1ab71bc0b0998fd21db2afd33a02ca09fd8db00f8f5d599b4895f3f0f584876a",
       "sheets": 9,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -711,7 +711,7 @@
         "orders": 3,
         "first30": 100,
         "after30": 5,
-        "phone": 0,
+        "phone": 2,
         "group": null,
         "fiveMinute": {
           "mode": "increment",
@@ -728,6 +728,36 @@
             "valueCells": "C63:C68",
             "timeCells": "B63:B68",
             "totalCell": "C75",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-27",
+        "program": "新加坡·马来西亚",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 64,
+        "orders": 7,
+        "first30": 62,
+        "after30": 2,
+        "phone": 3,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            1,
+            12,
+            11,
+            13,
+            9,
+            16
+          ],
+          "source": {
+            "sheet": "新马",
+            "valueCells": "C79:C84",
+            "timeCells": "B79:B84",
+            "totalCell": "C89",
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
@@ -808,12 +838,12 @@
         "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
       }
     ],
-    "sourceLastRecorded": "2026-10-26",
+    "sourceLastRecorded": "2026-10-27",
     "totals": {
-      "sessions": 24,
+      "sessions": 25,
       "programs": 8,
-      "scans": 1708,
-      "orders": 60,
+      "scans": 1772,
+      "orders": 67,
       "amount": 497469
     }
   }
