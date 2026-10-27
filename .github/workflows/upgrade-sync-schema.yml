@@ -1,0 +1,27 @@
+name: 都市频道 · 共享字段兼容升级
+on:
+  push:
+    branches: [main]
+    paths: ['api/worker.mjs', 'scripts/upgrade-sync-schema.mjs', '.github/workflows/upgrade-sync-schema.yml']
+permissions:
+  contents: read
+concurrency:
+  group: tv-weekly-schema-upgrade
+  cancel-in-progress: false
+jobs:
+  upgrade-existing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-package-lock --no-audit --no-fund
+      - run: npm test
+      - name: Upgrade existing Worker only, verify snapshot unchanged
+        run: node scripts/upgrade-sync-schema.mjs
