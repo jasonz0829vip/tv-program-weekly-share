@@ -111,7 +111,12 @@ function mergeSnapshots(incoming,mode){
     const prev=metricsMap.get(m.key);
     metricsMap.set(m.key,{...m,valuesByProgram:{...(prev?.valuesByProgram||{}),...m.valuesByProgram}});
   });
-  return {...incoming,
+  let followUpSummary=base.followUpSummary;
+  if(incoming.followUpSummary){
+    const replacing=new Set(incoming.followUpSummary.rows.map(r=>r.sourceProduct));
+    followUpSummary={schemaVersion:1,rows:[...(base.followUpSummary?.rows||[]).filter(r=>!replacing.has(r.sourceProduct)),...incoming.followUpSummary.rows]};
+  }
+  return {...incoming,...(followUpSummary?{followUpSummary}:{}),
     records:[...recordMap.values()].sort((a,b)=>a.date.localeCompare(b.date)||a.program.localeCompare(b.program)),
     paymentSummary:[...paidMap.values()],
     metrics:[...metricsMap.values()],
@@ -298,6 +303,7 @@ function applySnapshot(snapshot,version,updatedAt,options={}){
   else if(preset==='custom'&&start>end){start=datesSorted[0];end=datesSorted[datesSorted.length-1]}
   // Shared data supersedes cached local CSV. The original embedded sample remains as offline fallback.
   refreshScheduleAdvice();
+  window.UrbanLines?.setFollowUp(snapshot.followUpSummary||null);
   render();
   refreshNewMetrics(snapshot.metrics||[]);
   text('sharedCurrentAt','共享版本 '+String(version||'').slice(0,19).replace('T',' ')+' · 数据截至 '+datesSorted[datesSorted.length-1]);
@@ -503,3 +509,4 @@ window.UrbanSync={api:API,initialize,refreshShared,refreshPublishedMirror,applyS
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
 else initialize();
 })();
+
