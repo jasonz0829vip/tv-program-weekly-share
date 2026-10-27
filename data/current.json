@@ -1,8 +1,8 @@
 {
   "ok": true,
-  "version": "2026-10-27T06-01-48-106Z-e9a42a9b",
-  "updatedAt": "2026-10-27T06:01:48.106Z",
-  "mirroredAt": "2026-10-27T06:12:55.972Z",
+  "version": "2026-10-27T06-38-55-988Z-da973f6b",
+  "updatedAt": "2026-10-27T06:38:55.988Z",
+  "mirroredAt": "2026-10-27T07:05:49.694Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
@@ -773,9 +773,9 @@
       },
       {
         "program": "新加坡·马来西亚",
-        "amount": 272625,
-        "fullOrders": 17,
-        "fullPersons": 34,
+        "amount": 320619,
+        "fullOrders": 20,
+        "fullPersons": 40,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -828,7 +828,7 @@
         "unit": "元/人",
         "valuesByProgram": {
           "清远肇庆": 3359,
-          "新加坡·马来西亚": 8018.41,
+          "新加坡·马来西亚": 8015.5,
           "福建泰宁": 2879,
           "越南全景": 5597.24,
           "拈花湾": 2027,
@@ -844,7 +844,7 @@
       "programs": 8,
       "scans": 1772,
       "orders": 67,
-      "amount": 497469
+      "amount": 545463
     }
   }
 }
