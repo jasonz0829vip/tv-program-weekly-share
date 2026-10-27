@@ -85,9 +85,31 @@ export function validateSnapshot(payload){
     }
     metrics.push({key,label,unit,valuesByProgram,source:cleanText(m.source,140),note:cleanText(m.note,180)});
   }
+  // Optional aggregate-only extension. Existing JSON version storage needs no migration.
+  let followUpSummary;
+  if(payload.followUpSummary!=null){
+    const data=payload.followUpSummary;
+    if(data.schemaVersion!==1||!Array.isArray(data.rows)||data.rows.length>200)invalid('跟进汇总格式错误');
+    const rows=[],anchors=new Set();
+    for(const input of data.rows){
+      const sourceProduct=cleanText(input.sourceProduct,120),sourceRow=input.sourceRow;
+      if(!sourceProduct||/[<>]|[0-9]{11}/.test(sourceProduct)||!int(sourceRow,10000)||sourceRow===0||anchors.has(sourceProduct+'|'+sourceRow))invalid('跟进产品或批次标识无效');
+      anchors.add(sourceProduct+'|'+sourceRow);
+      const row={sourceProduct,sourceRow};
+      for(const key of ['scanCount','paidByOrder','followingUp','notInterested','unclassifiedRemainder','paidAmount','otherConsumptionAmount']){
+        const value=input[key];
+        if(value!==null&&!(key==='otherConsumptionAmount'?typeof value==='number'&&Number.isFinite(value)&&value>=0&&value<=1000000000&&Math.abs(value*100-Math.round(value*100))<0.000001:int(value,1000000000)))invalid('跟进数值缺失或无效：'+key);
+        row[key]=value;
+      }
+      const states=['paidByOrder','followingUp','notInterested','unclassifiedRemainder'];
+      if(states.every(k=>row[k]!==null)&&row.scanCount!==null&&states.reduce((n,k)=>n+row[k],0)!==row.scanCount)invalid('跟进四类合计与扫码小计不一致');
+      rows.push(row);
+    }
+    followUpSummary={schemaVersion:1,rows};
+  }
   const source={name:cleanText(payload.source?.name,100),hash:cleanText(payload.source?.hash,100),sheets:Math.min(100,Math.max(0,Number(payload.source?.sheets)||0)),notes:cleanText(payload.source?.notes,280)};
   // Future snapshots may add new programs or metrics but never client PII, formulas or raw cells.
-  return {schemaVersion:2,source,records,paymentSummary,metrics,sourceLastRecorded:records[records.length-1].date,
+  return {schemaVersion:2,source,records,paymentSummary,metrics,...(followUpSummary?{followUpSummary}:{}),sourceLastRecorded:records[records.length-1].date,
     totals:{sessions:records.length,programs:nameSet.size,scans:arrSum(records.map(r=>r.scans)),orders:arrSum(records.map(r=>r.orders)),
     amount:arrSum(paymentSummary.map(p=>p.amount))}};
 }
@@ -176,7 +198,7 @@ export default {
   try{
     const u=new URL(request.url),method=request.method;
     if(method==='OPTIONS')return new Response(null,{status:204,headers:cors(request)});
-    if(method==='GET'&&u.pathname==='/')return json(request,{ok:true,service:'都市频道共享周报',version:'2.0',hasDatabase:!!env.DB});
+    if(method==='GET'&&u.pathname==='/')return json(request,{ok:true,service:'都市频道共享周报',version:'2.1',capabilities:['followup-summary-v1'],hasDatabase:!!env.DB});
     if(!['/api/current','/api/versions','/api/publish','/api/restore'].includes(u.pathname))return json(request,{ok:false,error:'不存在该接口'},404);
     await ensureDb(env);
     if(method==='GET'&&u.pathname==='/api/current'){
@@ -200,3 +222,4 @@ export default {
   }
  }
 };
+
