@@ -208,7 +208,13 @@ function recognizeMetrics(rows){
   }
   return result;
 }
-function paymentData(rows,names,context){
+// Product ownership follows the actual column-A merge, never a prior block.
+function programOwner(rows,rowIndex,merges){
+  const owners=merges.filter(m=>m.s.c===0&&m.e.c===0&&m.s.r<=rowIndex&&m.e.r>=rowIndex);
+  if(owners.length>1)return '';
+  return str(get(rows[owners.length?owners[0].s.r:rowIndex],0));
+}
+function paymentData(rows,names,context,merges=null){
   if(!rows.length)return {paymentSummary:[],metrics:[]};
   const matched=[];
   const metricsInfo=recognizeMetrics(rows);
@@ -221,26 +227,53 @@ function paymentData(rows,names,context){
     const arr=rows[row-1]||[];
     return safeNumber(get(arr,7))!==null&&safeNumber(get(arr,5))!==null&&safeNumber(get(arr,6))!==null;
   });
+  const strictOwnership=Array.isArray(merges), totals=[];
+  if(strictOwnership&&merges.some(m=>!m?.s||!m?.e||![m.s.r,m.s.c,m.e.r,m.e.c].every(Number.isInteger)||m.s.r<0||m.s.c<0||m.e.r<m.s.r||m.e.c<m.s.c)){
+    context.blocking.push('财务汇总合并范围无效，禁止发布');return {paymentSummary:[],metrics:[]};
+  }
   for(let i=0;i<rows.length;i++){
     const row=rows[i]||[],amount=safeNumber(get(row,7)),order=safeNumber(get(row,5)),people=safeNumber(get(row,6));
-    if(/(?:全部合计|总计|合计总额|总金额合计)/.test(row.slice(0,5).join(' ')))continue;
-    if(!isInteger(amount)||!isInteger(order)||!isInteger(people))continue;
-    let name=sniffProgram(row.slice(0,5).join(' '),names);
-    if(!name){
-      for(let n=i-1;n>=Math.max(0,i-3);n--){
-        name=sniffProgram((rows[n]||[]).slice(0,5).join(' '),names);
-        if(name)break;
+    // Consume a merged amount only at its H-column anchor.
+    if(strictOwnership){
+      const spans=merges.filter(m=>m.s.c<=7&&m.e.c>=7&&m.s.r<=i&&m.e.r>=i);
+      if(spans.length>1||spans.some(m=>m.s.c!==7)){
+        context.blocking.push('汇总数据!H'+(i+1)+' 金额合并范围不明确，禁止发布');continue;
       }
+      if(spans.some(m=>m.s.r<i))continue;
     }
-    if(!name&&oldSignature){
-      const index=signatureRows.indexOf(i+1);
-      if(index>=0&&names.includes(signaturePrograms[index]))name=signaturePrograms[index];
+    if(/(?:全部合计|总计|合计总额|总金额合计)/.test(row.slice(0,5).join(' '))){
+      if(strictOwnership){
+        if(!isInteger(amount))context.blocking.push('汇总数据!H'+(i+1)+' 总额缺失或无效，禁止发布');
+        else totals.push({row:i+1,amount,order,people});
+      }
+      continue;
     }
-    if(!name){context.warnings.push('汇总数据!H'+(i+1)+' 有金额但无法确认归属线路，未纳入实付合计');continue}
+    const label=strictOwnership?programOwner(rows,i,merges):row.slice(0,5).join(' ');
+    const candidates=strictOwnership?names.filter(n=>sniffProgram(label,[n])===n):[];
+    let name=strictOwnership?(candidates.length===1?candidates[0]:''):sniffProgram(label,names);
+    if(!strictOwnership){
+      if(!name)for(let n=i-1;n>=Math.max(0,i-3);n--){name=sniffProgram((rows[n]||[]).slice(0,5).join(' '),names);if(name)break;}
+      if(!name&&oldSignature){const index=signatureRows.indexOf(i+1);if(index>=0&&names.includes(signaturePrograms[index]))name=signaturePrograms[index];}
+    }
+    // Blank financial rows are not zero-valued financial records.
+    if(amount===null&&order===null&&people===null)continue;
+    if(!isInteger(amount)||!isInteger(order)||!isInteger(people)){
+      if(strictOwnership&&(amount!==null||name))context.blocking.push('汇总数据!F'+(i+1)+':H'+(i+1)+' 财务数值缺失或无效，不能按0处理');
+      continue;
+    }
+    if(!name){
+      const message='汇总数据!H'+(i+1)+' 有金额但无法确认归属线路，未纳入实付合计';
+      (strictOwnership&&(amount>0||order>0||people>0)?context.blocking:context.warnings).push(message);continue;
+    }
     let p=groups.get(name);
     if(!p){p={program:name,amount:0,fullOrders:0,fullPersons:0,source:'汇总数据 F:G:H'};groups.set(name,p)}
     p.amount+=amount;p.fullOrders+=order;p.fullPersons+=people;
     matched.push({name,rowIndex:i,row,amount,order,people});
+  }
+  if(strictOwnership){
+    const sums=matched.reduce((a,r)=>({amount:a.amount+r.amount,order:a.order+r.order,people:a.people+r.people}),{amount:0,order:0,people:0});
+    for(const total of totals)if(total.amount!==sums.amount||(isInteger(total.order)&&total.order!==sums.order)||(isInteger(total.people)&&total.people!==sums.people))
+      context.blocking.push('汇总数据!H'+total.row+' 总计与已识别批次合计不一致，禁止发布');
   }
   if(!matched.length)context.warnings.push('无法识别汇总数据中的完整实付金额和全款订单，金额将标记为待核验');
   const metrics=[];
@@ -265,16 +298,16 @@ function paymentData(rows,names,context){
 function parseMatrices(matrices,options={}){
   const context={year:options.year||2026,warnings:[],blocking:[],seen:new Set()},records=[];
   const names=[];
-  let totalRows=null;
+  let totalRows=null,totalMerges=null;
   for(const [sheet,rows] of Object.entries(matrices)){
     if(!Array.isArray(rows))continue;
-    if(totalSheetPattern.test(sheet)){if(!totalRows||/汇总数据/.test(sheet))totalRows=rows;continue}
+    if(totalSheetPattern.test(sheet)){if(!totalRows||/汇总数据/.test(sheet)){totalRows=rows;totalMerges=options.sheetMerges?options.sheetMerges[sheet]||[]:null;}continue}
     if(excludedNames.test(sheet))continue;
     const found=sessionEntries(sheet,rows,context);
     if(found.length){records.push(...found);names.push(canonical(sheet))}
   }
   if(!records.length)context.blocking.push('Excel中没有识别到完整的节目场次，请检查播出日期、首播/重播与5分钟时间行');
-  const p=paymentData(totalRows||[],[...new Set(names)],context);
+  const p=paymentData(totalRows||[],[...new Set(names)],context,totalMerges);
   if(totalRows===null)context.warnings.push('未找到财务汇总表，全款金额不会自动编造');
   records.sort((a,b)=>a.date.localeCompare(b.date)||a.program.localeCompare(b.program));
   const snapshot={schemaVersion:2,records,paymentSummary:p.paymentSummary,metrics:p.metrics,
@@ -308,17 +341,19 @@ async function parseFile(file,seed,xlsx){
   if(sha256===KNOWN_SHA && seed?.records?.length===16)return knownSnapshot(seed,{sha256});
   if(!xlsx?.read||!xlsx?.utils?.sheet_to_json)throw new Error('Excel解析组件未加载，请检查网络后重试');
   const book=xlsx.read(bytes,{type:'array',cellDates:false,cellText:true,cellNF:true});
-  const matrices={};
+  const matrices={},sheetMerges={};
   for(const name of book.SheetNames){
     const sheet=book.Sheets[name];
+    sheetMerges[name]=sheet['!merges']||[];
     matrices[name]=xlsx.utils.sheet_to_json(sheet,{header:1,raw:false,defval:null,blankrows:true});
   }
   let year=new Date(file.lastModified||Date.now()).getFullYear();
   const yyyy=file.name.match(/20[0-9]{2}/);
   if(yyyy)year=+yyyy[0];
-  const parsed=parseMatrices(matrices,{year,sha256});
+  const parsed=parseMatrices(matrices,{year,sha256,sheetMerges});
   parsed.snapshot.source.name='Excel上传（'+(file.name.toLowerCase().endsWith('.xlsx')?'xlsx':'xls')+'）';
   return parsed;
 }
 return {KNOWN_SHA,parseFile,parseMatrices,knownSnapshot,dateLabel,timeRange,canonical,recognizeMetrics};
 });
+
