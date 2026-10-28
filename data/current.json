@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-10-28T01-32-07-766Z-95f189cd",
-  "updatedAt": "2026-10-28T01:32:07.766Z",
-  "mirroredAt": "2026-10-28T02:37:51.858Z",
+  "version": "2026-10-28T05-24-26-685Z-98c44a79",
+  "updatedAt": "2026-10-28T05:24:26.685Z",
+  "mirroredAt": "2026-10-28T08:59:21.945Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "df0dab592d50b3f9403665c8b52daec9cad958bab1a6b9cc0b0865bfa3476934",
+      "hash": "8c8e1edb405b7d33b7e0df6b75d3b33d3333cf38866ddafe8a6925ccc0798c5e",
       "sheets": 10,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -791,6 +791,36 @@
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
+      },
+      {
+        "date": "2026-10-28",
+        "program": "美国旧金山",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 9,
+        "orders": 1,
+        "first30": 9,
+        "after30": 0,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            1,
+            1,
+            2,
+            0,
+            5,
+            0
+          ],
+          "source": {
+            "sheet": "美国旧金山",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       }
     ],
     "paymentSummary": [
@@ -1002,22 +1032,22 @@
         {
           "sourceProduct": "美国旧金山+夏威夷跳岛20日游",
           "sourceRow": 38,
-          "scanCount": 20,
+          "scanCount": 29,
           "paidByOrder": 0,
-          "followingUp": 6,
-          "notInterested": 1,
-          "unclassifiedRemainder": 13,
+          "followingUp": 7,
+          "notInterested": 3,
+          "unclassifiedRemainder": 19,
           "paidAmount": 0,
           "otherConsumptionAmount": null
         }
       ]
     },
-    "sourceLastRecorded": "2026-10-27",
+    "sourceLastRecorded": "2026-10-28",
     "totals": {
-      "sessions": 26,
+      "sessions": 27,
       "programs": 9,
-      "scans": 1792,
-      "orders": 73,
+      "scans": 1801,
+      "orders": 74,
       "amount": 545463
     }
   }
