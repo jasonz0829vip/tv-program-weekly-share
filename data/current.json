@@ -1,14 +1,14 @@
 {
   "ok": true,
-  "version": "2026-10-27T06-38-55-988Z-da973f6b",
-  "updatedAt": "2026-10-27T06:38:55.988Z",
-  "mirroredAt": "2026-10-27T07:05:49.694Z",
+  "version": "2026-10-28T01-32-07-766Z-95f189cd",
+  "updatedAt": "2026-10-28T01:32:07.766Z",
+  "mirroredAt": "2026-10-28T02:37:51.858Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "ad160dc4d1e5e0b8cdb13254bec1445ff72c2eebb2005f8cf79d515dce861e36",
-      "sheets": 9,
+      "hash": "df0dab592d50b3f9403665c8b52daec9cad958bab1a6b9cc0b0865bfa3476934",
+      "sheets": 10,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
     "records": [
@@ -734,6 +734,36 @@
       },
       {
         "date": "2026-10-27",
+        "program": "美国旧金山",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 20,
+        "orders": 6,
+        "first30": 17,
+        "after30": 3,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            2,
+            4,
+            2,
+            2,
+            1,
+            6
+          ],
+          "source": {
+            "sheet": "美国旧金山",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-27",
         "program": "新加坡·马来西亚",
         "type": "重播",
         "startTime": "09:30",
@@ -819,6 +849,13 @@
         "fullOrders": 0,
         "fullPersons": 0,
         "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "美国旧金山",
+        "amount": 0,
+        "fullOrders": 0,
+        "fullPersons": 0,
+        "source": "汇总数据 F:G:H"
       }
     ],
     "metrics": [
@@ -838,12 +875,149 @@
         "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
       }
     ],
+    "followUpSummary": {
+      "schemaVersion": 1,
+      "rows": [
+        {
+          "sourceProduct": "清远、肇庆美食动卧7日游",
+          "sourceRow": 2,
+          "scanCount": 171,
+          "paidByOrder": 5,
+          "followingUp": 2,
+          "notInterested": 28,
+          "unclassifiedRemainder": 136,
+          "paidAmount": 50385,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "新加坡马来西亚8日游",
+          "sourceRow": 6,
+          "scanCount": 146,
+          "paidByOrder": 12,
+          "followingUp": 5,
+          "notInterested": 25,
+          "unclassifiedRemainder": 104,
+          "paidAmount": 199377,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "新加坡马来西亚8日游",
+          "sourceRow": 9,
+          "scanCount": 198,
+          "paidByOrder": 5,
+          "followingUp": 4,
+          "notInterested": 23,
+          "unclassifiedRemainder": 166,
+          "paidAmount": 73248,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "新加坡马来西亚8日游",
+          "sourceRow": 12,
+          "scanCount": 169,
+          "paidByOrder": 3,
+          "followingUp": 0,
+          "notInterested": 17,
+          "unclassifiedRemainder": 149,
+          "paidAmount": 47994,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "福建泰宁大金湖上清溪双高5日游",
+          "sourceRow": 15,
+          "scanCount": 182,
+          "paidByOrder": 7,
+          "followingUp": 6,
+          "notInterested": 22,
+          "unclassifiedRemainder": 147,
+          "paidAmount": 54694,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "越南全景7日游",
+          "sourceRow": 19,
+          "scanCount": 170,
+          "paidByOrder": 3,
+          "followingUp": 5,
+          "notInterested": 16,
+          "unclassifiedRemainder": 146,
+          "paidAmount": 33561,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "越南全景7日游",
+          "sourceRow": 22,
+          "scanCount": 168,
+          "paidByOrder": 4,
+          "followingUp": 1,
+          "notInterested": 13,
+          "unclassifiedRemainder": 150,
+          "paidAmount": 61589,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "不一样的拈花湾4天3晚",
+          "sourceRow": 25,
+          "scanCount": 341,
+          "paidByOrder": 4,
+          "followingUp": 0,
+          "notInterested": 15,
+          "unclassifiedRemainder": 322,
+          "paidAmount": 16217,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "西班牙+葡萄牙（马德里进巴塞罗那回）13日游",
+          "sourceRow": 29,
+          "scanCount": 31,
+          "paidByOrder": 0,
+          "followingUp": 0,
+          "notInterested": 3,
+          "unclassifiedRemainder": 28,
+          "paidAmount": 0,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "港珠澳、深圳、惠州双飞6日美食之旅",
+          "sourceRow": 32,
+          "scanCount": 155,
+          "paidByOrder": 1,
+          "followingUp": 2,
+          "notInterested": 14,
+          "unclassifiedRemainder": 138,
+          "paidAmount": 8398,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "南非一地12日游",
+          "sourceRow": 35,
+          "scanCount": 41,
+          "paidByOrder": 0,
+          "followingUp": 0,
+          "notInterested": 2,
+          "unclassifiedRemainder": 39,
+          "paidAmount": 0,
+          "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "美国旧金山+夏威夷跳岛20日游",
+          "sourceRow": 38,
+          "scanCount": 20,
+          "paidByOrder": 0,
+          "followingUp": 6,
+          "notInterested": 1,
+          "unclassifiedRemainder": 13,
+          "paidAmount": 0,
+          "otherConsumptionAmount": null
+        }
+      ]
+    },
     "sourceLastRecorded": "2026-10-27",
     "totals": {
-      "sessions": 25,
-      "programs": 8,
-      "scans": 1772,
-      "orders": 67,
+      "sessions": 26,
+      "programs": 9,
+      "scans": 1792,
+      "orders": 73,
       "amount": 545463
     }
   }
