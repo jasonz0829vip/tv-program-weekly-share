@@ -4,7 +4,7 @@ function render(paidCount,zeroLast=false){
  const elements={};const records=Array.from({length:7},(_,i)=>({program:'线路'+i}));
  const node=()=>({innerHTML:'',textContent:'',addEventListener(){},focus(){},querySelector(selector){if(selector==='button')return null;return this.children[selector]??=node()},querySelectorAll(){return []},children:{}});
  const ctx={$:id=>elements[id]??=node(),records,PAYMENT_ROUTES:records.slice(0,paidCount).map((r,i)=>({...r,amount:zeroLast&&i===6?0:100,fullOrders:zeroLast&&i===6?0:1,fullPersons:zeroLast&&i===6?0:2})),
- sum:(rows,key)=>rows.reduce((n,r)=>n+r[key],0),fmt:String,h:String,moneyAvg:String,decimal:()=>0,
+ sum:(rows,key)=>rows.reduce((n,r)=>n+r[key],0),fmt:String,fmtMoney:n=>Number(n||0).toLocaleString('zh-CN',{maximumFractionDigits:2}),h:String,moneyAvg:String,decimal:()=>0,
  groups:rows=>rows.map(r=>({name:r.program,sessions:1,live:1,replay:0,scans:1,orders:0,liveScans:1,replayScans:0}))};
  const start=html.indexOf('function renderRevenue(){');
  vm.createContext(ctx);vm.runInContext(html.slice(start,html.indexOf('\nfunction ',start+1)),ctx);
