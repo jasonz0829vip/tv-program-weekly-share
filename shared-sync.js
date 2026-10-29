@@ -6,10 +6,11 @@ const CLOUD_CACHE_KEY='urban-channel-last-confirmed-shared-v1';
 const UI=id=>document.getElementById(id);
 const text=(id,value)=>{const el=UI(id);if(el)el.textContent=String(value??'')};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const total=(rows,key)=>rows.reduce((n,r)=>n+(Number(r[key])||0),0);
+const total=(rows,key)=>key==='amount'?rows.reduce((n,r)=>n+Math.round((Number(r[key])||0)*100),0)/100:rows.reduce((n,r)=>n+(Number(r[key])||0),0);
 const dates=(rows)=>rows.map(r=>r.date).sort();
 const sessionKey=r=>[r.date,r.program,r.type,r.startTime||''].join('|');
 const fmtNumber=n=>Number(n||0).toLocaleString('zh-CN');
+const fmtMoney=n=>Number(n||0).toLocaleString('zh-CN',{maximumFractionDigits:2});
 const safeStatus=(label,type)=>{
   const badge=UI('sharedSyncBadge');
   if(!badge)return;
@@ -146,7 +147,7 @@ function renderFilePreview(){
   const warnings=result.warnings||[];
   box.innerHTML='<div class="excel-preview-overline">自动识别结果 · '+esc(UI('excelSyncMode')?.selectedOptions?.[0]?.textContent||'智能合并')+'</div>'+
    '<div class="excel-preview-grid"><div><span>本次文件场次</span><strong>'+original+'</strong></div><div><span>发布后场次</span><strong>'+r.length+'</strong></div><div><span>线路</span><strong>'+groupSet.size+'</strong></div><div><span>5分钟完整数据</span><strong>'+validFive+' / '+r.length+'</strong></div></div>'+
-   '<div class="excel-preview-summary"><span>扫码累计 <b>'+fmtNumber(total(r,'scans'))+'</b> 人次</span><span>意向金 <b>'+fmtNumber(total(r,'orders'))+'</b> 单</span><span>全款实付 <b>'+(p.length?'¥'+fmtNumber(total(p,'amount')):'待补')+'</b></span></div>'+
+   '<div class="excel-preview-summary"><span>扫码累计 <b>'+fmtNumber(total(r,'scans'))+'</b> 人次</span><span>意向金 <b>'+fmtNumber(total(r,'orders'))+'</b> 单</span><span>全款实付 <b>'+(p.length?'¥'+fmtMoney(total(p,'amount')):'待补')+'</b></span></div>'+
    '<div class="excel-preview-programs">'+[...groupSet].map(x=>'<span>'+esc(x)+'</span>').join('')+'</div>'+
    (metrics.length?'<div class="excel-preview-metrics">识别到新增指标：'+metrics.map(m=>'<b>'+esc(m.label)+'</b>').join('、')+'</div>':'')+
    (warnings.length?'<details class="excel-preview-warnings"><summary>有 '+warnings.length+' 条数据提醒（点开核对）</summary>'+warnings.slice(0,15).map(x=>'<p>'+esc(x)+'</p>').join('')+'</details>':'')+
@@ -235,7 +236,7 @@ function refreshScheduleAdvice(){
   const visible=scheduleView.expanded?matches:matches.slice(0,5);
   box.innerHTML=visible.map((g,i)=>{
     const paid=g.paid;
-    const paidText=paid?'¥'+fmtNumber(paid.amount):'待核验';
+    const paidText=paid?'¥'+fmtMoney(paid.amount):'待核验';
     const orderText=paid?fmtNumber(paid.fullOrders)+'单':'—';
     const personsText=paid?fmtNumber(paid.fullPersons)+'人':'—';
     const paidPerPerson=paid&&g.paidPerPerson!==null?'¥'+fmtNumber(Math.round(g.paidPerPerson))+'/人':'—';
@@ -509,4 +510,3 @@ window.UrbanSync={api:API,initialize,refreshShared,refreshPublishedMirror,applyS
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
 else initialize();
 })();
-
