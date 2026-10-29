@@ -493,11 +493,12 @@ try{const saved=localStorage.getItem(storageKey);if(saved){const parsed=JSON.par
 let issues=SEED.quality;let activeView='overview',preset='all',start='2026-09-23',end='2026-10-16';
 const $=(id)=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('zh-CN');
+const fmtMoney=n=>Number(n||0).toLocaleString('zh-CN',{maximumFractionDigits:2});
 const pct=(a,b,d=1)=>b?((a/b)*100).toFixed(d):'—';
 const shortDate=s=>{const a=s.split('-');return Number(a[1])+'月'+Number(a[2])+'日'};
 const longDate=s=>{const a=s.split('-');return a[0]+'年'+Number(a[1])+'月'+Number(a[2])+'日'};
 const h=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const sum=(a,k)=>a.reduce((n,r)=>n+(Number(r[k])||0),0);
+const sum=(a,k)=>k==='amount'?a.reduce((n,r)=>n+Math.round((Number(r[k])||0)*100),0)/100:a.reduce((n,r)=>n+(Number(r[k])||0),0);
 const getPeriod=()=>records.filter(r=>r.date>=start&&r.date<=end);
 function summary(a){return {sessions:a.length,scans:sum(a,'scans'),orders:sum(a,'orders'),first30:sum(a,'first30'),last30:sum(a,'after30'),programs:[...new Set(a.map(r=>r.program))].length}}
 function groups(a){const map=new Map();a.forEach(r=>{let g=map.get(r.program);if(!g){g={name:r.program,scans:0,orders:0,sessions:0,live:0,replay:0,liveScans:0,replayScans:0,liveOrders:0,replayOrders:0,first:0,phones:0};map.set(r.program,g)}g.scans+=r.scans;g.orders+=r.orders;g.sessions++;if(r.type==='首播'){g.live++;g.liveScans+=r.scans;g.liveOrders+=r.orders}else if(r.type==='重播'){g.replay++;g.replayScans+=r.scans;g.replayOrders+=r.orders}g.first+=r.first30||0;g.phones+=r.phone||0});return [...map.values()].sort((x,y)=>y.scans-x.scans)}
@@ -556,8 +557,8 @@ function renderRevenue(){
   $('revenueCoverage').textContent='共 '+programNames.size+' 条线路';
   $('revenueKpiScope').textContent=paidCount?(missing?'按已提供的实付数据累计':'全部线路累计'):'暂无可核验实付数据';
   $('revenueScope').textContent='全款实付及播出次数为全周期口径，与上方日期筛选独立。'+(missing?'另有 '+missing+' 条线路未提供实付数据，未计入金额合计。':'');
-  $('kpiRevenue').textContent=hasPaid?fmt(total):'—';
-  $('revenuePanelTotal').textContent=hasPaid?fmt(total):'—';
+  $('kpiRevenue').textContent=hasPaid?fmtMoney(total):'—';
+  $('revenuePanelTotal').textContent=hasPaid?fmtMoney(total):'—';
   $('kpiPaidOrders').textContent=hasPaid?fmt(sum(all,'fullOrders')):'—';
   $('kpiPaidPersons').textContent=hasPaid?fmt(sum(all,'fullPersons')):'—';
   const broadcast=groups(records),map=new Map(broadcast.map(x=>[x.name,x]));
@@ -576,10 +577,10 @@ function renderRevenue(){
   function routeRow(x,rank){
     const g=x.stats,n=g.sessions,realAvg=n?x.amount/n:null;
     const amountNote=realAvg!==null?'¥'+moneyAvg(realAvg)+'/播次':'—';
-    return `<button type="button" class="revenue-chart-row" data-revenue-route="${h(x.program)}" aria-pressed="${view.selected===x.program}" aria-controls="revenueSelectedDetail" aria-label="${h(x.program)}，实付¥${fmt(x.amount)}，查看图下详情">
+    return `<button type="button" class="revenue-chart-row" data-revenue-route="${h(x.program)}" aria-pressed="${view.selected===x.program}" aria-controls="revenueSelectedDetail" aria-label="${h(x.program)}，实付¥${fmtMoney(x.amount)}，查看图下详情">
       <span class="revenue-route-name">${h(x.program)}${x.amount===0?'<small class="revenue-zero">已确认零成交</small>':''}</span>
       <span class="revenue-route-track"><i style="width:${(x.amount/axisMax*100).toFixed(3)}%"></i></span>
-      <span class="revenue-chart-value"><strong>¥${fmt(x.amount)}</strong><small>占总实付 ${total>0?(x.amount/total*100).toFixed(1):'0.0'}%</small></span></button>`;
+      <span class="revenue-chart-value"><strong>¥${fmtMoney(x.amount)}</strong><small>占总实付 ${total>0?(x.amount/total*100).toFixed(1):'0.0'}%</small></span></button>`;
   }
   function routeDetail(x){
     const g=x.stats,n=g.sessions,amountNote=n?'¥'+moneyAvg(x.amount/n)+'/播次':'—';
@@ -640,7 +641,7 @@ function renderInsights(a,s,g){
     <div class="insight-metric"><div class="insight-metric-kicker">场均扫码最高</div><div class="insight-metric-name">${h(byScans.name)}</div><div class="insight-metric-value">${decimal(byScans.scans,byScans.sessions,1)}<small>人次/场</small></div><p>${fmt(byScans.scans)} 人次 ÷ ${byScans.sessions} 场（首播 ${byScans.live} · 重播 ${byScans.replay}）</p></div>
     <div class="insight-metric"><div class="insight-metric-kicker">场均意向金最高</div><div class="insight-metric-name">${h(byOrders.name)}</div><div class="insight-metric-value">${decimal(byOrders.orders,byOrders.sessions,2)}<small>单/场</small></div><p>${fmt(byOrders.orders)} 单 ÷ ${byOrders.sessions} 场（首播 ${byOrders.live} · 重播 ${byOrders.replay}）</p></div>
     ${ratioCard}
-    <div class="insight-metric revenue-leader"><div class="insight-metric-kicker">全周期累计实付最多</div><div class="insight-metric-name">${h(byRevenue.program)}</div><div class="insight-metric-value"><small>¥</small>${fmt(byRevenue.amount)}</div><p>累计 ${totalRevenueShows?totalRevenueShows.sessions:'—'} 场 · 按播次均摊参考 ¥${totalRevenueShows?moneyAvg(byRevenue.amount/totalRevenueShows.sessions):'—'}；不是单场归因收入</p></div>
+    <div class="insight-metric revenue-leader"><div class="insight-metric-kicker">全周期累计实付最多</div><div class="insight-metric-name">${h(byRevenue.program)}</div><div class="insight-metric-value"><small>¥</small>${fmtMoney(byRevenue.amount)}</div><p>累计 ${totalRevenueShows?totalRevenueShows.sessions:'—'} 场 · 按播次均摊参考 ¥${totalRevenueShows?moneyAvg(byRevenue.amount/totalRevenueShows.sessions):'—'}；不是单场归因收入</p></div>
   </div>
   
   <div class="insight-type-split"><div><span>首播</span><strong>${live.length} 场</strong><small>场均扫码 ${decimal(liveScans,live.length,1)} · 场均意向 ${decimal(sum(live,'orders'),live.length,2)} 单</small></div><div><span>重播</span><strong>${replay.length} 场</strong><small>场均扫码 ${decimal(replayScans,replay.length,1)} · 场均意向 ${decimal(sum(replay,'orders'),replay.length,2)} 单</small></div></div>
@@ -848,9 +849,9 @@ navigateFromHash();
 <link rel="stylesheet" href="recent-broadcast.css?v=20261027-2">
 <script src="recent-broadcast.js?v=20261027-2"></script>
 <link rel="stylesheet" href="line-overview.css?v=20261027-1">
-<script src="line-overview.js?v=20261027-1"></script>
+<script src="line-overview.js?v=20261029-money"></script>
 <script src="broadcast-trend.js?v=20261027-1"></script>
-<script src="excel-import.js?v=2.1.0" defer></script>
+<script src="excel-import.js?v=2.1.1" defer></script>
 <script src="recommendation-policy.js?v=20261021" defer></script>
-<script src="shared-sync.js?v=20261027-followup" defer></script>
+<script src="shared-sync.js?v=20261029-money" defer></script>
 </body></html>
