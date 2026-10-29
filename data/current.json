@@ -1,14 +1,14 @@
 {
   "ok": true,
-  "version": "2026-10-28T05-24-26-685Z-98c44a79",
-  "updatedAt": "2026-10-28T05:24:26.685Z",
-  "mirroredAt": "2026-10-28T08:59:21.945Z",
+  "version": "2026-10-29T08-10-30-959Z-6c4a3b5f",
+  "updatedAt": "2026-10-29T08:10:30.959Z",
+  "mirroredAt": "2026-10-29T08:14:09.615Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "8c8e1edb405b7d33b7e0df6b75d3b33d3333cf38866ddafe8a6925ccc0798c5e",
-      "sheets": 10,
+      "hash": "9995295112098e7f70ca806bb8c8e7abc87370fcfbfd6c108b13fdc2eb7c717b",
+      "sheets": 11,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
     "records": [
@@ -794,6 +794,36 @@
       },
       {
         "date": "2026-10-28",
+        "program": "黄龙饭店年夜饭",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 54,
+        "orders": 0,
+        "first30": 46,
+        "after30": 8,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            1,
+            3,
+            11,
+            11,
+            10,
+            10
+          ],
+          "source": {
+            "sheet": "黄龙饭店年夜饭",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-28",
         "program": "美国旧金山",
         "type": "重播",
         "startTime": "09:30",
@@ -821,6 +851,36 @@
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
+      },
+      {
+        "date": "2026-10-29",
+        "program": "黄龙饭店年夜饭",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 36,
+        "orders": 0,
+        "first30": 31,
+        "after30": 5,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            2,
+            7,
+            8,
+            7,
+            7,
+            0
+          ],
+          "source": {
+            "sheet": "黄龙饭店年夜饭",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       }
     ],
     "paymentSummary": [
@@ -833,9 +893,9 @@
       },
       {
         "program": "新加坡·马来西亚",
-        "amount": 320619,
-        "fullOrders": 20,
-        "fullPersons": 40,
+        "amount": 368613,
+        "fullOrders": 23,
+        "fullPersons": 46,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -886,6 +946,13 @@
         "fullOrders": 0,
         "fullPersons": 0,
         "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "黄龙饭店年夜饭",
+        "amount": 48233.82,
+        "fullOrders": 5,
+        "fullPersons": 30,
+        "source": "汇总数据 F:G:H"
       }
     ],
     "metrics": [
@@ -895,11 +962,12 @@
         "unit": "元/人",
         "valuesByProgram": {
           "清远肇庆": 3359,
-          "新加坡·马来西亚": 8015.5,
+          "新加坡·马来西亚": 8013.22,
           "福建泰宁": 2879,
           "越南全景": 5597.24,
           "拈花湾": 2027,
-          "港珠澳": 4199
+          "港珠澳": 4199,
+          "黄龙饭店年夜饭": 1608
         },
         "source": "Excel 汇总数据 I1 列",
         "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
@@ -934,22 +1002,22 @@
           "sourceProduct": "新加坡马来西亚8日游",
           "sourceRow": 9,
           "scanCount": 198,
-          "paidByOrder": 5,
+          "paidByOrder": 6,
           "followingUp": 4,
           "notInterested": 23,
-          "unclassifiedRemainder": 166,
-          "paidAmount": 73248,
+          "unclassifiedRemainder": 165,
+          "paidAmount": 89246,
           "otherConsumptionAmount": null
         },
         {
           "sourceProduct": "新加坡马来西亚8日游",
           "sourceRow": 12,
           "scanCount": 169,
-          "paidByOrder": 3,
+          "paidByOrder": 5,
           "followingUp": 0,
           "notInterested": 17,
-          "unclassifiedRemainder": 149,
-          "paidAmount": 47994,
+          "unclassifiedRemainder": 147,
+          "paidAmount": 79990,
           "otherConsumptionAmount": null
         },
         {
@@ -1039,16 +1107,27 @@
           "unclassifiedRemainder": 19,
           "paidAmount": 0,
           "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "杭州黄龙饭店年夜饭",
+          "sourceRow": 41,
+          "scanCount": 90,
+          "paidByOrder": 5,
+          "followingUp": 9,
+          "notInterested": 0,
+          "unclassifiedRemainder": 76,
+          "paidAmount": 48233.82,
+          "otherConsumptionAmount": null
         }
       ]
     },
-    "sourceLastRecorded": "2026-10-28",
+    "sourceLastRecorded": "2026-10-29",
     "totals": {
-      "sessions": 27,
-      "programs": 9,
-      "scans": 1801,
+      "sessions": 29,
+      "programs": 10,
+      "scans": 1891,
       "orders": 74,
-      "amount": 545463
+      "amount": 641690.82
     }
   }
 }
