@@ -16,6 +16,8 @@ const MONEY_FIELDS=[
 const excludedNames=/客户|咨询|电话号码|订单明细|备注|逐字稿|汇报文案|解释|数据说明|模板|词条|合计表|说明|回访/;
 const totalSheetPattern=/汇总|统计|结算|财务|总表|全款/;
 const isInteger=x=>Number.isSafeInteger(x)&&x>=0;
+const isMoney=x=>typeof x==='number'&&Number.isFinite(x)&&x>=0&&x<=1000000000&&/^(?:0|[1-9][0-9]*)(?:\.[0-9]{1,2})?$/.test(String(x));
+const cents=x=>Math.round(x*100);
 const canonical=name=>{
   let n=String(name||'').replace(/\s+/g,'').replace(/[-·_（）()]/g,'');
   if(/新马|新加坡.*马来西亚|马来西亚.*新加坡/.test(n))return '新加坡·马来西亚';
@@ -243,7 +245,7 @@ function paymentData(rows,names,context,merges=null){
     }
     if(/(?:全部合计|总计|合计总额|总金额合计)/.test(row.slice(0,5).join(' '))){
       if(strictOwnership){
-        if(!isInteger(amount))context.blocking.push('汇总数据!H'+(i+1)+' 总额缺失或无效，禁止发布');
+        if(!isMoney(amount))context.blocking.push('汇总数据!H'+(i+1)+' 总额缺失或无效，禁止发布');
         else totals.push({row:i+1,amount,order,people});
       }
       continue;
@@ -257,7 +259,7 @@ function paymentData(rows,names,context,merges=null){
     }
     // Blank financial rows are not zero-valued financial records.
     if(amount===null&&order===null&&people===null)continue;
-    if(!isInteger(amount)||!isInteger(order)||!isInteger(people)){
+    if(!isMoney(amount)||!isInteger(order)||!isInteger(people)){
       if(strictOwnership&&(amount!==null||name))context.blocking.push('汇总数据!F'+(i+1)+':H'+(i+1)+' 财务数值缺失或无效，不能按0处理');
       continue;
     }
@@ -267,12 +269,14 @@ function paymentData(rows,names,context,merges=null){
     }
     let p=groups.get(name);
     if(!p){p={program:name,amount:0,fullOrders:0,fullPersons:0,source:'汇总数据 F:G:H'};groups.set(name,p)}
-    p.amount+=amount;p.fullOrders+=order;p.fullPersons+=people;
+    p.amount=(cents(p.amount)+cents(amount))/100;p.fullOrders+=order;p.fullPersons+=people;
     matched.push({name,rowIndex:i,row,amount,order,people});
   }
+  for(const p of groups.values())if(!isMoney(p.amount))context.blocking.push('线路累计实付金额超限：'+p.program);
   if(strictOwnership){
-    const sums=matched.reduce((a,r)=>({amount:a.amount+r.amount,order:a.order+r.order,people:a.people+r.people}),{amount:0,order:0,people:0});
-    for(const total of totals)if(total.amount!==sums.amount||(isInteger(total.order)&&total.order!==sums.order)||(isInteger(total.people)&&total.people!==sums.people))
+    const sums=matched.reduce((a,r)=>({amount:a.amount+cents(r.amount),order:a.order+r.order,people:a.people+r.people}),{amount:0,order:0,people:0});
+    if(sums.amount>100000000000)context.blocking.push('全部线路累计实付金额超限');
+    for(const total of totals)if(cents(total.amount)!==sums.amount||(isInteger(total.order)&&total.order!==sums.order)||(isInteger(total.people)&&total.people!==sums.people))
       context.blocking.push('汇总数据!H'+total.row+' 总计与已识别批次合计不一致，禁止发布');
   }
   if(!matched.length)context.warnings.push('无法识别汇总数据中的完整实付金额和全款订单，金额将标记为待核验');
@@ -313,6 +317,7 @@ function followUpData(rows,merges,formulaCells,context){
     if(/^(产品|线路|节目)(名称)?$/.test(owner)||/扫码|全款订单|明确不需要|跟进中/.test(owner))continue;
     const end=Math.max(i,...merges.filter(m=>m.s.r===i&&[7,9,10,11,12].includes(m.s.c)).map(m=>m.e.r));
     const paidByOrder=num(i,5),paidAmount=num(i,7),notInterested=num(i,9),followingUp=num(i,10),unclassifiedRemainder=num(i,11),otherConsumptionAmount=num(i,12);
+    for(const c of [5,7,9,10,11,12])if(get(rows[i],c)!=null&&str(get(rows[i],c))!==''&&num(i,c)===null)context.blocking.push('汇总数据第'+(i+1)+'行数值无效：'+coord(c,i+1));
     const allMissing=values.every(v=>v===null);
     let scanCount=null;
     if(!allMissing){
@@ -326,12 +331,13 @@ function followUpData(rows,merges,formulaCells,context){
       else {const detail=[];for(let r=i;r<=end;r++)if(!formulaCells?.[coord(2,r+1)]){const n=num(r,2);if(n!==null)detail.push(n)}scanCount=detail.length?detail.reduce((a,b)=>a+b,0):null;}
     }
     const row={sourceProduct:owner,sourceRow:i+1,scanCount,paidByOrder,followingUp,notInterested,unclassifiedRemainder,paidAmount,otherConsumptionAmount};
-    for(const [key,value] of Object.entries(row))if(!['sourceProduct','sourceRow'].includes(key)&&value!==null&&!(key==='otherConsumptionAmount'?Number.isFinite(value)&&value>=0&&Math.abs(value*100-Math.round(value*100))<0.000001:isInteger(value)))context.blocking.push('汇总数据第'+(i+1)+'行跟进数值无效：'+key);
+    for(const [key,value] of Object.entries(row))if(!['sourceProduct','sourceRow'].includes(key)&&value!==null&&!(['paidAmount','otherConsumptionAmount'].includes(key)?isMoney(value):isInteger(value)&&value<=1000000000))context.blocking.push('汇总数据第'+(i+1)+'行跟进数值无效：'+key);
     const states=[paidByOrder,followingUp,notInterested,unclassifiedRemainder];
     if(states.every(v=>v!==null)&&scanCount!==null&&states.reduce((a,b)=>a+b,0)!==scanCount)context.blocking.push('汇总数据第'+(i+1)+'行四类合计与扫码小计不一致');
     if(!allMissing&&states.some(v=>v===null))context.warnings.push('汇总数据第'+(i+1)+'行跟进状态未填完整，缺失项保留待补充');
     rowsOut.push(row);
   }
+  for(const key of ['paidAmount','otherConsumptionAmount'])if(rowsOut.reduce((n,r)=>n+(r[key]===null?0:cents(r[key])),0)>100000000000)context.blocking.push('跟进汇总累计金额超限：'+key);
   return {schemaVersion:1,rows:rowsOut};
 }
 function parseMatrices(matrices,options={}){
@@ -397,5 +403,4 @@ async function parseFile(file,seed,xlsx){
 }
 return {KNOWN_SHA,parseFile,parseMatrices,knownSnapshot,dateLabel,timeRange,canonical,recognizeMetrics};
 });
-
 
