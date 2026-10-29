@@ -7,6 +7,8 @@ const MAX_RECORDS = 3000;
 let initialized = false;
 const iso = () => new Date().toISOString();
 const int = (x, max = 100000000) => Number.isSafeInteger(x) && x >= 0 && x <= max;
+const money = x => typeof x==='number'&&Number.isFinite(x)&&x>=0&&x<=1000000000&&/^(?:0|[1-9][0-9]*)(?:\.[0-9]{1,2})?$/.test(String(x));
+const moneySum = a => {const cents=a.reduce((n,v)=>n+Math.round(v*100),0);if(cents>100000000000)invalid('累计金额超出上限');return cents/100};
 const arrSum = a => a.reduce((v,n)=>v+n,0);
 function invalid(message, status=422){const e=new Error(message);e.status=status;throw e}
 function cleanText(s,max=100){return String(s == null?'':s).trim().slice(0,max)}
@@ -65,7 +67,7 @@ export function validateSnapshot(payload){
     if(!nameSet.has(program)||paymentSet.has(program))invalid('全款汇总线路不匹配或重复：'+program);
     paymentSet.add(program);
     for(const field of ['amount','fullOrders','fullPersons']){
-      if(!int(p[field],1000000000))invalid('全款金额、订单或人数不是有效数字：'+program);
+      if(!(field==='amount'?money(p[field]):int(p[field],1000000000)))invalid('全款金额、订单或人数不是有效数字：'+program);
     }
     paymentSummary.push({program,amount:p.amount,fullOrders:p.fullOrders,fullPersons:p.fullPersons,source:cleanText(p.source,130)});
   }
@@ -98,20 +100,21 @@ export function validateSnapshot(payload){
       const row={sourceProduct,sourceRow};
       for(const key of ['scanCount','paidByOrder','followingUp','notInterested','unclassifiedRemainder','paidAmount','otherConsumptionAmount']){
         const value=input[key];
-        if(value!==null&&!(key==='otherConsumptionAmount'?typeof value==='number'&&Number.isFinite(value)&&value>=0&&value<=1000000000&&Math.abs(value*100-Math.round(value*100))<0.000001:int(value,1000000000)))invalid('跟进数值缺失或无效：'+key);
+        if(value!==null&&!(['paidAmount','otherConsumptionAmount'].includes(key)?money(value):int(value,1000000000)))invalid('跟进数值缺失或无效：'+key);
         row[key]=value;
       }
       const states=['paidByOrder','followingUp','notInterested','unclassifiedRemainder'];
       if(states.every(k=>row[k]!==null)&&row.scanCount!==null&&states.reduce((n,k)=>n+row[k],0)!==row.scanCount)invalid('跟进四类合计与扫码小计不一致');
       rows.push(row);
     }
+    for(const key of ['paidAmount','otherConsumptionAmount'])moneySum(rows.map(r=>r[key]??0));
     followUpSummary={schemaVersion:1,rows};
   }
   const source={name:cleanText(payload.source?.name,100),hash:cleanText(payload.source?.hash,100),sheets:Math.min(100,Math.max(0,Number(payload.source?.sheets)||0)),notes:cleanText(payload.source?.notes,280)};
   // Future snapshots may add new programs or metrics but never client PII, formulas or raw cells.
   return {schemaVersion:2,source,records,paymentSummary,metrics,...(followUpSummary?{followUpSummary}:{}),sourceLastRecorded:records[records.length-1].date,
     totals:{sessions:records.length,programs:nameSet.size,scans:arrSum(records.map(r=>r.scans)),orders:arrSum(records.map(r=>r.orders)),
-    amount:arrSum(paymentSummary.map(p=>p.amount))}};
+    amount:moneySum(paymentSummary.map(p=>p.amount))}};
 }
 async function ensureDb(env){
   if(initialized)return;
@@ -198,7 +201,7 @@ export default {
   try{
     const u=new URL(request.url),method=request.method;
     if(method==='OPTIONS')return new Response(null,{status:204,headers:cors(request)});
-    if(method==='GET'&&u.pathname==='/')return json(request,{ok:true,service:'都市频道共享周报',version:'2.1',capabilities:['followup-summary-v1'],hasDatabase:!!env.DB});
+    if(method==='GET'&&u.pathname==='/')return json(request,{ok:true,service:'都市频道共享周报',version:'2.1.1',capabilities:['followup-summary-v1','money-cents-v1'],hasDatabase:!!env.DB});
     if(!['/api/current','/api/versions','/api/publish','/api/restore'].includes(u.pathname))return json(request,{ok:false,error:'不存在该接口'},404);
     await ensureDb(env);
     if(method==='GET'&&u.pathname==='/api/current'){
@@ -222,4 +225,3 @@ export default {
   }
  }
 };
-
