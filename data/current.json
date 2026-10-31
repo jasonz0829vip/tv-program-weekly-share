@@ -1,14 +1,14 @@
 {
   "ok": true,
-  "version": "2026-10-30T06-59-48-116Z-9d285c5e",
-  "updatedAt": "2026-10-30T06:59:48.116Z",
-  "mirroredAt": "2026-10-30T09:03:19.242Z",
+  "version": "2026-10-31T03-58-41-692Z-b22e31eb",
+  "updatedAt": "2026-10-31T03:58:41.692Z",
+  "mirroredAt": "2026-10-31T04:26:49.276Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "11d913bb84bd5e5f7b192f75406d75df8e3cbd83ae3764469f3ba942bacc72fe",
-      "sheets": 12,
+      "hash": "1181924e544d9516a9c4b1be0e1b68dc0bce87dbc013b97df34c4108c1316f32",
+      "sheets": 13,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
     "records": [
@@ -914,6 +914,36 @@
       },
       {
         "date": "2026-10-30",
+        "program": "意大利一地16日游",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 51,
+        "orders": 0,
+        "first30": 47,
+        "after30": 4,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            0,
+            14,
+            15,
+            17,
+            1,
+            0
+          ],
+          "source": {
+            "sheet": "意大利一地16日游",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-30",
         "program": "银星皇冠年夜饭",
         "type": "重播",
         "startTime": "09:30",
@@ -935,6 +965,36 @@
           ],
           "source": {
             "sheet": "银星皇冠年夜饭",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-11-02",
+        "program": "意大利一地16日游",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 0,
+        "orders": 0,
+        "first30": 0,
+        "after30": 0,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": {
+            "sheet": "意大利一地16日游",
             "valueCells": "C18:C23",
             "timeCells": "B18:B23",
             "totalCell": "C28",
@@ -1196,14 +1256,25 @@
           "unclassifiedRemainder": 52,
           "paidAmount": 0,
           "otherConsumptionAmount": null
+        },
+        {
+          "sourceProduct": "银星皇冠年夜饭",
+          "sourceRow": 47,
+          "scanCount": 51,
+          "paidByOrder": 0,
+          "followingUp": 1,
+          "notInterested": 0,
+          "unclassifiedRemainder": 50,
+          "paidAmount": 0,
+          "otherConsumptionAmount": null
         }
       ]
     },
-    "sourceLastRecorded": "2026-10-30",
+    "sourceLastRecorded": "2026-11-02",
     "totals": {
-      "sessions": 31,
-      "programs": 11,
-      "scans": 1945,
+      "sessions": 33,
+      "programs": 12,
+      "scans": 1996,
       "orders": 74,
       "amount": 641690.82
     }
