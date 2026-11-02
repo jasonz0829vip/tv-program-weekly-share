@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-10-31T03-58-41-692Z-b22e31eb",
-  "updatedAt": "2026-10-31T03:58:41.692Z",
-  "mirroredAt": "2026-10-31T04:26:49.276Z",
+  "version": "2026-11-02T09-27-30-155Z-a43e0554",
+  "updatedAt": "2026-11-02T09:27:30.155Z",
+  "mirroredAt": "2026-11-02T09:52:53.023Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "1181924e544d9516a9c4b1be0e1b68dc0bce87dbc013b97df34c4108c1316f32",
+      "hash": "805fae2a919dc26b3a668219fda0ee2b39573749ae7492716cd944418169d061",
       "sheets": 13,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -914,6 +914,36 @@
       },
       {
         "date": "2026-10-30",
+        "program": "意大利一地",
+        "type": "首播",
+        "startTime": "17:30",
+        "scans": 51,
+        "orders": 0,
+        "first30": 47,
+        "after30": 4,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            0,
+            14,
+            15,
+            17,
+            1,
+            0
+          ],
+          "source": {
+            "sheet": "意大利一地",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-10-30",
         "program": "意大利一地16日游",
         "type": "首播",
         "startTime": "17:30",
@@ -974,7 +1004,67 @@
       },
       {
         "date": "2026-11-02",
+        "program": "意大利一地",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 26,
+        "orders": 0,
+        "first30": 25,
+        "after30": 1,
+        "phone": 1,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            13,
+            7,
+            1,
+            4,
+            0,
+            0
+          ],
+          "source": {
+            "sheet": "意大利一地",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-11-02",
         "program": "意大利一地16日游",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 26,
+        "orders": 0,
+        "first30": 25,
+        "after30": 1,
+        "phone": 1,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            13,
+            7,
+            1,
+            4,
+            0,
+            0
+          ],
+          "source": {
+            "sheet": "意大利一地16日游",
+            "valueCells": "C18:C23",
+            "timeCells": "B18:B23",
+            "totalCell": "C28",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-11-02",
+        "program": "越南全景",
         "type": "重播",
         "startTime": "09:30",
         "scans": 0,
@@ -994,10 +1084,10 @@
             0
           ],
           "source": {
-            "sheet": "意大利一地16日游",
-            "valueCells": "C18:C23",
-            "timeCells": "B18:B23",
-            "totalCell": "C28",
+            "sheet": "越南全景",
+            "valueCells": "C61:C66",
+            "timeCells": "B61:B66",
+            "totalCell": "C71",
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
@@ -1027,14 +1117,14 @@
       },
       {
         "program": "越南全景",
-        "amount": 95150,
+        "amount": 91328,
         "fullOrders": 7,
         "fullPersons": 17,
         "source": "汇总数据 F:G:H"
       },
       {
         "program": "拈花湾",
-        "amount": 16217,
+        "amount": 12219,
         "fullOrders": 4,
         "fullPersons": 8,
         "source": "汇总数据 F:G:H"
@@ -1080,6 +1170,20 @@
         "fullOrders": 0,
         "fullPersons": 0,
         "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "意大利一地",
+        "amount": 0,
+        "fullOrders": 0,
+        "fullPersons": 0,
+        "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "意大利一地16日游",
+        "amount": 0,
+        "fullOrders": 0,
+        "fullPersons": 0,
+        "source": "汇总数据 F:G:H"
       }
     ],
     "metrics": [
@@ -1091,8 +1195,8 @@
           "清远肇庆": 3359,
           "新加坡·马来西亚": 8013.22,
           "福建泰宁": 2879,
-          "越南全景": 5597.24,
-          "拈花湾": 2027,
+          "越南全景": 5372.41,
+          "拈花湾": 1527,
           "港珠澳": 4199,
           "黄龙饭店年夜饭": 1608
         },
@@ -1108,33 +1212,33 @@
           "sourceRow": 2,
           "scanCount": 171,
           "paidByOrder": 5,
-          "followingUp": 2,
+          "followingUp": 0,
           "notInterested": 28,
-          "unclassifiedRemainder": 136,
+          "unclassifiedRemainder": 138,
           "paidAmount": 50385,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 59524
         },
         {
           "sourceProduct": "新加坡马来西亚8日游",
           "sourceRow": 6,
           "scanCount": 146,
           "paidByOrder": 12,
-          "followingUp": 5,
+          "followingUp": 0,
           "notInterested": 25,
-          "unclassifiedRemainder": 104,
+          "unclassifiedRemainder": 109,
           "paidAmount": 199377,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 72116
         },
         {
           "sourceProduct": "新加坡马来西亚8日游",
           "sourceRow": 9,
           "scanCount": 198,
           "paidByOrder": 6,
-          "followingUp": 4,
+          "followingUp": 0,
           "notInterested": 23,
-          "unclassifiedRemainder": 165,
+          "unclassifiedRemainder": 169,
           "paidAmount": 89246,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 0
         },
         {
           "sourceProduct": "新加坡马来西亚8日游",
@@ -1145,29 +1249,29 @@
           "notInterested": 17,
           "unclassifiedRemainder": 147,
           "paidAmount": 79990,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 0
         },
         {
           "sourceProduct": "福建泰宁大金湖上清溪双高5日游",
           "sourceRow": 15,
           "scanCount": 182,
           "paidByOrder": 7,
-          "followingUp": 6,
+          "followingUp": 0,
           "notInterested": 22,
-          "unclassifiedRemainder": 147,
+          "unclassifiedRemainder": 153,
           "paidAmount": 54694,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 6865.01
         },
         {
           "sourceProduct": "越南全景7日游",
           "sourceRow": 19,
           "scanCount": 170,
           "paidByOrder": 3,
-          "followingUp": 5,
+          "followingUp": 0,
           "notInterested": 16,
-          "unclassifiedRemainder": 146,
-          "paidAmount": 33561,
-          "otherConsumptionAmount": null
+          "unclassifiedRemainder": 151,
+          "paidAmount": 29739,
+          "otherConsumptionAmount": 0
         },
         {
           "sourceProduct": "越南全景7日游",
@@ -1178,7 +1282,7 @@
           "notInterested": 13,
           "unclassifiedRemainder": 150,
           "paidAmount": 61589,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 26392
         },
         {
           "sourceProduct": "不一样的拈花湾4天3晚",
@@ -1188,8 +1292,8 @@
           "followingUp": 0,
           "notInterested": 15,
           "unclassifiedRemainder": 322,
-          "paidAmount": 16217,
-          "otherConsumptionAmount": null
+          "paidAmount": 12219,
+          "otherConsumptionAmount": 20512.8
         },
         {
           "sourceProduct": "西班牙+葡萄牙（马德里进巴塞罗那回）13日游",
@@ -1200,18 +1304,18 @@
           "notInterested": 3,
           "unclassifiedRemainder": 28,
           "paidAmount": 0,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 0
         },
         {
           "sourceProduct": "港珠澳、深圳、惠州双飞6日美食之旅",
           "sourceRow": 32,
           "scanCount": 155,
           "paidByOrder": 1,
-          "followingUp": 2,
+          "followingUp": 0,
           "notInterested": 14,
-          "unclassifiedRemainder": 138,
+          "unclassifiedRemainder": 140,
           "paidAmount": 8398,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 1736
         },
         {
           "sourceProduct": "南非一地12日游",
@@ -1222,61 +1326,72 @@
           "notInterested": 2,
           "unclassifiedRemainder": 39,
           "paidAmount": 0,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 877
         },
         {
           "sourceProduct": "美国旧金山+夏威夷跳岛20日游",
           "sourceRow": 38,
           "scanCount": 29,
           "paidByOrder": 0,
-          "followingUp": 7,
+          "followingUp": 1,
           "notInterested": 3,
-          "unclassifiedRemainder": 19,
+          "unclassifiedRemainder": 25,
           "paidAmount": 0,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 0
         },
         {
           "sourceProduct": "杭州黄龙饭店年夜饭",
           "sourceRow": 41,
           "scanCount": 90,
           "paidByOrder": 5,
-          "followingUp": 2,
-          "notInterested": 3,
+          "followingUp": 0,
+          "notInterested": 5,
           "unclassifiedRemainder": 80,
           "paidAmount": 48233.82,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 0
         },
         {
           "sourceProduct": "银星皇冠年夜饭",
           "sourceRow": 44,
           "scanCount": 54,
           "paidByOrder": 0,
-          "followingUp": 1,
-          "notInterested": 1,
+          "followingUp": 0,
+          "notInterested": 2,
           "unclassifiedRemainder": 52,
           "paidAmount": 0,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 0
         },
         {
-          "sourceProduct": "银星皇冠年夜饭",
+          "sourceProduct": "意大利一地16日游",
           "sourceRow": 47,
-          "scanCount": 51,
+          "scanCount": 77,
           "paidByOrder": 0,
           "followingUp": 1,
           "notInterested": 0,
-          "unclassifiedRemainder": 50,
+          "unclassifiedRemainder": 76,
           "paidAmount": 0,
-          "otherConsumptionAmount": null
+          "otherConsumptionAmount": 0
+        },
+        {
+          "sourceProduct": "越南全景7日游",
+          "sourceRow": 50,
+          "scanCount": 0,
+          "paidByOrder": 0,
+          "followingUp": 0,
+          "notInterested": 0,
+          "unclassifiedRemainder": 0,
+          "paidAmount": 0,
+          "otherConsumptionAmount": 0
         }
       ]
     },
     "sourceLastRecorded": "2026-11-02",
     "totals": {
-      "sessions": 33,
-      "programs": 12,
-      "scans": 1996,
+      "sessions": 36,
+      "programs": 13,
+      "scans": 2099,
       "orders": 74,
-      "amount": 641690.82
+      "amount": 633870.82
     }
   }
 }
