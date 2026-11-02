@@ -19,6 +19,7 @@ const isInteger=x=>Number.isSafeInteger(x)&&x>=0;
 const isMoney=x=>typeof x==='number'&&Number.isFinite(x)&&x>=0&&x<=1000000000&&/^(?:0|[1-9][0-9]*)(?:\.[0-9]{1,2})?$/.test(String(x));
 const cents=x=>Math.round(x*100);
 const canonical=name=>{
+  if(['意大利一地','意大利一地16日游'].includes(String(name||'').trim()))return '意大利一地16日游';
   let n=String(name||'').replace(/\s+/g,'').replace(/[-·_（）()]/g,'');
   if(/新马|新加坡.*马来西亚|马来西亚.*新加坡/.test(n))return '新加坡·马来西亚';
   if(/越南/.test(n))return '越南全景';
@@ -160,7 +161,7 @@ function sessionEntries(sheetName,rows,context){
     }else{
       context.blocking.push(program+' '+date+' 意向金订单缺少有效原始数值，不能将缺失当成0');
     }
-    if(context.seen.has(date+'|'+program+'|'+type+'|'+six[0].time.startTime)){
+    if(program!=='意大利一地16日游'&&context.seen.has(date+'|'+program+'|'+type+'|'+six[0].time.startTime)){
       context.blocking.push(program+' '+date+' 重复场次');continue;
     }
     context.seen.add(date+'|'+program+'|'+type+'|'+six[0].time.startTime);
@@ -182,6 +183,7 @@ function sessionEntries(sheetName,rows,context){
 }
 function sniffProgram(text,names){
   const t=str(text).replace(/\s+/g,'');
+  if(['意大利一地','意大利一地16日游'].includes(t)&&names.includes('意大利一地16日游'))return '意大利一地16日游';
   for(const name of names)if(t.includes(name)||t.includes(name.replace('新加坡·马来西亚','新马')))return name;
   if(/新马|马来西亚|新加坡/.test(t)&&names.includes('新加坡·马来西亚'))return '新加坡·马来西亚';
   if(/清远|肇庆/.test(t)&&names.includes('清远肇庆'))return '清远肇庆';
@@ -351,6 +353,13 @@ function parseMatrices(matrices,options={}){
     const found=sessionEntries(sheet,rows,context);
     if(found.length){records.push(...found);names.push(canonical(sheet))}
   }
+  const italySeen=new Map();
+  for(let i=0;i<records.length;i++){
+    const r=records[i];if(r.program!=='意大利一地16日游')continue;
+    const key=[r.date,r.program,r.type,r.startTime].join('|');
+    const signature=x=>JSON.stringify([x.scans,x.orders,x.first30,x.after30,x.phone,x.group,x.fiveMinute?.values??null]);
+    if(italySeen.has(key)){if(signature(italySeen.get(key))!==signature(r))context.blocking.push('意大利一地16日游 '+r.date+' 同场数据冲突，待核对');records.splice(i--,1);}else italySeen.set(key,r);
+  }
   if(!records.length)context.blocking.push('Excel中没有识别到完整的节目场次，请检查播出日期、首播/重播与5分钟时间行');
   const p=paymentData(totalRows||[],[...new Set(names)],context,totalMerges);
   if(totalRows===null)context.warnings.push('未找到财务汇总表，全款金额不会自动编造');
@@ -403,4 +412,5 @@ async function parseFile(file,seed,xlsx){
 }
 return {KNOWN_SHA,parseFile,parseMatrices,knownSnapshot,dateLabel,timeRange,canonical,recognizeMetrics};
 });
+
 

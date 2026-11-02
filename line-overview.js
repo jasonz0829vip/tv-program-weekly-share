@@ -30,5 +30,5 @@ box.querySelector('select').value=lineOrder;box.querySelector('select').onchange
 const old=document.querySelector('[aria-label="线路全款实付汇总"]');if(old)old.hidden=true;
 }
 
-const originalRender=render;render=function(){originalRender();draw()};draw();window.UrbanLines={refresh:draw,setFollowUp(value){appliedFollowUp=value}};
+const originalRender=render;render=function(){originalRender();draw()};draw();window.UrbanLines={refresh:draw,setFollowUp(value){appliedFollowUp=window.UrbanIdentity?.normalize({followUpSummary:value}).snapshot.followUpSummary||value}};
 })();

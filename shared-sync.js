@@ -8,7 +8,8 @@ const text=(id,value)=>{const el=UI(id);if(el)el.textContent=String(value??'')};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const total=(rows,key)=>key==='amount'?rows.reduce((n,r)=>n+Math.round((Number(r[key])||0)*100),0)/100:rows.reduce((n,r)=>n+(Number(r[key])||0),0);
 const dates=(rows)=>rows.map(r=>r.date).sort();
-const sessionKey=r=>[r.date,r.program,r.type,r.startTime||''].join('|');
+const identity=window.UrbanIdentity;
+const sessionKey=r=>[r.date,identity?.name(r.program)||r.program,r.type,r.startTime||''].join('|');
 const fmtNumber=n=>Number(n||0).toLocaleString('zh-CN');
 const fmtMoney=n=>Number(n||0).toLocaleString('zh-CN',{maximumFractionDigits:2});
 const safeStatus=(label,type)=>{
@@ -96,10 +97,14 @@ async function loadSheetJS(){
   try{return await API.sheetLoader}finally{API.sheetLoader=null}
 }
 function mergeSnapshots(incoming,mode){
-  if(mode==='replace')return incoming;
-  const base=API.snapshot||{
+  const identity=typeof window!=='undefined'?window.UrbanIdentity:null;
+  const normalizedIncoming=identity?.normalize(incoming);
+  if(normalizedIncoming?.conflicts.length)throw Error(normalizedIncoming.conflicts.join('；'));
+  if(mode==='replace')return normalizedIncoming?.snapshot||incoming;
+  let base=API.snapshot||{
     records:SEED.records,paymentSummary:SEED.paymentSummary,metrics:[],source:{notes:'历史内置周报'}
   };
+  if(identity){identity.assertAliasCompatibility(base,incoming);base=identity.normalize(base).snapshot;incoming=normalizedIncoming.snapshot;}
   const recordMap=new Map();
   (base.records||[]).forEach(r=>recordMap.set(sessionKey(r),r));
   (incoming.records||[]).forEach(r=>recordMap.set(sessionKey(r),r));
@@ -138,7 +143,7 @@ function renderFilePreview(){
     feedback('请核对原始 Excel：存在 '+result.blocking.length+' 项必须修复的错误。','error');
     updatePublishButton();return;
   }
-  const d=evaluateDraft();API.preview=d;
+  let d;try{d=evaluateDraft()}catch(error){API.preview=null;box.innerHTML='<div class="excel-preview-error"><b>数据冲突，禁止发布</b><div>'+esc(error.message)+'</div></div>';feedback(error.message,'error');updatePublishButton();return;}API.preview=d;
   const r=d.records,groupSet=new Set(r.map(x=>x.program));
   const p=d.paymentSummary||[],metrics=d.metrics||[];
   const validFive=r.filter(x=>Array.isArray(x.fiveMinute?.values)&&x.fiveMinute.values.length===6
@@ -295,9 +300,11 @@ function refreshNewMetrics(metrics){
 }
 function applySnapshot(snapshot,version,updatedAt,options={}){
   if(!snapshot?.records?.length)return;
+  const normalized=identity?.normalize(snapshot);
+  snapshot=normalized?.snapshot||snapshot;
   records=snapshot.records;
   PAYMENT_ROUTES=Array.isArray(snapshot.paymentSummary)?snapshot.paymentSummary:[];
-  issues=[];
+  issues=(normalized?.conflicts||[]).map((detail,i)=>({id:'alias-'+i,severity:'high',kind:'线路身份',title:'意大利线路数据待核',detail,source:'共享快照',affects:'同场去重与合计',action:'请核对后重新导入；原始数据未修改。'}));
   if(options.clearLegacyCache!==false){try{localStorage.removeItem(storageKey)}catch{}}
   const datesSorted=dates(records);
   if(preset==='all'){start=datesSorted[0];end=datesSorted[datesSorted.length-1]}
@@ -510,3 +517,4 @@ window.UrbanSync={api:API,initialize,refreshShared,refreshPublishedMirror,applyS
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
 else initialize();
 })();
+
