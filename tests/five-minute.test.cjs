@@ -35,6 +35,13 @@ test('missing, partial, negative, fractional, cumulative or mismatched data neve
  assert.equal(ctx.fiveData({...base,fiveMinute:{...base.fiveMinute,source:''}}).valid,false);
  const zero=seed.records.find(r=>r.program==='新加坡·马来西亚'&&r.date==='2026-10-14');assert.equal(ctx.fiveData(zero).values[5],0);
 });
+test('current missing increments never fall back to historical seed with matching totals',()=>{
+ const current={...seed.records[0],fiveMinute:null};
+ assert.equal(ctx.fiveData(current).valid,false);
+ delete current.fiveMinute;
+ assert.equal(ctx.fiveData(current).valid,false);
+ assert.equal(ctx.fiveData(seed.records[0]).valid,true,'explicit original source still renders');
+});
 test('CSV round-trip and atomic rejection of invalid imports',()=>{
  const result=vm.runInContext(`(()=>{const r=records[0],rows=[FIVE_HEADERS,[r.date,r.program,r.type,r.startTime,...r.fiveMinute.values,r.first30,r.after30,'原表C列']];return {rows,csv:fiveCSV(rows)}})()`,ctx);
  assert.equal(ctx.parseFiveImport(result.csv).length,1);
@@ -51,3 +58,4 @@ test('four primary entries and previous safe-area mobile navigation remain',()=>
  assert.match(html,/id="lvSessionBars"/);assert.match(html,/id="lvDailyScans"/);
  assert.match(html,/id="lvFirstReplay"/);assert.match(html,/id="lvScatter"/);
 });
+

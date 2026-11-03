@@ -18,8 +18,12 @@ const totalSheetPattern=/汇总|统计|结算|财务|总表|全款/;
 const isInteger=x=>Number.isSafeInteger(x)&&x>=0;
 const isMoney=x=>typeof x==='number'&&Number.isFinite(x)&&x>=0&&x<=1000000000&&/^(?:0|[1-9][0-9]*)(?:\.[0-9]{1,2})?$/.test(String(x));
 const cents=x=>Math.round(x*100);
+// Exact title shared by this route worksheet's A1 and the financial summary.
+const SPAIN_PORTUGAL_NAME='西葡（马进巴回）';
+const SPAIN_PORTUGAL_TITLE='西班牙+葡萄牙（马德里进巴塞罗那回）13日游';
 const canonical=name=>{
   if(['意大利一地','意大利一地16日游'].includes(String(name||'').trim()))return '意大利一地16日游';
+  if([SPAIN_PORTUGAL_NAME,SPAIN_PORTUGAL_TITLE].includes(String(name||'').trim()))return SPAIN_PORTUGAL_NAME;
   let n=String(name||'').replace(/\s+/g,'').replace(/[-·_（）()]/g,'');
   if(/新马|新加坡.*马来西亚|马来西亚.*新加坡/.test(n))return '新加坡·马来西亚';
   if(/越南/.test(n))return '越南全景';
@@ -184,6 +188,7 @@ function sessionEntries(sheetName,rows,context){
 function sniffProgram(text,names){
   const t=str(text).replace(/\s+/g,'');
   if(['意大利一地','意大利一地16日游'].includes(t)&&names.includes('意大利一地16日游'))return '意大利一地16日游';
+  if(t===SPAIN_PORTUGAL_TITLE&&names.includes(SPAIN_PORTUGAL_NAME))return SPAIN_PORTUGAL_NAME;
   for(const name of names)if(t.includes(name)||t.includes(name.replace('新加坡·马来西亚','新马')))return name;
   if(/新马|马来西亚|新加坡/.test(t)&&names.includes('新加坡·马来西亚'))return '新加坡·马来西亚';
   if(/清远|肇庆/.test(t)&&names.includes('清远肇庆'))return '清远肇庆';
@@ -412,5 +417,6 @@ async function parseFile(file,seed,xlsx){
 }
 return {KNOWN_SHA,parseFile,parseMatrices,knownSnapshot,dateLabel,timeRange,canonical,recognizeMetrics};
 });
+
 
 

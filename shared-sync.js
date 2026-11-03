@@ -131,8 +131,10 @@ function mergeSnapshots(incoming,mode){
 }
 function evaluateDraft(){
   if(!API.parseResult||API.parseResult.blocking?.length)return null;
-  const mode=UI('excelSyncMode')?.value||'merge';
-  return mergeSnapshots(API.parseResult.snapshot,mode);
+  // Each upload is the complete current workbook. A changed time/date or deleted
+  // worksheet must not resurrect a record from a previous upload or the seed.
+  // Historical snapshots remain in D1; only the active dataset is replaced.
+  return mergeSnapshots(API.parseResult.snapshot,'replace');
 }
 function renderFilePreview(){
   const result=API.parseResult, box=UI('excelSyncPreview');
@@ -150,10 +152,13 @@ function renderFilePreview(){
     &&x.fiveMinute.values.reduce((a,b)=>a+b,0)===x.first30).length;
   const original=result.snapshot.records.length;
   const warnings=result.warnings||[];
-  box.innerHTML='<div class="excel-preview-overline">自动识别结果 · '+esc(UI('excelSyncMode')?.selectedOptions?.[0]?.textContent||'智能合并')+'</div>'+
+  const incomingKeys=new Set(r.map(sessionKey));
+  const removed=(API.snapshot?.records||[]).filter(row=>!incomingKeys.has(sessionKey(row)));
+  box.innerHTML='<div class="excel-preview-overline">自动识别结果 · 以最新完整表格为准</div>'+
    '<div class="excel-preview-grid"><div><span>本次文件场次</span><strong>'+original+'</strong></div><div><span>发布后场次</span><strong>'+r.length+'</strong></div><div><span>线路</span><strong>'+groupSet.size+'</strong></div><div><span>5分钟完整数据</span><strong>'+validFive+' / '+r.length+'</strong></div></div>'+
    '<div class="excel-preview-summary"><span>扫码累计 <b>'+fmtNumber(total(r,'scans'))+'</b> 人次</span><span>意向金 <b>'+fmtNumber(total(r,'orders'))+'</b> 单</span><span>全款实付 <b>'+(p.length?'¥'+fmtMoney(total(p,'amount')):'待补')+'</b></span></div>'+
    '<div class="excel-preview-programs">'+[...groupSet].map(x=>'<span>'+esc(x)+'</span>').join('')+'</div>'+
+   '<p class="excel-preview-foot">本次文件包含的场次、线路、金额和跟进数据将成为完整当前版本；旧版本仅保留在历史记录，不混入当前图表。'+(removed.length?'原版本中有 '+removed.length+' 场未出现在本次文件，发布后不再展示，请确认已选择最新完整表格。':'')+'</p>'+
    (metrics.length?'<div class="excel-preview-metrics">识别到新增指标：'+metrics.map(m=>'<b>'+esc(m.label)+'</b>').join('、')+'</div>':'')+
    (warnings.length?'<details class="excel-preview-warnings"><summary>有 '+warnings.length+' 条数据提醒（点开核对）</summary>'+warnings.slice(0,15).map(x=>'<p>'+esc(x)+'</p>').join('')+'</details>':'')+
    '<p class="excel-preview-foot">仅向共享服务提交节目、场次、金额等经过字段白名单处理的汇总数据；原始文件和客户明细不会上传。发布后其他人自动看到同一版本。</p>';
@@ -183,7 +188,7 @@ async function handleExcelFile(event){
 async function publishExcel(){
   if(!API.online){feedback('当前网络无法连接全员共享接口。请先恢复网络连接；你仍可以使用「应用到本机预览」。','error');return}
   const data=evaluateDraft();if(!data){feedback('当前文件无法通过核验，请检查预览。','error');return}
-  if(!confirm('确认把本次核验后的经营汇总发布给所有能够打开网页的同事？\n原始Excel不会上传，任何访客都可以发布下一个版本。'))return;
+  if(!confirm('确认以本次最新完整表格替换当前全部经营汇总，并发布给所有能够打开网页的同事？\n本次文件未包含的旧场次及指标将不再展示，历史版本仍可恢复。\n原始Excel不会上传，任何访客都可以发布下一个版本。'))return;
   setRunning(true);feedback('正在发布共享周报数据…');
   try{
     let body={baseVersion:API.currentVersion,snapshot:data};
@@ -517,4 +522,5 @@ window.UrbanSync={api:API,initialize,refreshShared,refreshPublishedMirror,applyS
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
 else initialize();
 })();
+
 

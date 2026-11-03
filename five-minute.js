@@ -2,12 +2,10 @@
 const FIVE_LABELS=['0–5','5–10','10–15','15–20','20–25','25–30'];
 let fiveView='minute',fiveProgram='',fiveSession='';
 function sessionId(r){return [r.date,r.program,r.type,r.startTime||''].join('|')}
-function seedFive(r){
-  const s=SEED.records.find(x=>sessionId(x)===sessionId(r));
-  return s&&['scans','orders','first30','after30'].every(k=>s[k]===r[k])?s.fiveMinute:null;
-}
 function fiveData(r){
-  const d=r.fiveMinute||seedFive(r),v=d?.values;
+  // Missing increments in the current dataset stay missing, even when an old
+  // built-in record happens to have identical totals.
+  const d=r.fiveMinute,v=d?.values;
   if(!Array.isArray(v)||v.length!==6||v.some(n=>typeof n!=='number'||!Number.isSafeInteger(n)||n<0))return {valid:false,reason:'缺少完整的六段扫码增量，缺测不记为0。'};
   if(d.mode!=='increment')return {valid:false,reason:'需要独立分段增量，累计值不能直接绘图。'};
   const source=d.source;
@@ -159,3 +157,4 @@ async function importFive(e){
   }catch(err){$('fiveFeedback').className='five-feedback error';$('fiveFeedback').textContent='未导入：'+err.message}
   finally{e.target.value=''}
 }
+
