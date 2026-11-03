@@ -20,6 +20,7 @@ if(!process.env.INITIAL_SNAPSHOT&&!initial.snapshot.records.some(isOldVietnam)){
 const latest=process.env.LATEST_SNAPSHOT?JSON.parse(fs.readFileSync(process.env.LATEST_SNAPSHOT,'utf8')):structuredClone(initial.snapshot);
 if(!process.env.LATEST_SNAPSHOT)latest.records=latest.records.filter(r=>!isOldVietnam(r));
 latest.totals.sessions=latest.records.length;
+const orderedRecords=rows=>rows.slice().sort((a,b)=>[a.date,a.program,a.type,a.startTime].join('|').localeCompare([b.date,b.program,b.type,b.startTime].join('|')));
 const output=process.env.SCREENSHOT_DIR||path.join(root,'../browser-regression');
 fs.mkdirSync(output,{recursive:true});
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_BIN||undefined});
@@ -76,7 +77,9 @@ try{
     await setDraft();
     page.on('dialog',d=>d.accept());await page.evaluate(()=>publishExcel());
     assert.equal(published.length,1);
-    assert.deepEqual(published[0].snapshot.records,latest.records);
+    // Route identity normalization may reorder records; compare every field by
+    // stable session key rather than treating display-independent order as data.
+    assert.deepEqual(orderedRecords(published[0].snapshot.records),orderedRecords(latest.records));
     assert.equal(await page.evaluate(()=>records.length),latest.records.length);
     await page.reload({waitUntil:'networkidle'});await page.waitForFunction(()=>UrbanSync.api.online);
     assert.equal(await page.evaluate(()=>records.length),latest.records.length,'reload keeps latest confirmed version without resurrecting cache');

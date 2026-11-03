@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-11-03T02-05-24-681Z-415ac03e",
-  "updatedAt": "2026-11-03T02:05:24.681Z",
-  "mirroredAt": "2026-11-03T02:09:16.590Z",
+  "version": "2026-11-03T07-06-04-467Z-e13fefe7",
+  "updatedAt": "2026-11-03T07:06:04.467Z",
+  "mirroredAt": "2026-11-03T07:06:28.444Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "956cf267851ed889899616a39961b611acf9b6587d74bd2637fdbd6440d37f5b",
+      "hash": "8cd751fbd04cb000c528d444b1c508ff87cb9c8a6e6db5618c7b17c218047deb",
       "sheets": 13,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -1006,36 +1006,6 @@
         "date": "2026-11-02",
         "program": "越南全景",
         "type": "重播",
-        "startTime": "09:30",
-        "scans": 0,
-        "orders": 0,
-        "first30": 0,
-        "after30": 0,
-        "phone": 0,
-        "group": null,
-        "fiveMinute": {
-          "mode": "increment",
-          "values": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-          ],
-          "source": {
-            "sheet": "越南全景",
-            "valueCells": "C61:C66",
-            "timeCells": "B61:B66",
-            "totalCell": "C71",
-            "definition": "原始Excel对应时段新增扫码数"
-          }
-        }
-      },
-      {
-        "date": "2026-11-02",
-        "program": "越南全景",
-        "type": "重播",
         "startTime": "17:30",
         "scans": 107,
         "orders": 3,
@@ -1058,6 +1028,36 @@
             "valueCells": "C61:C66",
             "timeCells": "B61:B66",
             "totalCell": "C73",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-11-03",
+        "program": "越南全景",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 51,
+        "orders": 1,
+        "first30": 48,
+        "after30": 3,
+        "phone": 1,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            0,
+            4,
+            13,
+            10,
+            5,
+            16
+          ],
+          "source": {
+            "sheet": "越南全景",
+            "valueCells": "C77:C82",
+            "timeCells": "B77:B82",
+            "totalCell": "C87",
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
@@ -1087,9 +1087,9 @@
       },
       {
         "program": "越南全景",
-        "amount": 106348,
-        "fullOrders": 8,
-        "fullPersons": 25,
+        "amount": 117546,
+        "fullOrders": 9,
+        "fullPersons": 27,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -1100,18 +1100,18 @@
         "source": "汇总数据 F:G:H"
       },
       {
+        "program": "西葡（马进巴回）",
+        "amount": 0,
+        "fullOrders": 0,
+        "fullPersons": 0,
+        "source": "汇总数据 F:G:H"
+      },
+      {
         "program": "港珠澳",
         "amount": 8398,
         "fullOrders": 1,
         "fullPersons": 2,
         "source": "汇总数据 F:G:H"
-      },
-      {
-        "program": "西葡（马进巴回）",
-        "amount": 0,
-        "fullOrders": 0,
-        "fullPersons": 0,
-        "source": "业务负责人确认：截至2026-10-22无全款成交"
       },
       {
         "program": "南非一地",
@@ -1158,7 +1158,7 @@
           "清远肇庆": 3359,
           "新加坡·马来西亚": 8013.22,
           "福建泰宁": 2879,
-          "越南全景": 4254,
+          "越南全景": 4353.44,
           "拈花湾": 1527,
           "港珠澳": 4199,
           "黄龙饭店年夜饭": 1608
@@ -1240,16 +1240,16 @@
           "sourceProduct": "越南全景7日游",
           "sourceRow": 22,
           "scanCount": 168,
-          "paidByOrder": 5,
+          "paidByOrder": 6,
           "followingUp": 3,
           "notInterested": 23,
-          "unclassifiedRemainder": 137,
-          "paidAmount": 76609,
+          "unclassifiedRemainder": 136,
+          "paidAmount": 87807,
           "otherConsumptionAmount": 26392
         },
         {
           "sourceProduct": "不一样的拈花湾4天3晚",
-          "sourceRow": 26,
+          "sourceRow": 27,
           "scanCount": 341,
           "paidByOrder": 4,
           "followingUp": 0,
@@ -1260,7 +1260,7 @@
         },
         {
           "sourceProduct": "西班牙+葡萄牙（马德里进巴塞罗那回）13日游",
-          "sourceRow": 30,
+          "sourceRow": 31,
           "scanCount": 31,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -1271,7 +1271,7 @@
         },
         {
           "sourceProduct": "港珠澳、深圳、惠州双飞6日美食之旅",
-          "sourceRow": 33,
+          "sourceRow": 34,
           "scanCount": 155,
           "paidByOrder": 1,
           "followingUp": 0,
@@ -1282,7 +1282,7 @@
         },
         {
           "sourceProduct": "南非一地12日游",
-          "sourceRow": 36,
+          "sourceRow": 37,
           "scanCount": 41,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -1293,7 +1293,7 @@
         },
         {
           "sourceProduct": "美国旧金山+夏威夷跳岛20日游",
-          "sourceRow": 39,
+          "sourceRow": 40,
           "scanCount": 29,
           "paidByOrder": 0,
           "followingUp": 1,
@@ -1304,7 +1304,7 @@
         },
         {
           "sourceProduct": "杭州黄龙饭店年夜饭",
-          "sourceRow": 42,
+          "sourceRow": 43,
           "scanCount": 90,
           "paidByOrder": 5,
           "followingUp": 0,
@@ -1315,7 +1315,7 @@
         },
         {
           "sourceProduct": "银星皇冠年夜饭",
-          "sourceRow": 45,
+          "sourceRow": 46,
           "scanCount": 54,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -1326,7 +1326,7 @@
         },
         {
           "sourceProduct": "意大利一地16日游",
-          "sourceRow": 48,
+          "sourceRow": 49,
           "scanCount": 77,
           "paidByOrder": 0,
           "followingUp": 1,
@@ -1337,13 +1337,13 @@
         }
       ]
     },
-    "sourceLastRecorded": "2026-11-02",
+    "sourceLastRecorded": "2026-11-03",
     "totals": {
       "sessions": 35,
       "programs": 12,
-      "scans": 2129,
-      "orders": 77,
-      "amount": 648890.82
+      "scans": 2180,
+      "orders": 78,
+      "amount": 660088.82
     }
   }
 }
