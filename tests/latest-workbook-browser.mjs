@@ -8,10 +8,17 @@ const {chromium}=createRequire(import.meta.url)('playwright');
 const root=fileURLToPath(new URL('..',import.meta.url));
 const publicFixture=JSON.parse(fs.readFileSync(process.env.INITIAL_SNAPSHOT||path.join(root,'data/current.json'),'utf8'));
 const initial=structuredClone(publicFixture);
+const isOldVietnam=r=>r.program==='越南全景'&&r.date==='2026-11-02'&&r.startTime==='09:30';
+// The default fixture remains meaningful after production has already been
+// corrected: add the stale zero only to this isolated in-memory scenario.
+if(!process.env.INITIAL_SNAPSHOT&&!initial.snapshot.records.some(isOldVietnam)){
+  initial.snapshot.records.push({date:'2026-11-02',program:'越南全景',type:'重播',startTime:'09:30',scans:0,orders:0,first30:0,after30:0,phone:0,group:null,fiveMinute:{mode:'increment',values:[0,0,0,0,0,0],source:'isolated regression fixture'}});
+  initial.snapshot.totals.sessions=initial.snapshot.records.length;
+}
 // Supply LATEST_SNAPSHOT for an independently parsed real workbook; otherwise
 // use a synthetic correction scenario, never infer production-data deletion.
 const latest=process.env.LATEST_SNAPSHOT?JSON.parse(fs.readFileSync(process.env.LATEST_SNAPSHOT,'utf8')):structuredClone(initial.snapshot);
-if(!process.env.LATEST_SNAPSHOT)latest.records=latest.records.filter(r=>!(r.program==='越南全景'&&r.date==='2026-11-02'&&r.startTime==='09:30'));
+if(!process.env.LATEST_SNAPSHOT)latest.records=latest.records.filter(r=>!isOldVietnam(r));
 latest.totals.sessions=latest.records.length;
 const output=process.env.SCREENSHOT_DIR||path.join(root,'../browser-regression');
 fs.mkdirSync(output,{recursive:true});

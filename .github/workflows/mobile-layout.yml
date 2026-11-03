@@ -2,7 +2,7 @@ name: 手机布局回归
 on:
   push:
     branches: [main]
-    paths: ['index.html', '*.css', '*-sync.js', 'five-minute.js', 'tests/mobile-layout.mjs', '.github/workflows/mobile-layout.yml']
+    paths: ['index.html', '*.css', '*-sync.js', 'five-minute.js', 'tests/mobile-layout.mjs', 'tests/latest-workbook-browser.mjs', '.github/workflows/mobile-layout.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -20,8 +20,14 @@ jobs:
         env:
           CHROME_BIN: /usr/bin/google-chrome
           SCREENSHOT_DIR: mobile-screenshots
+      - name: Verify latest-workbook preview, cancellation and isolated publication
+        run: node tests/latest-workbook-browser.mjs
+        env:
+          CHROME_BIN: /usr/bin/google-chrome
+          SCREENSHOT_DIR: mobile-screenshots/latest-workbook
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: mobile-layout-screenshots
           path: mobile-screenshots
+
