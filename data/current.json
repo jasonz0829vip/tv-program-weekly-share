@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-11-04T01-55-01-083Z-6a87b17f",
-  "updatedAt": "2026-11-04T01:55:01.083Z",
-  "mirroredAt": "2026-11-04T02:31:58.525Z",
+  "version": "2026-11-04T08-16-39-383Z-b0b2a988",
+  "updatedAt": "2026-11-04T08:16:39.383Z",
+  "mirroredAt": "2026-11-04T09:48:16.819Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "98d69dd09f97d9371ef45309746973d6248d071c1b8a224fbe896656aa246500",
+      "hash": "4a492eb72d1239ae8860f17b0087f75b6191863b94c89ea5fcc3e7c3d0117084",
       "sheets": 15,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -1121,6 +1121,66 @@
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
+      },
+      {
+        "date": "2026-11-04",
+        "program": "澳大利亚新西兰精华游",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 13,
+        "orders": 0,
+        "first30": 13,
+        "after30": 0,
+        "phone": null,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            4,
+            6,
+            3,
+            0,
+            0,
+            0
+          ],
+          "source": {
+            "sheet": "澳大利亚新西兰精华游",
+            "valueCells": "C17:C22",
+            "timeCells": "B17:B22",
+            "totalCell": "C27",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-11-04",
+        "program": "泉州漳州厦门6日游",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 34,
+        "orders": 0,
+        "first30": 28,
+        "after30": 6,
+        "phone": null,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            0,
+            1,
+            0,
+            6,
+            12,
+            9
+          ],
+          "source": {
+            "sheet": "泉州漳州厦门6日游",
+            "valueCells": "C17:C22",
+            "timeCells": "B17:B22",
+            "totalCell": "C27",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       }
     ],
     "paymentSummary": [
@@ -1202,13 +1262,6 @@
         "source": "汇总数据 F:G:H"
       },
       {
-        "program": "意大利一地16日游",
-        "amount": 0,
-        "fullOrders": 0,
-        "fullPersons": 0,
-        "source": "汇总数据 F:G:H"
-      },
-      {
         "program": "澳大利亚新西兰精华游",
         "amount": 0,
         "fullOrders": 0,
@@ -1217,6 +1270,13 @@
       },
       {
         "program": "泉州漳州厦门6日游",
+        "amount": 0,
+        "fullOrders": 0,
+        "fullPersons": 0,
+        "source": "汇总数据 F:G:H"
+      },
+      {
+        "program": "意大利一地16日游",
         "amount": 0,
         "fullOrders": 0,
         "fullPersons": 0,
@@ -1401,22 +1461,22 @@
         {
           "sourceProduct": "澳大利亚新西兰精华游",
           "sourceRow": 52,
-          "scanCount": 14,
+          "scanCount": 27,
           "paidByOrder": 0,
-          "followingUp": 0,
+          "followingUp": 1,
           "notInterested": 0,
-          "unclassifiedRemainder": 14,
+          "unclassifiedRemainder": 26,
           "paidAmount": 0,
           "otherConsumptionAmount": 0
         },
         {
           "sourceProduct": "泉州漳州厦门6日游",
           "sourceRow": 55,
-          "scanCount": 43,
+          "scanCount": 77,
           "paidByOrder": 0,
-          "followingUp": 3,
+          "followingUp": 5,
           "notInterested": 2,
-          "unclassifiedRemainder": 38,
+          "unclassifiedRemainder": 70,
           "paidAmount": 0,
           "otherConsumptionAmount": 0
         },
@@ -1433,11 +1493,11 @@
         }
       ]
     },
-    "sourceLastRecorded": "2026-11-03",
+    "sourceLastRecorded": "2026-11-04",
     "totals": {
-      "sessions": 37,
+      "sessions": 39,
       "programs": 14,
-      "scans": 2237,
+      "scans": 2284,
       "orders": 78,
       "amount": 660088.82
     }
