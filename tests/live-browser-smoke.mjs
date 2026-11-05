@@ -16,7 +16,7 @@ let chromeError='';
 proc.stderr.on('data',d=>{chromeError+=String(d).slice(0,300)});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function json(url){const r=await fetch(url,{signal:AbortSignal.timeout(1700)});return r.json()}
-let tab,ws,reqId=0,pending=new Map(),errors=[],failedRequests=[],consoleErrors=[],badStatus=[];
+let tab,ws,reqId=0,pending=new Map(),errors=[],failedRequests=[],consoleErrors=[],badStatus=[],writeRequests=[];
 async function connect(){
   for(let i=0;i<150;i++){
     try{const list=await json('http://127.0.0.1:'+port+'/json/list');tab=list.find(t=>t.type==='page');if(tab?.webSocketDebuggerUrl)break}catch(e){}
@@ -31,6 +31,8 @@ async function connect(){
     if(p.id){
       const waiter=pending.get(p.id);
       if(waiter){pending.delete(p.id);p.error?waiter.reject(Error(p.error.message)):waiter.resolve(p.result)}
+    }else if(p.method==='Network.requestWillBeSent'&&['POST','PUT','PATCH','DELETE'].includes(p.params?.request?.method)){
+      writeRequests.push(p.params.request.url);
     }else if(p.method==='Runtime.exceptionThrown'){
       errors.push(p.params?.exceptionDetails?.text+' '+(p.params?.exceptionDetails?.exception?.description||''));
     }else if(p.method==='Runtime.consoleAPICalled'&&p.params?.type==='error'){
@@ -57,6 +59,15 @@ async function evaluate(expression){
 }
 function assert(x,message){if(!x)throw Error('SMOKE FAIL: '+message)}
 async function main(){
+  // The push workflow may start before Pages finishes serving the new assets.
+  let currentParser=false;
+  for(let i=0;i<36;i++){
+    const index=await fetch(url+'&release_check='+Date.now()).then(r=>r.text());
+    const parser=await fetch(new URL('excel-import.js?v=2.1.6&release_check='+Date.now(),url)).then(r=>r.text());
+    if(index.includes('excel-import.js?v=2.1.6')&&parser.includes('function worksheetRows(')){currentParser=true;break;}
+    await sleep(5000);
+  }
+  assert(currentParser,'Pages must serve the native-number parser and cache-busted script reference');
   await connect();
   await Promise.all([cdp('Runtime.enable'),cdp('Page.enable'),cdp('Network.enable')]);
   await cdp('Page.addScriptToEvaluateOnNewDocument',{source:
@@ -101,6 +112,32 @@ async function main(){
   console.log('HTTP >=400:',JSON.stringify(badStatus.slice(0,20)));
   assert(errors.length===0&&mobile.errors.length===0,'JavaScript runtime errors present');
   assert(badStatus.length===0,'The live site returned HTTP errors: '+JSON.stringify(badStatus));
+  // Exercise the actual production upload handler using synthetic local files.
+  // Block the publish endpoint defensively; never call publishExcel.
+  await cdp('Network.setBlockedURLs',{urls:['*/api/publish*']});
+  const upload=await evaluate(`(async()=>{
+    const before=JSON.stringify(UrbanSync.api.snapshot),version=UrbanSync.api.currentVersion;
+    if(!window.XLSX)await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';s.onload=resolve;s.onerror=()=>reject(Error('SheetJS failed'));document.head.appendChild(s)});
+    const results=[];
+    for(const bookType of ['xls','xlsx']){
+      const rows=[['2026年11月1日首播'],...Array.from({length:6},(_,i)=>[null,'17:'+String(30+i*5)+'-'+(i===5?'18:00':'17:'+String(35+i*5)),1]),[null,null,6,null,0]];
+      const headers=['标签名称','user_id','最早标签时间','订单编号','产品名称','产品编号','业务类别','年夜饭','订单状态','合同金额','实付金额','支付时间'];
+      const orders=[headers,...[225.9,0.01,0].map((amount,i)=>['新版电视-我们退休啦-越南','synthetic-user','2026-11-01','synthetic-order-'+i,'合成产品','synthetic-product','商品','否','已支付',amount,amount,'2026-11-01'])];
+      const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'越南全景');
+      XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['越南全景',null,null,null,null,1,1,225.9]]),'汇总数据');
+      const details=XLSX.utils.aoa_to_sheet(orders);for(const key of ['K2','K3','K4'])details[key].z='[$-10804]#,##0';XLSX.utils.book_append_sheet(wb,details,'标签用户订单明细');
+      const file=new File([XLSX.write(wb,{type:'array',bookType})],'synthetic-live-check-2026.'+bookType);
+      openExcelUploader();await handleExcelFile({target:{files:[file]}});
+      const parsed=UrbanSync.api.parseResult;
+      results.push({bookType,blocking:parsed?.blocking,amount:parsed?.snapshot.otherConsumption?.amount,orders:parsed?.snapshot.otherConsumption?.orderCount,first:parsed?.localOtherOrders[0]?.amount,previewReady:!document.querySelector('#excelLocalPreview').disabled});
+      previewExcelLocally();exitExcelLocalPreview();closeExcelUploader();
+    }
+    return {results,version,afterVersion:UrbanSync.api.currentVersion,snapshotUnchanged:before===JSON.stringify(UrbanSync.api.snapshot)};
+  })()`);
+  console.log('Production upload precision diagnostic:',JSON.stringify(upload));
+  assert(upload.results.every(r=>r.blocking.length===0&&r.amount===225.91&&r.orders===3&&r.first===225.9&&r.previewReady),'live XLS/XLSX upload must retain cents and allow local preview');
+  assert(upload.snapshotUnchanged&&upload.version===upload.afterVersion,'upload preview must leave the confirmed production snapshot unchanged');
+  assert(writeRequests.length===0,'live verification must never send a write request');
   await cdp('Network.setBlockedURLs',{urls:['*workers.dev*']});
   await cdp('Page.navigate',{url:url+(url.includes('?')?'&':'?')+'mainland_mock=1'});
   await sleep(9500);
@@ -132,3 +169,4 @@ try{await main()}catch(error){
   try{proc.kill('SIGTERM')}catch{}
   try{rmSync(dir,{recursive:true,force:true})}catch{}
 }
+
