@@ -493,6 +493,30 @@ async function fileHash(buffer){
   const digest=await crypto.subtle.digest('SHA-256',buffer);
   return Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,'0')).join('');
 }
+function worksheetRows(sheet,name,xlsx){
+  const settings={header:1,defval:null,blankrows:true};
+  const rows=xlsx.utils.sheet_to_json(sheet,{...settings,raw:false});
+  const raw=xlsx.utils.sheet_to_json(sheet,{...settings,raw:true});
+  const start=xlsx.utils.decode_range?.(sheet['!ref']||'A1')?.s||{r:0,c:0};
+  const detail=name==='标签用户订单明细';
+  const amountColumn=detail?(rows[0]||[]).findIndex(v=>str(v).replace(/\s/g,'')==='实付金额'):-1;
+  const finance=totalSheetPattern.test(name);
+  const route=!excludedNames.test(name)&&findAnchorRows(rows).length>0;
+  const numericColumns=new Set(finance?[2,3,4,5,6,7]:route?[2,3,4,5,6]:[]);
+  if(finance&&rows.some(row=>/明确不需要|暂不考虑|跟进中|不回复|其他消费/.test((row||[]).slice(9,13).join(' '))))for(const col of [9,10,11,12])numericColumns.add(col);
+  if(finance)for(const {col,def} of recognizeMetrics(rows))if(def.unit!=='%')numericColumns.add(start.c+col);
+  for(let r=0;r<raw.length;r++)for(let c=0;c<(raw[r]||[]).length;c++){
+    const value=raw[r][c],column=start.c+c;
+    // Only quantitative fields use native numbers. Keep identifiers, labels,
+    // date/time display and percentage conventions on their existing path.
+    if(typeof value!=='number'||!(detail?c===amountColumn:numericColumns.has(column)))continue;
+    const cell=sheet[coord(column,start.r+r+1)],format=cell?.z||'';
+    if(xlsx.SSF?.is_date?.(format)||/%/.test(format))continue;
+    if(!rows[r])rows[r]=[];
+    rows[r][c]=value;
+  }
+  return rows;
+}
 async function parseFile(file,seed,xlsx){
   if(!file||!/\.(xls|xlsx)$/i.test(file.name))throw new Error('请选择原始 .xls 或 .xlsx 文件');
   if(file.size>12*1024*1024)throw new Error('Excel超过12MB，暂不支持超大文件');
@@ -506,7 +530,7 @@ async function parseFile(file,seed,xlsx){
     const sheet=book.Sheets[name];
     sheetMerges[name]=sheet['!merges']||[];
     sheetFormulaCells[name]=Object.fromEntries(Object.entries(sheet).filter(([cell,value])=>/^[A-M][0-9]+$/.test(cell)&&value?.f).map(([cell])=>[cell,true]));
-    matrices[name]=xlsx.utils.sheet_to_json(sheet,{header:1,raw:false,defval:null,blankrows:true});
+    matrices[name]=worksheetRows(sheet,name,xlsx);
   }
   let year=new Date(file.lastModified||Date.now()).getFullYear();
   const yyyy=file.name.match(/20[0-9]{2}/);
@@ -515,8 +539,9 @@ async function parseFile(file,seed,xlsx){
   parsed.snapshot.source.name='Excel上传（'+(file.name.toLowerCase().endsWith('.xlsx')?'xlsx':'xls')+'）';
   return parsed;
 }
-return {KNOWN_SHA,parseFile,parseMatrices,knownSnapshot,dateLabel,timeRange,canonical,recognizeMetrics,parseOtherOrders,applyOtherCorrection,applySessionOrderCorrection,applyFileCorrections};
+return {KNOWN_SHA,parseFile,parseMatrices,knownSnapshot,dateLabel,timeRange,canonical,recognizeMetrics,parseOtherOrders,applyOtherCorrection,applySessionOrderCorrection,applyFileCorrections,worksheetRows};
 });
+
 
 
 

@@ -1,8 +1,8 @@
 name: 手机布局回归
 on:
   push:
-    branches: [main]
-    paths: ['index.html', '*.css', '*-sync.js', 'five-minute.js', 'tests/mobile-layout.mjs', 'tests/latest-workbook-browser.mjs', '.github/workflows/mobile-layout.yml']
+    branches: [main, 'fix/excel-native-values-*']
+    paths: ['index.html', '*.css', '*-sync.js', 'excel-import.js', 'five-minute.js', 'tests/mobile-layout.mjs', 'tests/latest-workbook-browser.mjs', 'tests/excel-formats-browser.mjs', '.github/workflows/mobile-layout.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -16,6 +16,10 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-save --package-lock=false playwright@1.58.2
+      - name: Verify real XLS/XLSX numeric formats and isolated upload previews
+        run: node tests/excel-formats-browser.mjs
+        env:
+          CHROME_BIN: /usr/bin/google-chrome
       - run: node tests/mobile-layout.mjs
         env:
           CHROME_BIN: /usr/bin/google-chrome
@@ -30,4 +34,5 @@ jobs:
         with:
           name: mobile-layout-screenshots
           path: mobile-screenshots
+
 

@@ -2,7 +2,7 @@ name: 都市频道 · 自动回归校验
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'fix/excel-native-values-*']
     paths:
       - "index.html"
       - "excel-import.js"
@@ -32,3 +32,4 @@ jobs:
           node --check shared-sync.js
           node --check api/worker.mjs
           node --check five-minute.js
+
