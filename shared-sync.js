@@ -306,10 +306,11 @@ function refreshNewMetrics(metrics){
   box.hidden=false;
   box.innerHTML='<div class="shared-metrics-heading"><h3>Excel 新增经营指标</h3><span>自动识别 · '+metrics.length+' 类指标</span></div>'+
     '<div class="shared-metrics-grid">'+metrics.map(m=>{
-      const entries=Object.entries(m.valuesByProgram||{});
+      const values=m.valuesByProgram||{};
+      const entries=m.key==='average_price_per_person'?[...new Set([...PAYMENT_ROUTES.map(p=>p.program),...Object.keys(values)])].map(name=>{const paid=PAYMENT_ROUTES.find(p=>p.program===name);return [name,paid?.fullPersons===0?null:values[name]??null];}):Object.entries(values);
       return '<article class="shared-metric-card"><div class="shared-metric-name">'+esc(m.label)+
         ' <small>'+esc(m.unit)+'</small></div>'+entries.map(([name,value])=>
-          '<div class="shared-metric-row"><span>'+esc(name)+'</span><b>'+fmtNumber(value)+' '+esc(m.unit)+'</b></div>').join('')+
+          '<div class="shared-metric-row"><span>'+esc(name)+'</span>'+(value===null?'<b class="metric-unavailable">— '+(PAYMENT_ROUTES.find(p=>p.program===name)?.fullPersons===0?'暂不可计算':'待补充')+'</b>':'<b>'+fmtNumber(value)+' '+esc(m.unit)+'</b>')+'</div>').join('')+
         '<p>'+esc(m.note||m.source||'来自新版Excel')+'</p></article>';
     }).join('')+'</div>';
 }

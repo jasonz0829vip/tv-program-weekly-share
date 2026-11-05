@@ -293,6 +293,7 @@ function paymentData(rows,names,context,merges=null){
     for(const r of matched){
       const value=safeNumber(get(r.row,col));
       if(value===null||!Number.isFinite(value)||value<0)continue;
+      if(def.key==='average_price_per_person'&&r.people===0)continue;
       const weight=def.key==='average_price_per_person'?Math.max(1,r.people):/%|率/.test(def.unit)?Math.max(1,r.amount):1;
       let a=accum.get(r.name)||{weighted:0,weight:0};
       a.weighted+=value*(weight||1);a.weight+=(weight||1);accum.set(r.name,a);
