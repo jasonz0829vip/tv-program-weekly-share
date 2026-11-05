@@ -39,7 +39,7 @@ try{
         return route.fulfill({json:{ok:true,version:current.version}});
       }
       if(request.method()!=='GET')throw Error('Unexpected non-GET request: '+request.url());
-      if(url.pathname==='/api/current')return route.fulfill({json:current});
+      if(url.pathname==='/api/current')return route.fulfill({json:{...current,capabilities:['followup-summary-v1','money-cents-v1','other-consumption-v1']}});
       if(url.pathname==='/sync-config.json')return route.fulfill({json:{apiBase:'https://fixture.invalid',mirrorPath:'data/current.json',pollSeconds:86400}});
       if(url.pathname==='/data/current.json')return route.fulfill({json:current});
       if(url.hostname==='dashboard.test'){
@@ -71,6 +71,13 @@ try{
     await page.evaluate(()=>exitExcelLocalPreview());
     assert.equal(await page.evaluate(()=>records.length),baselineCount,'exit restores confirmed snapshot');
     await setDraft();
+    if(latest.otherConsumption){
+      await page.evaluate(()=>{UrbanSync.api.otherConsumptionReady=false;});
+      await page.evaluate(()=>publishExcel());
+      assert.equal(published.length,0,'older backend cannot silently strip new aggregates');
+      assert.match(await page.locator('#excelSyncFeedback').textContent(),/尚未支持其他消费分类/);
+      await page.evaluate(()=>{UrbanSync.api.otherConsumptionReady=true;});
+    }
     page.once('dialog',d=>d.dismiss());await page.evaluate(()=>publishExcel());
     assert.equal(published.length,0,'cancel sends no publication request');
     assert.equal(await page.evaluate(()=>records.length),baselineCount);
