@@ -308,9 +308,14 @@ function refreshNewMetrics(metrics){
     '<div class="shared-metrics-grid">'+metrics.map(m=>{
       const values=m.valuesByProgram||{};
       const entries=m.key==='average_price_per_person'?[...new Set([...PAYMENT_ROUTES.map(p=>p.program),...Object.keys(values)])].map(name=>{const paid=PAYMENT_ROUTES.find(p=>p.program===name);return [name,paid?.fullPersons===0?null:values[name]??null];}):Object.entries(values);
+      const isAverage=m.key==='average_price_per_person';
+      const available=isAverage?entries.filter(([,value])=>typeof value==='number'&&Number.isFinite(value)&&value>=0):entries;
+      const unavailable=isAverage?entries.filter(entry=>!available.includes(entry)):[];
+      const row=([name,value])=>'<div class="shared-metric-row"><span>'+esc(name)+'</span>'+(value===null||typeof value!=='number'||!Number.isFinite(value)||value<0?'<b class="metric-unavailable">— '+(PAYMENT_ROUTES.find(p=>p.program===name)?.fullPersons===0?'暂不可计算':'待补充')+'</b>':'<b>'+fmtNumber(value)+' '+esc(m.unit)+'</b>')+'</div>';
       return '<article class="shared-metric-card"><div class="shared-metric-name">'+esc(m.label)+
-        ' <small>'+esc(m.unit)+'</small></div>'+entries.map(([name,value])=>
-          '<div class="shared-metric-row"><span>'+esc(name)+'</span>'+(value===null?'<b class="metric-unavailable">— '+(PAYMENT_ROUTES.find(p=>p.program===name)?.fullPersons===0?'暂不可计算':'待补充')+'</b>':'<b>'+fmtNumber(value)+' '+esc(m.unit)+'</b>')+'</div>').join('')+
+        ' <small>'+esc(m.unit)+'</small></div><div class="metric-available-rows">'+available.map(row).join('')+'</div>'+
+        (isAverage&&!available.length?'<p class="metric-empty">暂无可展示的客单价</p>':'')+
+        (unavailable.length?'<details class="metric-unavailable-details"><summary>查看其他线路明细（'+unavailable.length+'条）</summary><div>'+unavailable.map(row).join('')+'</div></details>':'')+
         '<p>'+esc(m.note||m.source||'来自新版Excel')+'</p></article>';
     }).join('')+'</div>';
 }
