@@ -24,6 +24,8 @@ function feedback(message,style='neutral'){
 }
 function showModal(){const modal=UI('excelSyncModal');if(modal){modal.classList.add('show');UI('excelFilePicker')?.focus()}}
 function hideModal(){UI('excelSyncModal')?.classList.remove('show')}
+function clearLocalOrderMemory(){if(API.parseResult)API.parseResult.localOtherOrders=[];API.sourceFile=null;window.UrbanOther?.clearLocalOrders();}
+function cancelExcelUploader(){clearLocalOrderMemory();API.preview=null;API.parseResult=null;const picker=UI('excelFilePicker');if(picker)picker.value='';hideModal();}
 function openExcelUploader(){
   showModal();feedback(API.online?'选择原始 .xls / .xlsx 文件即可开始解析，完成核验后可发布给所有人。':API.enabled?'当前网络无法连接共享接口。Excel仍可在本机解析预览，但不能宣称已发布给所有人。':'可以先解析、预览 Excel；全员共享还需连接免费云端服务。');
   updatePublishButton();
@@ -166,7 +168,7 @@ function renderFilePreview(){
   updatePublishButton();
 }
 async function handleExcelFile(event){
-  const file=event.target?.files?.[0];if(!file)return;
+  const file=event.target?.files?.[0];clearLocalOrderMemory();if(!file)return;
   API.sourceFile=file;API.preview=null;API.parseResult=null;
   UI('excelSyncPreview').innerHTML='';
   feedback('正在读取 Excel 的工作表和公式汇总，请勿关闭上传窗口。');
@@ -181,6 +183,13 @@ async function handleExcelFile(event){
       result=await window.TVExcel.parseFile(file,SEED,window.XLSX);
     }
     API.parseResult=result;
+    // Reuse only a previously confirmed adjustment tied to exactly the same file.
+    if(API.snapshot?.source?.hash&&API.snapshot.source.hash===result.snapshot?.source?.hash){
+      for(const adjustment of API.snapshot.otherConsumption?.audit||[]){if(result.snapshot.followUpSummary?.rows.find(r=>r.sourceRow===adjustment.sourceRow)?.otherConsumptionAmount!==adjustment.to)result=window.TVExcel.applyOtherCorrection(result,{...adjustment,sourceHash:result.snapshot.source.hash});}
+      for(const adjustment of API.snapshot.otherConsumption?.sessionAudit||[]){if(result.snapshot.records.find(r=>r.program===adjustment.program&&r.date===adjustment.date&&r.type===adjustment.type&&r.startTime===adjustment.startTime)?.orders!==adjustment.to)result=window.TVExcel.applySessionOrderCorrection(result,{...adjustment,sourceHash:result.snapshot.source.hash});}
+      API.parseResult=result;
+    }
+    window.UrbanOther?.setLocalOrders(result.localOtherOrders||[],result.snapshot?.source?.hash);
     renderFilePreview();
   }catch(error){feedback('无法解析：'+error.message,'error');API.preview=null}
   finally{setRunning(false)}
@@ -188,7 +197,8 @@ async function handleExcelFile(event){
 async function publishExcel(){
   if(!API.online){feedback('当前网络无法连接全员共享接口。请先恢复网络连接；你仍可以使用「应用到本机预览」。','error');return}
   const data=evaluateDraft();if(!data){feedback('当前文件无法通过核验，请检查预览。','error');return}
-  if(!confirm('确认以本次最新完整表格替换当前全部经营汇总，并发布给所有能够打开网页的同事？\n本次文件未包含的旧场次及指标将不再展示，历史版本仍可恢复。\n原始Excel不会上传，任何访客都可以发布下一个版本。'))return;
+  if(data.otherConsumption&&!API.otherConsumptionReady){feedback('共享服务尚未支持其他消费分类，已保留本机预览；请先完成兼容升级。','error');return;}
+  if(!confirm((data.otherConsumption?'本次还将共享其他消费分类金额和产品级汇总，公开网址的访问者可读取；订单编号、用户ID和逐单明细不共享。\n':'')+'确认以本次最新完整表格替换当前全部经营汇总，并发布给所有能够打开网页的同事？\n本次文件未包含的旧场次及指标将不再展示，历史版本仍可恢复。\n原始Excel不会上传，任何访客都可以发布下一个版本。'))return;
   setRunning(true);feedback('正在发布共享周报数据…');
   try{
     let body={baseVersion:API.currentVersion,snapshot:data};
@@ -305,6 +315,7 @@ function refreshNewMetrics(metrics){
 }
 function applySnapshot(snapshot,version,updatedAt,options={}){
   if(!snapshot?.records?.length)return;
+  if(version!=='本机预览')clearLocalOrderMemory();
   const normalized=identity?.normalize(snapshot);
   snapshot=normalized?.snapshot||snapshot;
   records=snapshot.records;
@@ -319,6 +330,7 @@ function applySnapshot(snapshot,version,updatedAt,options={}){
   window.UrbanLines?.setFollowUp(snapshot.followUpSummary||null);
   render();
   refreshNewMetrics(snapshot.metrics||[]);
+  window.UrbanOther?.apply(snapshot.otherConsumption||null,snapshot.source?.hash);
   text('sharedCurrentAt','共享版本 '+String(version||'').slice(0,19).replace('T',' ')+' · 数据截至 '+datesSorted[datesSorted.length-1]);
   text('sharedDataFooter','云端更新时间 '+(updatedAt?updatedAt.replace('T',' ').slice(0,19):'未记录')+'（UTC）');
   const title=UI('qualityIntroText');
@@ -338,6 +350,7 @@ function previewExcelLocally(){
   if(typeof navigate==='function')navigate('overview');
 }
 async function exitExcelLocalPreview(){
+  clearLocalOrderMemory();API.parseResult=null;
   API.localPreview=false;
   const reset=UI('excelLocalReset');if(reset)reset.hidden=true;
   if(API.enabled && API.snapshot){
@@ -407,6 +420,7 @@ async function refreshShared(force=false){
   API.polling=true;
   try{
     const result=await request('/api/current');
+    API.otherConsumptionReady=Array.isArray(result.capabilities)&&result.capabilities.includes('other-consumption-v1');
     API.online=true;
     API.sourceKind='cloud';
     if(result.version&&result.snapshot){
@@ -511,7 +525,7 @@ async function initialize(){
   updatePublishButton();
 }
 window.openExcelUploader=openExcelUploader;
-window.closeExcelUploader=hideModal;
+window.closeExcelUploader=cancelExcelUploader;
 window.handleExcelFile=handleExcelFile;
 window.recomputeExcelPreview=renderFilePreview;
 window.publishExcel=publishExcel;

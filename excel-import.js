@@ -347,6 +347,95 @@ function followUpData(rows,merges,formulaCells,context){
   for(const key of ['paidAmount','otherConsumptionAmount'])if(rowsOut.reduce((n,r)=>n+(r[key]===null?0:cents(r[key])),0)>100000000000)context.blocking.push('跟进汇总累计金额超限：'+key);
   return {schemaVersion:1,rows:rowsOut};
 }
+const OTHER_CATEGORY_GROUPS={travel:['短线','长线','出境','出境游轮','主题游'],hotel:['外地酒店','上海酒店'],dining:['聚会餐','壹日聚'],commerce:['商品']};
+const OTHER_CATEGORY_LABELS={travel:'旅游',hotel:'酒店',dining:'团餐',commerce:'电商',unclassified:'未分类'};
+const OTHER_SOURCE_PROGRAMS={'越南':'越南全景','新马':'新加坡·马来西亚','清肇':'清远肇庆','拈花湾':'拈花湾','福泰上':'福建泰宁','港深惠':'港珠澳','南非一地':'南非一地','西葡':'西葡（马进巴回）'};
+function parseOtherOrders(matrices,context){
+ const entry=Object.entries(matrices).find(([name])=>name==='标签用户订单明细');
+ if(!entry)return {summary:null,localOrders:[]};
+ const rows=entry[1],headers=rows[0]||[],col=label=>headers.findIndex(x=>str(x).replace(/\s/g,'')===label);
+ const cols=Object.fromEntries(['标签名称','订单编号','产品名称','业务类别','年夜饭','订单状态','实付金额','支付时间'].map(k=>[k,col(k)]));
+ for(const k of ['订单编号','产品名称','业务类别','实付金额'])if(cols[k]<0)context.blocking.push('其他消费明细缺少列：'+k);
+ if(['订单编号','产品名称','业务类别','实付金额'].some(k=>cols[k]<0))return {summary:null,localOrders:[]};
+ const orders=new Map(),localOrders=[];
+ for(let i=1;i<rows.length;i++){
+  const row=rows[i]||[];if(row.slice(0,12).every(v=>v==null||str(v)===''))continue;
+  const value=k=>cols[k]<0?null:get(row,cols[k]);
+  const id=str(value('订单编号')),product=str(value('产品名称')),rawCategory=str(value('业务类别'));
+  if(/^(?:合计|总计|小计)$/.test(str(get(row,0)))&&!id)continue;
+  if(!id||!product){context.blocking.push('其他消费明细第'+(i+1)+'行订单或产品缺失');continue;}
+  if(/^[0-9.]+e[+-]?[0-9]+$/i.test(id)){context.blocking.push('其他消费明细第'+(i+1)+'行订单编号为科学记数，无法可靠去重');continue;}
+  const amount=safeNumber(value('实付金额'));
+  if(amount===null||!isMoney(amount)){context.blocking.push('其他消费明细第'+(i+1)+'行实付金额缺失或无效');continue;}
+  const category=Object.keys(OTHER_CATEGORY_GROUPS).find(k=>OTHER_CATEGORY_GROUPS[k].includes(rawCategory))||'unclassified';
+  const annualDinner=/^(?:是|1|true|年夜饭)$/i.test(str(value('年夜饭')));
+  if(str(value('年夜饭'))&&!/^(?:是|否|0|1|true|false|年夜饭|非年夜饭)$/i.test(str(value('年夜饭'))))context.warnings.push('其他消费明细第'+(i+1)+'行年夜饭标签未识别，保留待核');
+  const order={product,rawCategory,category,annualDinner,amount,status:str(value('订单状态')),paidAt:str(value('支付时间'))};
+  const sourceLabel=str(value('标签名称')),sourceProgram=sourceLabel.startsWith('新版电视-我们退休啦-')?OTHER_SOURCE_PROGRAMS[sourceLabel.slice('新版电视-我们退休啦-'.length)]||null:null;
+  const previous=orders.get(id);
+  if(previous){if(JSON.stringify(previous)!==JSON.stringify(order))context.blocking.push('其他消费明细第'+(i+1)+'行同订单数据冲突，需核对');else{const local=localOrders.find(r=>r.orderId===id);if(!local.sourceLabels.includes(sourceLabel))local.sourceLabels.push(sourceLabel);if(sourceProgram&&!local.sourcePrograms.includes(sourceProgram))local.sourcePrograms.push(sourceProgram);}continue;}
+  orders.set(id,order);localOrders.push({...order,orderId:id,sourceLabels:[sourceLabel],sourcePrograms:sourceProgram?[sourceProgram]:[],sourceRow:i+1});
+  if(!sourceProgram)context.warnings.push('其他消费明细第'+(i+1)+'行扫码来源标签未匹配，保留待核');
+ }
+ const categories=Object.entries(OTHER_CATEGORY_LABELS).map(([key,label])=>({key,label,amount:0,orderCount:0})),products=new Map();let totalCents=0,annualCents=0,annualCount=0;
+ for(const r of orders.values()){
+  const n=cents(r.amount);totalCents+=n;const c=categories.find(c=>c.key===r.category);c.amount+=n;c.orderCount++;
+  const key=JSON.stringify([r.product,r.rawCategory]);let p=products.get(key);if(!p){p={name:r.product,rawCategory:r.rawCategory,category:r.category,amount:0,orderCount:0};products.set(key,p);}p.amount+=n;p.orderCount++;
+  if(r.annualDinner){annualCents+=n;annualCount++;}
+ }
+ if(totalCents>100000000000)context.blocking.push('其他消费明细累计金额超限');
+ const unknownCategories=[...new Set(localOrders.filter(r=>r.category==='unclassified').map(r=>r.rawCategory||'未填写'))];
+ if(unknownCategories.length)context.warnings.push('其他消费存在未分类业务类别，请核对');
+ return {summary:{schemaVersion:1,amount:totalCents/100,orderCount:orders.size,categories:categories.map(c=>({...c,amount:c.amount/100})),products:[...products.values()].map(p=>({...p,amount:p.amount/100})),annualDinner:{amount:annualCents/100,orderCount:annualCount},unknownCategories,unknownSourceOrders:localOrders.filter(r=>!r.sourcePrograms.length).length},localOrders};
+}
+function applyOtherCorrection(parsed,change){
+ if(!change||change.sourceHash!==parsed.snapshot.source.hash)throw Error('更正确认与当前文件不匹配');
+ if(!isMoney(change.from)||!isMoney(change.to)||!str(change.reason))throw Error('更正确认缺少有效金额或依据');
+ const matches=parsed.snapshot.followUpSummary?.rows.filter(r=>r.sourceRow===change.sourceRow&&r.otherConsumptionAmount===change.from)||[];
+ if(matches.length!==1)throw Error('更正目标不唯一或原值已变化');
+ const copy=JSON.parse(JSON.stringify(parsed));const row=copy.snapshot.followUpSummary.rows.find(r=>r.sourceRow===change.sourceRow);row.otherConsumptionAmount=change.to;
+ if(copy.snapshot.otherConsumption){const d=copy.snapshot.otherConsumption;d.summaryAmount=copy.snapshot.followUpSummary.rows.reduce((s,r)=>s+cents(r.otherConsumptionAmount??0),0)/100;d.audit=[...(d.audit||[]),{sourceRow:change.sourceRow,from:change.from,to:change.to,reason:str(change.reason).slice(0,180)}];}
+ return copy;
+}
+function applySessionOrderCorrection(parsed,change){
+ if(!change||change.sourceHash!==parsed.snapshot.source.hash)throw Error('更正确认与当前文件不匹配');
+ if(!isInteger(change.from)||!isInteger(change.to)||change.to>1000000||!str(change.reason))throw Error('意向金更正无效');
+ const matches=parsed.snapshot.records.filter(r=>r.program===change.program&&r.date===change.date&&r.type===change.type&&r.startTime===change.startTime&&r.orders===change.from);
+ if(matches.length!==1)throw Error('意向金更正目标不唯一或原值已变化');
+ const copy=JSON.parse(JSON.stringify(parsed));const record=copy.snapshot.records.find(r=>r.program===change.program&&r.date===change.date&&r.type===change.type&&r.startTime===change.startTime);record.orders=change.to;
+ if(copy.snapshot.totals)copy.snapshot.totals.orders=copy.snapshot.records.reduce((s,r)=>s+r.orders,0);
+ if(copy.snapshot.otherConsumption){const d=copy.snapshot.otherConsumption;const check=d.checks?.find(c=>c.key==='intention_totals');if(check)check.left=copy.snapshot.records.reduce((s,r)=>s+r.orders,0);d.sessionAudit=[...(d.sessionAudit||[]),{program:change.program,date:change.date,type:change.type,startTime:change.startTime,from:change.from,to:change.to,reason:str(change.reason).slice(0,180)}];}
+ return copy;
+}
+// User-confirmed aggregate corrections for one exact source file only.
+// These are not heuristics: any other value/shape must be reviewed again.
+const CONFIRMED_CORRECTIONS={
+ '64d94d88ad4919b7d5b8dca140bcc04580db3fb37267d54f5654fdd825a3c1cb':[
+  {kind:'other',sourcePattern:'港(?:深惠|珠澳)',from:3350,to:3550,reason:'用户2026-11-05确认港深惠其他消费增加200元，原文件保留'},
+  {kind:'orders',programPattern:'泉州',date:'2026-11-03',type:'首播',from:0,to:3,reason:'用户2026-11-05确认泉州首播意向金按汇总表3单，原文件保留'}
+ ]
+};
+function applyFileCorrections(parsed,policies=CONFIRMED_CORRECTIONS){
+ const hash=parsed.snapshot.source?.hash,policy=policies[hash];if(!policy)return parsed;
+ let output=JSON.parse(JSON.stringify(parsed));
+ for(const p of policy){
+  if(p.kind==='other'){
+   const matches=(output.snapshot.followUpSummary?.rows||[]).filter(r=>new RegExp(p.sourcePattern).test(r.sourceProduct));
+   if(matches.length!==1||![p.from,p.to].includes(matches[0].otherConsumptionAmount))throw Error('已确认其他消费更正的批次或原值发生变化，请核对');
+   const target=matches[0];
+   if(target.otherConsumptionAmount===p.from)output=applyOtherCorrection(output,{sourceHash:hash,sourceRow:target.sourceRow,from:p.from,to:p.to,reason:p.reason});
+   else if(output.snapshot.otherConsumption&&!output.snapshot.otherConsumption.audit?.some(a=>a.sourceRow===target.sourceRow&&a.from===p.from&&a.to===p.to))output.snapshot.otherConsumption.audit=[...(output.snapshot.otherConsumption.audit||[]),{sourceRow:target.sourceRow,from:p.from,to:p.to,reason:p.reason}];
+  }else if(p.kind==='orders'){
+   const matches=output.snapshot.records.filter(r=>new RegExp(p.programPattern).test(r.program)&&r.date===p.date&&r.type===p.type);
+   if(matches.length!==1||![p.from,p.to].includes(matches[0].orders))throw Error('已确认意向金更正的场次或原值发生变化，请核对');
+   const target=matches[0];
+   if(target.orders===p.from)output=applySessionOrderCorrection(output,{sourceHash:hash,program:target.program,date:target.date,type:target.type,startTime:target.startTime,from:p.from,to:p.to,reason:p.reason});
+   else if(output.snapshot.otherConsumption&&!output.snapshot.otherConsumption.sessionAudit?.some(a=>a.program===target.program&&a.date===target.date&&a.type===target.type&&a.startTime===target.startTime&&a.from===p.from&&a.to===p.to))output.snapshot.otherConsumption.sessionAudit=[...(output.snapshot.otherConsumption.sessionAudit||[]),{program:target.program,date:target.date,type:target.type,startTime:target.startTime,from:p.from,to:p.to,reason:p.reason}];
+  }
+ }
+ return output;
+}
+
 function parseMatrices(matrices,options={}){
   const context={year:options.year||2026,warnings:[],blocking:[],seen:new Set()},records=[];
   const names=[];
@@ -370,9 +459,19 @@ function parseMatrices(matrices,options={}){
   if(totalRows===null)context.warnings.push('未找到财务汇总表，全款金额不会自动编造');
   records.sort((a,b)=>a.date.localeCompare(b.date)||a.program.localeCompare(b.program));
   const followUpSummary=Array.isArray(totalMerges)?followUpData(totalRows||[],totalMerges,totalFormulas,context):null;
-  const snapshot={schemaVersion:2,records,paymentSummary:p.paymentSummary,metrics:p.metrics,...(followUpSummary?{followUpSummary}:{}),
+  const other=parseOtherOrders(matrices,context);
+  if(other.summary){other.summary.summaryAmount=(followUpSummary?.rows||[]).reduce((n,r)=>n+cents(r.otherConsumptionAmount??0),0)/100;other.summary.blankSummaryBatches=(followUpSummary?.rows||[]).filter(r=>r.otherConsumptionAmount==null).length;
+    other.summary.checks=[];
+    if(followUpSummary){other.summary.checks.push({key:'scan_totals',left:records.reduce((s,r)=>s+r.scans,0),right:followUpSummary.rows.reduce((s,r)=>s+(r.scanCount??0),0)});
+      const intentionValues=totalRows.filter(row=>/首播|重播/.test(str(get(row,1)))).map(row=>safeNumber(get(row,4)));
+      if(intentionValues.length&&intentionValues.every(v=>isInteger(v)))other.summary.checks.push({key:'intention_totals',left:records.reduce((s,r)=>s+r.orders,0),right:intentionValues.reduce((a,b)=>a+b,0)});
+    }
+  }
+  const snapshot={schemaVersion:2,records,paymentSummary:p.paymentSummary,metrics:p.metrics,...(followUpSummary?{followUpSummary}:{}),...(other.summary?{otherConsumption:other.summary}:{}),
     source:{name:'Excel文件',hash:options.sha256||'',sheets:Object.keys(matrices).length,notes:'浏览器内读取，上传到共享服务的仅为脱敏节目汇总'}};
-  return {snapshot,warnings:context.warnings,blocking:context.blocking,recognizedSheets:[...new Set(names)]};
+  const parsed={snapshot,localOtherOrders:other.localOrders,warnings:context.warnings,blocking:context.blocking,recognizedSheets:[...new Set(names)]};
+  if(!context.blocking.length){try{return applyFileCorrections(parsed)}catch(error){context.blocking.push(error.message);}}
+  return parsed;
 }
 function knownSnapshot(seed,options={}){
   const records=seed.records.map(r=>({
@@ -415,7 +514,7 @@ async function parseFile(file,seed,xlsx){
   parsed.snapshot.source.name='Excel上传（'+(file.name.toLowerCase().endsWith('.xlsx')?'xlsx':'xls')+'）';
   return parsed;
 }
-return {KNOWN_SHA,parseFile,parseMatrices,knownSnapshot,dateLabel,timeRange,canonical,recognizeMetrics};
+return {KNOWN_SHA,parseFile,parseMatrices,knownSnapshot,dateLabel,timeRange,canonical,recognizeMetrics,parseOtherOrders,applyOtherCorrection,applySessionOrderCorrection,applyFileCorrections};
 });
 
 

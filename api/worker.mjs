@@ -1,9 +1,11 @@
+import {validateOtherConsumption} from './other-consumption-schema.mjs';
 // Urban Channel V2 public shared-data API (Cloudflare Workers + D1).
 // Browser reads the Excel locally; only a strict, de-identified snapshot crosses the network.
 // No authentication by product choice: anyone, including direct API clients, may publish or restore.
 const SITE_ORIGIN = 'https://jasonz0829vip.github.io';
 const MAX_BODY = 750000;
 const MAX_RECORDS = 3000;
+const CAPABILITIES=['followup-summary-v1','money-cents-v1','other-consumption-v1'];
 let initialized = false;
 const iso = () => new Date().toISOString();
 const int = (x, max = 100000000) => Number.isSafeInteger(x) && x >= 0 && x <= max;
@@ -111,8 +113,9 @@ export function validateSnapshot(payload){
     followUpSummary={schemaVersion:1,rows};
   }
   const source={name:cleanText(payload.source?.name,100),hash:cleanText(payload.source?.hash,100),sheets:Math.min(100,Math.max(0,Number(payload.source?.sheets)||0)),notes:cleanText(payload.source?.notes,280)};
+  if(payload.otherConsumption&&followUpSummary&&moneySum(followUpSummary.rows.map(r=>r.otherConsumptionAmount??0))!==payload.otherConsumption.summaryAmount)invalid('其他消费汇总与线路批次不一致');
   // Future snapshots may add new programs or metrics but never client PII, formulas or raw cells.
-  return {schemaVersion:2,source,records,paymentSummary,metrics,...(followUpSummary?{followUpSummary}:{}),sourceLastRecorded:records[records.length-1].date,
+  return {schemaVersion:2,source,records,paymentSummary,metrics,...(followUpSummary?{followUpSummary}:{}),...(payload.otherConsumption?{otherConsumption:validateOtherConsumption(payload.otherConsumption)}:{}),sourceLastRecorded:records[records.length-1].date,
     totals:{sessions:records.length,programs:nameSet.size,scans:arrSum(records.map(r=>r.scans)),orders:arrSum(records.map(r=>r.orders)),
     amount:moneySum(paymentSummary.map(p=>p.amount))}};
 }
@@ -201,15 +204,15 @@ export default {
   try{
     const u=new URL(request.url),method=request.method;
     if(method==='OPTIONS')return new Response(null,{status:204,headers:cors(request)});
-    if(method==='GET'&&u.pathname==='/')return json(request,{ok:true,service:'都市频道共享周报',version:'2.1.1',capabilities:['followup-summary-v1','money-cents-v1'],hasDatabase:!!env.DB});
+    if(method==='GET'&&u.pathname==='/')return json(request,{ok:true,service:'都市频道共享周报',version:'2.2',capabilities:CAPABILITIES,hasDatabase:!!env.DB});
     if(!['/api/current','/api/versions','/api/publish','/api/restore'].includes(u.pathname))return json(request,{ok:false,error:'不存在该接口'},404);
     await ensureDb(env);
     if(method==='GET'&&u.pathname==='/api/current'){
       const version=await currentVersion(env.DB);
-      if(!version)return json(request,{ok:true,version:null,snapshot:null});
+      if(!version)return json(request,{ok:true,version:null,snapshot:null,capabilities:CAPABILITIES});
       const row=await getSnapshot(env.DB,version);
       if(!row)return json(request,{ok:false,error:'找不到当前数据版本'},503);
-      return json(request,{ok:true,version:row.version,updatedAt:row.created_at,snapshot:JSON.parse(row.snapshot)});
+      return json(request,{ok:true,version:row.version,updatedAt:row.created_at,snapshot:JSON.parse(row.snapshot),capabilities:CAPABILITIES});
     }
     if(method==='GET'&&u.pathname==='/api/versions'){
       const rows=await env.DB.prepare('SELECT version, created_at, file_name, file_hash, session_count FROM tv_versions ORDER BY created_at DESC LIMIT 30').all();
