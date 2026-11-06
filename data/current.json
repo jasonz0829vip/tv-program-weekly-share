@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-11-06T02-39-12-972Z-c0b26b0d",
-  "updatedAt": "2026-11-06T02:39:12.972Z",
-  "mirroredAt": "2026-11-06T03:43:32.002Z",
+  "version": "2026-11-06T08-14-04-451Z-2fed9ffa",
+  "updatedAt": "2026-11-06T08:14:04.451Z",
+  "mirroredAt": "2026-11-06T11:35:43.068Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "eb55e672d93dd6236cfaf36a8f6019448a30c02a6adf4c72755dcf41552b1fb1",
+      "hash": "3d9757ea5bdb87260a90dcf4c6ebe3c1cd599f8fcd35c67805f7520d61cb7c81",
       "sheets": 18,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -1009,11 +1009,28 @@
         "startTime": "09:30",
         "scans": 106,
         "orders": 0,
-        "first30": null,
-        "after30": null,
+        "first30": 102,
+        "after30": 4,
         "phone": 0,
         "group": null,
-        "fiveMinute": null
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            0,
+            0,
+            7,
+            67,
+            27,
+            1
+          ],
+          "source": {
+            "sheet": "东方明珠1日游",
+            "valueCells": "C17:C22",
+            "timeCells": "B17:B22",
+            "totalCell": "C27",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       },
       {
         "date": "2026-11-02",
@@ -1263,10 +1280,27 @@
         "scans": 76,
         "orders": 2,
         "first30": 66,
-        "after30": null,
+        "after30": 10,
         "phone": 1,
         "group": null,
-        "fiveMinute": null
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            8,
+            8,
+            15,
+            12,
+            13,
+            10
+          ],
+          "source": {
+            "sheet": "马来西亚全景深度9日游",
+            "valueCells": "C2:C7",
+            "timeCells": "B2:B7",
+            "totalCell": "C14",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       },
       {
         "date": "2026-11-05",
@@ -1294,6 +1328,36 @@
             "valueCells": "C48:C53",
             "timeCells": "B48:B53",
             "totalCell": "C58",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-11-06",
+        "program": "马来西亚全景深度9日游",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 24,
+        "orders": 2,
+        "first30": 24,
+        "after30": 0,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            1,
+            10,
+            3,
+            8,
+            2,
+            0
+          ],
+          "source": {
+            "sheet": "马来西亚全景深度9日游",
+            "valueCells": "C17:C22",
+            "timeCells": "B17:B22",
+            "totalCell": "C27",
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
@@ -1606,11 +1670,11 @@
         {
           "sourceProduct": "马来西亚全景深度9日游",
           "sourceRow": 60,
-          "scanCount": 76,
+          "scanCount": 100,
           "paidByOrder": 0,
-          "followingUp": 2,
+          "followingUp": 4,
           "notInterested": 0,
-          "unclassifiedRemainder": 74,
+          "unclassifiedRemainder": 96,
           "paidAmount": 0,
           "otherConsumptionAmount": 0
         },
@@ -2163,17 +2227,22 @@
       "checks": [
         {
           "key": "scan_totals",
-          "left": 2719,
-          "right": 2719
+          "left": 2743,
+          "right": 2743
+        },
+        {
+          "key": "intention_totals",
+          "left": 88,
+          "right": 88
         }
       ]
     },
-    "sourceLastRecorded": "2026-11-05",
+    "sourceLastRecorded": "2026-11-06",
     "totals": {
-      "sessions": 44,
+      "sessions": 45,
       "programs": 16,
-      "scans": 2719,
-      "orders": 86,
+      "scans": 2743,
+      "orders": 88,
       "amount": 660088.82
     }
   }
