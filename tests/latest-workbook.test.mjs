@@ -67,3 +67,22 @@ test('different Spain Portugal itinerary or duration does not silently share fin
     const p=spainFinance(title,123);assert.match(p.blocking.join(''),/无法确认归属线路/);assert.equal(p.snapshot.paymentSummary.length,0);
   }
 });
+
+const malaysiaSheet='马来西亚全景深度9日游';
+const malaysiaFinance=(amount)=>parser.parseMatrices({
+  '新马':[['2026年9月24日首播'],...Array.from({length:6},(_,i)=>[null,`17:${30+i*5}-`+(i===5?'18:00':`17:${35+i*5}`),1]),[null,null,6,null,0]],
+  [malaysiaSheet]:[['2026年11月5日首播'],...Array.from({length:6},(_,i)=>[null,`17:${30+i*5}-`+(i===5?'18:00':`17:${35+i*5}`),1]),[null,null,6,null,0]],
+  '汇总数据':[[malaysiaSheet,null,null,null,null,2,3,amount]]
+},{year:2026,sheetMerges:{'汇总数据':[]}});
+test('standalone Malaysia route is not swallowed by the Singapore-Malaysia fallback',()=>{
+  const p=malaysiaFinance(36697);assert.deepEqual(p.blocking,[]);
+  assert.equal(p.snapshot.paymentSummary.length,1);assert.equal(p.snapshot.paymentSummary[0].program,malaysiaSheet);assert.equal(p.snapshot.paymentSummary[0].amount,36697);
+});
+test('Singapore-Malaysia finance still resolves through the keyword fallback',()=>{
+  const p=parser.parseMatrices({
+    '新马':[['2026年9月24日首播'],...Array.from({length:6},(_,i)=>[null,`17:${30+i*5}-`+(i===5?'18:00':`17:${35+i*5}`),1]),[null,null,6,null,0]],
+    '汇总数据':[['新加坡马来西亚8日游',null,null,null,null,1,2,1000]]
+  },{year:2026,sheetMerges:{'汇总数据':[]}});
+  assert.deepEqual(p.blocking,[]);
+  assert.equal(p.snapshot.paymentSummary.length,1);assert.equal(p.snapshot.paymentSummary[0].program,'新加坡·马来西亚');assert.equal(p.snapshot.paymentSummary[0].amount,1000);
+});

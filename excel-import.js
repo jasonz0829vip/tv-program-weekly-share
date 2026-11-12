@@ -258,7 +258,16 @@ function paymentData(rows,names,context,merges=null){
       continue;
     }
     const label=strictOwnership?programOwner(rows,i,merges):row.slice(0,5).join(' ');
-    const candidates=strictOwnership?names.filter(n=>sniffProgram(label,[n])===n):[];
+    // Exact name matches win over fuzzy keyword fallbacks. A standalone route
+    // whose name shares a keyword with an older route (e.g. 马来西亚全景深度9日游
+    // vs the /马来西亚/ -> 新加坡·马来西亚 fallback) must resolve to itself,
+    // not to two candidates and a blocking error.
+    const exactCandidates=strictOwnership?names.filter(n=>{
+      const t=str(label).replace(/\s+/g,'');
+      return t.includes(n)||t.includes(n.replace('新加坡·马来西亚','新马'));
+    }):[];
+    const fuzzyCandidates=strictOwnership?names.filter(n=>sniffProgram(label,[n])===n):[];
+    const candidates=exactCandidates.length?exactCandidates:fuzzyCandidates;
     let name=strictOwnership?(candidates.length===1?candidates[0]:''):sniffProgram(label,names);
     if(!strictOwnership){
       if(!name)for(let n=i-1;n>=Math.max(0,i-3);n--){name=sniffProgram((rows[n]||[]).slice(0,5).join(' '),names);if(name)break;}
