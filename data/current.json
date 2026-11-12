@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-11-12T02-17-20-514Z-b5a31054",
-  "updatedAt": "2026-11-12T02:17:20.514Z",
-  "mirroredAt": "2026-11-12T03:25:48.825Z",
+  "version": "2026-11-12T04-30-59-241Z-c1598f64",
+  "updatedAt": "2026-11-12T04:30:59.241Z",
+  "mirroredAt": "2026-11-12T11:42:17.094Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "fc60ca4643b71bb72aeeea48e8347b4525d6017d5293930716e11f8dab14eb0c",
+      "hash": "9d121c5cc8a5708aba5697aa77b93c7964b4c2986efd488b164fa2b1e6033154",
       "sheets": 23,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -1631,6 +1631,36 @@
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
+      },
+      {
+        "date": "2026-11-12",
+        "program": "马来西亚全景深度9日游",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 29,
+        "orders": 0,
+        "first30": 28,
+        "after30": 1,
+        "phone": 0,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            2,
+            11,
+            4,
+            2,
+            7,
+            2
+          ],
+          "source": {
+            "sheet": "马来西亚全景深度9日游",
+            "valueCells": "C46:C51",
+            "timeCells": "B46:B51",
+            "totalCell": "C56",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       }
     ],
     "paymentSummary": [
@@ -1932,11 +1962,11 @@
         {
           "sourceProduct": "马来西亚全景深度9日游",
           "sourceRow": 59,
-          "scanCount": 140,
+          "scanCount": 169,
           "paidByOrder": 2,
           "followingUp": 3,
           "notInterested": 7,
-          "unclassifiedRemainder": 128,
+          "unclassifiedRemainder": 157,
           "paidAmount": 36697,
           "otherConsumptionAmount": 0
         },
@@ -3125,16 +3155,16 @@
       "checks": [
         {
           "key": "scan_totals",
-          "left": 3019,
-          "right": 3019
+          "left": 3048,
+          "right": 3048
         }
       ]
     },
-    "sourceLastRecorded": "2026-11-11",
+    "sourceLastRecorded": "2026-11-12",
     "totals": {
-      "sessions": 54,
+      "sessions": 55,
       "programs": 20,
-      "scans": 3019,
+      "scans": 3048,
       "orders": 89,
       "amount": 768894.26
     }
