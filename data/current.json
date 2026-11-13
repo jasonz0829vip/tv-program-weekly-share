@@ -1,14 +1,14 @@
 {
   "ok": true,
-  "version": "2026-11-13T04-40-28-877Z-61953603",
-  "updatedAt": "2026-11-13T04:40:28.877Z",
-  "mirroredAt": "2026-11-13T07:05:39.600Z",
+  "version": "2026-11-13T09-03-25-859Z-ddca76e2",
+  "updatedAt": "2026-11-13T09:03:25.859Z",
+  "mirroredAt": "2026-11-13T15:20:16.951Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "4f3ffc5d5d78d7be7584ef36880b2ae44007552d76bc161456f3f4db88d0a32e",
-      "sheets": 23,
+      "hash": "e06f24472e578c5f420e4b27624e1c2a6e8fff42049f83a6144c2007d159ef4f",
+      "sheets": 26,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
     "records": [
@@ -1768,9 +1768,9 @@
       },
       {
         "program": "港珠澳",
-        "amount": 24794,
-        "fullOrders": 3,
-        "fullPersons": 6,
+        "amount": 33192,
+        "fullOrders": 4,
+        "fullPersons": 8,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -1845,9 +1845,9 @@
       },
       {
         "program": "腾冲瑞丽芒市大理丽江双飞8日游",
-        "amount": 49768,
-        "fullOrders": 4,
-        "fullPersons": 10,
+        "amount": 95688,
+        "fullOrders": 9,
+        "fullPersons": 19,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -1869,13 +1869,13 @@
           "福建泰宁": 2847.89,
           "越南全景": 5631.67,
           "拈花湾": 1527.38,
-          "港珠澳": 4132.33,
+          "港珠澳": 4149,
           "美国旧金山": 20000,
           "黄龙饭店年夜饭": 1531.49,
           "泉州漳州厦门6日游": 2999,
           "马来西亚全景深度9日游": 12232.33,
           "冰岛+北极20日游": 5000,
-          "腾冲瑞丽芒市大理丽江双飞8日游": 4976.8
+          "腾冲瑞丽芒市大理丽江双飞8日游": 5036.21
         },
         "source": "Excel 汇总数据 I1 列",
         "note": "原表人均指标；多批次按付费人数加权，不能直接平均。"
@@ -1908,7 +1908,7 @@
         },
         {
           "sourceProduct": "福建泰宁大金湖上清溪双高5日游",
-          "sourceRow": 13,
+          "sourceRow": 15,
           "scanCount": 182,
           "paidByOrder": 7,
           "followingUp": 0,
@@ -1919,7 +1919,7 @@
         },
         {
           "sourceProduct": "越南全景7日游",
-          "sourceRow": 17,
+          "sourceRow": 19,
           "scanCount": 496,
           "paidByOrder": 11,
           "followingUp": 0,
@@ -1930,7 +1930,7 @@
         },
         {
           "sourceProduct": "不一样的拈花湾4天3晚",
-          "sourceRow": 24,
+          "sourceRow": 26,
           "scanCount": 341,
           "paidByOrder": 4,
           "followingUp": 0,
@@ -1941,7 +1941,7 @@
         },
         {
           "sourceProduct": "西班牙+葡萄牙（马德里进巴塞罗那回）13日游",
-          "sourceRow": 28,
+          "sourceRow": 30,
           "scanCount": 31,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -1952,18 +1952,18 @@
         },
         {
           "sourceProduct": "港珠澳、深圳、惠州双飞6日美食之旅",
-          "sourceRow": 31,
+          "sourceRow": 33,
           "scanCount": 170,
-          "paidByOrder": 3,
+          "paidByOrder": 4,
           "followingUp": 0,
           "notInterested": 15,
-          "unclassifiedRemainder": 152,
-          "paidAmount": 24794,
+          "unclassifiedRemainder": 151,
+          "paidAmount": 33192,
           "otherConsumptionAmount": 8626.6
         },
         {
           "sourceProduct": "南非一地12日游",
-          "sourceRow": 35,
+          "sourceRow": 37,
           "scanCount": 41,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -1974,7 +1974,7 @@
         },
         {
           "sourceProduct": "美国旧金山+夏威夷跳岛20日游",
-          "sourceRow": 38,
+          "sourceRow": 40,
           "scanCount": 63,
           "paidByOrder": 1,
           "followingUp": 2,
@@ -1985,7 +1985,7 @@
         },
         {
           "sourceProduct": "杭州黄龙饭店年夜饭",
-          "sourceRow": 43,
+          "sourceRow": 45,
           "scanCount": 90,
           "paidByOrder": 5,
           "followingUp": 0,
@@ -1996,7 +1996,7 @@
         },
         {
           "sourceProduct": "银星皇冠年夜饭",
-          "sourceRow": 47,
+          "sourceRow": 49,
           "scanCount": 54,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -2007,7 +2007,7 @@
         },
         {
           "sourceProduct": "澳大利亚新西兰精华游",
-          "sourceRow": 53,
+          "sourceRow": 55,
           "scanCount": 27,
           "paidByOrder": 0,
           "followingUp": 1,
@@ -2018,7 +2018,7 @@
         },
         {
           "sourceProduct": "泉州漳州厦门6日游",
-          "sourceRow": 56,
+          "sourceRow": 58,
           "scanCount": 77,
           "paidByOrder": 1,
           "followingUp": 4,
@@ -2029,7 +2029,7 @@
         },
         {
           "sourceProduct": "马来西亚全景深度9日游",
-          "sourceRow": 59,
+          "sourceRow": 61,
           "scanCount": 169,
           "paidByOrder": 2,
           "followingUp": 3,
@@ -2040,7 +2040,7 @@
         },
         {
           "sourceProduct": "东方明珠1日游",
-          "sourceRow": 64,
+          "sourceRow": 66,
           "scanCount": 325,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -2051,7 +2051,7 @@
         },
         {
           "sourceProduct": "马尔代夫+斯里兰卡10日游",
-          "sourceRow": 67,
+          "sourceRow": 69,
           "scanCount": 62,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -2062,7 +2062,7 @@
         },
         {
           "sourceProduct": "广西北海、涠洲岛半自助双飞5日游",
-          "sourceRow": 70,
+          "sourceRow": 72,
           "scanCount": 89,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -2073,7 +2073,7 @@
         },
         {
           "sourceProduct": "不一样的厦门5天4晚",
-          "sourceRow": 73,
+          "sourceRow": 75,
           "scanCount": 7,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -2084,7 +2084,7 @@
         },
         {
           "sourceProduct": "冰岛+北极20日游",
-          "sourceRow": 75,
+          "sourceRow": 77,
           "scanCount": 63,
           "paidByOrder": 1,
           "followingUp": 1,
@@ -2095,18 +2095,18 @@
         },
         {
           "sourceProduct": "腾冲瑞丽芒市大理丽江双飞8日游",
-          "sourceRow": 78,
+          "sourceRow": 80,
           "scanCount": 249,
-          "paidByOrder": 4,
-          "followingUp": 26,
-          "notInterested": 3,
+          "paidByOrder": 9,
+          "followingUp": 20,
+          "notInterested": 4,
           "unclassifiedRemainder": 216,
-          "paidAmount": 49768,
+          "paidAmount": 95688,
           "otherConsumptionAmount": 0
         },
         {
           "sourceProduct": "意大利一地16日游",
-          "sourceRow": 50,
+          "sourceRow": 52,
           "scanCount": 77,
           "paidByOrder": 0,
           "followingUp": 0,
@@ -3262,7 +3262,7 @@
       "programs": 21,
       "scans": 3297,
       "orders": 112,
-      "amount": 829777.26
+      "amount": 884095.26
     }
   }
 }
