@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-11-20T04-02-53-297Z-44c23e9b",
-  "updatedAt": "2026-11-20T04:02:53.297Z",
-  "mirroredAt": "2026-11-20T04:18:32.167Z",
+  "version": "2026-11-20T05-33-22-773Z-178b5ea8",
+  "updatedAt": "2026-11-20T05:33:22.773Z",
+  "mirroredAt": "2026-11-20T13:15:52.174Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "a9da5d9e08447462867835115eb558822f0d21c048d4d9b12406462019043ef9",
+      "hash": "f70a4ee7cfef0caa203dc0426bd1baec2b9dcf4566ed61d539fd8a50a4446092",
       "sheets": 26,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -2028,10 +2028,10 @@
         "type": "重播",
         "startTime": "09:30",
         "scans": 30,
-        "orders": 0,
+        "orders": 1,
         "first30": 25,
         "after30": 5,
-        "phone": 2,
+        "phone": 3,
         "group": null,
         "fiveMinute": {
           "mode": "increment",
@@ -2077,9 +2077,9 @@
       },
       {
         "program": "越南全景",
-        "amount": 151852,
-        "fullOrders": 13,
-        "fullPersons": 27,
+        "amount": 163050,
+        "fullOrders": 14,
+        "fullPersons": 29,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -2218,7 +2218,7 @@
           "清远肇庆": 3359,
           "新加坡·马来西亚": 7985.73,
           "福建泰宁": 2847.89,
-          "越南全景": 5624.15,
+          "越南全景": 5622.41,
           "拈花湾": 1527.38,
           "港珠澳": 4149,
           "美国旧金山": 20000,
@@ -2273,11 +2273,11 @@
           "sourceProduct": "越南全景7日游",
           "sourceRow": 20,
           "scanCount": 601,
-          "paidByOrder": 13,
+          "paidByOrder": 14,
           "followingUp": 7,
           "notInterested": 39,
-          "unclassifiedRemainder": 542,
-          "paidAmount": 151852,
+          "unclassifiedRemainder": 541,
+          "paidAmount": 163050,
           "otherConsumptionAmount": 66641
         },
         {
@@ -3821,8 +3821,8 @@
       "sessions": 68,
       "programs": 24,
       "scans": 3861,
-      "orders": 131,
-      "amount": 1051729.12
+      "orders": 132,
+      "amount": 1062927.12
     }
   }
 }
