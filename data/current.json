@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "version": "2026-11-24T05-20-57-503Z-95593eb7",
-  "updatedAt": "2026-11-24T05:20:57.503Z",
-  "mirroredAt": "2026-11-24T10:55:19.829Z",
+  "version": "2026-11-25T05-23-55-240Z-29c04ae4",
+  "updatedAt": "2026-11-25T05:23:55.240Z",
+  "mirroredAt": "2026-11-25T14:14:21.429Z",
   "snapshot": {
     "schemaVersion": 2,
     "source": {
       "name": "都市频道脱敏经营汇总",
-      "hash": "1c34394cee8ab1409ee63b647dc970e7216a9726cf69cf6bca13c486fdcf5a27",
+      "hash": "37116a3f2ec13773818b5ede694bc11e1de92dbc482cc4d0688af384b18129d6",
       "sheets": 27,
       "notes": "此文件仅包含已核验的经营场次、线路、金额和指标。原始Excel、客户身份信息不公开。"
     },
@@ -2231,6 +2231,66 @@
             "definition": "原始Excel对应时段新增扫码数"
           }
         }
+      },
+      {
+        "date": "2026-11-24",
+        "program": "港珠澳",
+        "type": "重播",
+        "startTime": "17:30",
+        "scans": 88,
+        "orders": 3,
+        "first30": 83,
+        "after30": 5,
+        "phone": 1,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            5,
+            4,
+            15,
+            14,
+            33,
+            12
+          ],
+          "source": {
+            "sheet": "港珠澳",
+            "valueCells": "C44:C49",
+            "timeCells": "B44:B49",
+            "totalCell": "C56",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
+      },
+      {
+        "date": "2026-11-25",
+        "program": "港珠澳",
+        "type": "重播",
+        "startTime": "09:30",
+        "scans": 44,
+        "orders": 1,
+        "first30": 41,
+        "after30": 3,
+        "phone": 3,
+        "group": null,
+        "fiveMinute": {
+          "mode": "increment",
+          "values": [
+            4,
+            8,
+            9,
+            5,
+            13,
+            2
+          ],
+          "source": {
+            "sheet": "港珠澳",
+            "valueCells": "C60:C65",
+            "timeCells": "B60:B65",
+            "totalCell": "C70",
+            "definition": "原始Excel对应时段新增扫码数"
+          }
+        }
       }
     ],
     "paymentSummary": [
@@ -2243,9 +2303,9 @@
       },
       {
         "program": "新加坡·马来西亚",
-        "amount": 439215.28,
-        "fullOrders": 28,
-        "fullPersons": 55,
+        "amount": 447114.28,
+        "fullOrders": 29,
+        "fullPersons": 56,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -2278,9 +2338,9 @@
       },
       {
         "program": "港珠澳",
-        "amount": 33192,
-        "fullOrders": 4,
-        "fullPersons": 8,
+        "amount": 41590,
+        "fullOrders": 5,
+        "fullPersons": 10,
         "source": "汇总数据 F:G:H"
       },
       {
@@ -2299,7 +2359,7 @@
       },
       {
         "program": "黄龙饭店年夜饭",
-        "amount": 45944.84,
+        "amount": 44833.84,
         "fullOrders": 5,
         "fullPersons": 30,
         "source": "汇总数据 F:G:H"
@@ -2396,13 +2456,13 @@
         "unit": "元/人",
         "valuesByProgram": {
           "清远肇庆": 3354.07,
-          "新加坡·马来西亚": 7985.73,
+          "新加坡·马来西亚": 7984.18,
           "福建泰宁": 2847.89,
           "越南全景": 5618.21,
           "拈花湾": 1527.38,
-          "港珠澳": 4149,
+          "港珠澳": 4159,
           "美国旧金山": 20000,
-          "黄龙饭店年夜饭": 1531.49,
+          "黄龙饭店年夜饭": 1494.46,
           "泉州漳州厦门6日游": 2999,
           "马来西亚全景深度9日游": 11499,
           "冰岛+北极20日游": 5000,
@@ -2425,18 +2485,18 @@
           "notInterested": 34,
           "unclassifiedRemainder": 212,
           "paidAmount": 97268,
-          "otherConsumptionAmount": 143564
+          "otherConsumptionAmount": 144150
         },
         {
           "sourceProduct": "新加坡马来西亚8日游",
           "sourceRow": 8,
           "scanCount": 643,
-          "paidByOrder": 28,
-          "followingUp": 1,
+          "paidByOrder": 29,
+          "followingUp": 0,
           "notInterested": 65,
           "unclassifiedRemainder": 549,
-          "paidAmount": 439215.28,
-          "otherConsumptionAmount": 116165.9
+          "paidAmount": 447114.28,
+          "otherConsumptionAmount": 115038.9
         },
         {
           "sourceProduct": "福建泰宁大金湖上清溪双高5日游",
@@ -2458,7 +2518,7 @@
           "notInterested": 39,
           "unclassifiedRemainder": 546,
           "paidAmount": 185401,
-          "otherConsumptionAmount": 65383
+          "otherConsumptionAmount": 65881
         },
         {
           "sourceProduct": "不一样的拈花湾4天3晚",
@@ -2469,7 +2529,7 @@
           "notInterested": 15,
           "unclassifiedRemainder": 322,
           "paidAmount": 12219,
-          "otherConsumptionAmount": 41704.8
+          "otherConsumptionAmount": 42598.8
         },
         {
           "sourceProduct": "西班牙+葡萄牙（马德里进巴塞罗那回）13日游",
@@ -2485,13 +2545,13 @@
         {
           "sourceProduct": "港珠澳、深圳、惠州双飞6日美食之旅",
           "sourceRow": 37,
-          "scanCount": 170,
-          "paidByOrder": 4,
-          "followingUp": 0,
-          "notInterested": 15,
-          "unclassifiedRemainder": 151,
-          "paidAmount": 33192,
-          "otherConsumptionAmount": 9208.7
+          "scanCount": 302,
+          "paidByOrder": 5,
+          "followingUp": 3,
+          "notInterested": 25,
+          "unclassifiedRemainder": 269,
+          "paidAmount": 41590,
+          "otherConsumptionAmount": 9901.7
         },
         {
           "sourceProduct": "南非一地12日游",
@@ -2513,7 +2573,7 @@
           "notInterested": 6,
           "unclassifiedRemainder": 56,
           "paidAmount": 40000,
-          "otherConsumptionAmount": 2034.8
+          "otherConsumptionAmount": 3132.8
         },
         {
           "sourceProduct": "杭州黄龙饭店年夜饭",
@@ -2523,7 +2583,7 @@
           "followingUp": 0,
           "notInterested": 5,
           "unclassifiedRemainder": 82,
-          "paidAmount": 45944.84,
+          "paidAmount": 44833.84,
           "otherConsumptionAmount": 29130
         },
         {
@@ -2535,7 +2595,7 @@
           "notInterested": 2,
           "unclassifiedRemainder": 52,
           "paidAmount": 0,
-          "otherConsumptionAmount": 198
+          "otherConsumptionAmount": 1286
         },
         {
           "sourceProduct": "澳大利亚新西兰精华游",
@@ -2568,7 +2628,7 @@
           "notInterested": 7,
           "unclassifiedRemainder": 161,
           "paidAmount": 22998,
-          "otherConsumptionAmount": 1236
+          "otherConsumptionAmount": 1632
         },
         {
           "sourceProduct": "东方明珠1日游",
@@ -2579,7 +2639,7 @@
           "notInterested": 0,
           "unclassifiedRemainder": 325,
           "paidAmount": 0,
-          "otherConsumptionAmount": 7327.7
+          "otherConsumptionAmount": 10425.7
         },
         {
           "sourceProduct": "马尔代夫+斯里兰卡10日游",
@@ -2590,7 +2650,7 @@
           "notInterested": 3,
           "unclassifiedRemainder": 59,
           "paidAmount": 0,
-          "otherConsumptionAmount": 699
+          "otherConsumptionAmount": 1037
         },
         {
           "sourceProduct": "广西北海、涠洲岛半自助双飞5日游",
@@ -2630,9 +2690,9 @@
           "sourceRow": 88,
           "scanCount": 249,
           "paidByOrder": 15,
-          "followingUp": 3,
+          "followingUp": 2,
           "notInterested": 4,
-          "unclassifiedRemainder": 227,
+          "unclassifiedRemainder": 228,
           "paidAmount": 175022,
           "otherConsumptionAmount": 1534
         },
@@ -2645,7 +2705,7 @@
           "notInterested": 0,
           "unclassifiedRemainder": 165,
           "paidAmount": 0,
-          "otherConsumptionAmount": 0
+          "otherConsumptionAmount": 12990
         },
         {
           "sourceProduct": "崇明金茂隐逸酒店年夜饭",
@@ -2656,7 +2716,7 @@
           "notInterested": 0,
           "unclassifiedRemainder": 87,
           "paidAmount": 0,
-          "otherConsumptionAmount": 0
+          "otherConsumptionAmount": 2999
         },
         {
           "sourceProduct": "上海中星雅高铂尔曼酒店年夜饭",
@@ -2684,28 +2744,28 @@
     },
     "otherConsumption": {
       "schemaVersion": 1,
-      "amount": 489160.71,
-      "summaryAmount": 489160.71,
+      "amount": 512711.71,
+      "summaryAmount": 512711.71,
       "blankSummaryBatches": 0,
-      "orderCount": 520,
+      "orderCount": 546,
       "categories": [
         {
           "key": "travel",
           "label": "旅游",
-          "amount": 294048.01,
-          "orderCount": 51
+          "amount": 294386.01,
+          "orderCount": 52
         },
         {
           "key": "hotel",
           "label": "酒店",
-          "amount": 112756,
-          "orderCount": 157
+          "amount": 129617,
+          "orderCount": 163
         },
         {
           "key": "dining",
           "label": "团餐",
-          "amount": 82253.7,
-          "orderCount": 310
+          "amount": 88605.7,
+          "orderCount": 329
         },
         {
           "key": "commerce",
@@ -2722,25 +2782,592 @@
       ],
       "products": [
         {
-          "name": "【预付款】清远、肇庆美食动卧7日游丨纯玩无购物",
-          "rawCategory": "聚会餐",
-          "category": "dining",
+          "name": "河南安阳、太行大峡谷卧高7日游丨纯玩无购物（5晚连住）",
+          "rawCategory": "长线",
+          "category": "travel",
+          "amount": 7198,
+          "orderCount": 1
+        },
+        {
+          "name": "特价 | 马来西亚+新加坡7日游 | 纯玩无购物",
+          "rawCategory": "出境",
+          "category": "travel",
+          "amount": 47992,
+          "orderCount": 4
+        },
+        {
+          "name": "特价| 乌镇黄金水岸度假4日游 |包吃包住",
+          "rawCategory": "短线",
+          "category": "travel",
+          "amount": 2107,
+          "orderCount": 4
+        },
+        {
+          "name": "苏州知音温德姆至尊酒店直播专用（双十一）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "东方明珠电视塔+午餐+乘船游览浦江",
+          "rawCategory": "短线",
+          "category": "travel",
+          "amount": 4384,
+          "orderCount": 11
+        },
+        {
+          "name": "上海虹桥宾馆（郁锦香）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 9
+        },
+        {
+          "name": "上海东锦江希尔顿逸林酒店",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 4
+        },
+        {
+          "name": "新加坡+马来西亚（兰卡威+槟城+吉隆坡）8日游丨纯玩无购物",
+          "rawCategory": "出境",
+          "category": "travel",
+          "amount": 111871,
+          "orderCount": 8
+        },
+        {
+          "name": "3天2晚（含2早2正）丨桐庐海博大酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "苏州东山宾馆3天2晚套餐（含2早2正）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 16772,
+          "orderCount": 7
+        },
+        {
+          "name": "3天2晚（含2早2正）丨缙云辰舜开元名都酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 798,
+          "orderCount": 1
+        },
+        {
+          "name": "3天2晚（含2早2正）丨浦江仙华檀宫国际度假酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 2694,
+          "orderCount": 2
+        },
+        {
+          "name": "上海滴水湖洲际酒店",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "【新春套餐】上海滴水湖洲际酒店  (豪华房1晚+1顿早餐+1顿新春年夜饭)",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "特价丨奉贤海湾森林公园·青溪古镇1日",
+          "rawCategory": "短线",
+          "category": "travel",
+          "amount": 74,
+          "orderCount": 1
+        },
+        {
+          "name": "宁波四明湖红杉·覆卮山3日游丨纯玩无购物",
+          "rawCategory": "短线",
+          "category": "travel",
+          "amount": 140,
+          "orderCount": 1
+        },
+        {
+          "name": "嘉兴月河客栈",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
           "amount": 0,
           "orderCount": 3
         },
         {
-          "name": "上海1号私藏菜·6人自选品质套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1197,
-          "orderCount": 7
+          "name": "江西婺女洲、三清山、葛仙村 、望仙谷双高6日丨纯玩无购物",
+          "rawCategory": "长线",
+          "category": "travel",
+          "amount": 10697,
+          "orderCount": 1
         },
         {
-          "name": "上海1号私藏菜·波龙松叶蟹包房宴请十人自选套餐",
+          "name": "上海松江凯悦酒店",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 4
+        },
+        {
+          "name": "宣城落羽红杉·月亮湾3日游丨纯玩无购物",
+          "rawCategory": "短线",
+          "category": "travel",
+          "amount": 3196,
+          "orderCount": 1
+        },
+        {
+          "name": "大江户温泉物语·浴资+寿喜锅套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 198,
+          "orderCount": 2
+        },
+        {
+          "name": "苏州万豪酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 1316,
+          "orderCount": 2
+        },
+        {
+          "name": "嘉兴浦龙酒店(湘家荡店)",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 14932,
+          "orderCount": 9
+        },
+        {
+          "name": "【年夜饭】上海静安雅高铂尔曼酒店",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "上海静安雅高铂尔曼酒店",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "越南全景7日游丨纯玩无购物",
+          "rawCategory": "出境",
+          "category": "travel",
+          "amount": 11198,
+          "orderCount": 1
+        },
+        {
+          "name": "上海佘山世茂洲际酒店(世茂深坑酒店)",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "【年夜饭】上海佘山世茂洲际酒店(世茂深坑酒店)(豪华房石榴石主题1晚+1顿早餐+1顿年夜饭)",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "2天1晚 （1早1正）|上海银星皇冠假日酒店",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "爱达魔都号丨上海-济州-釜山-上海5日游",
+          "rawCategory": "出境游轮",
+          "category": "travel",
+          "amount": 4198,
+          "orderCount": 1
+        },
+        {
+          "name": "濮院梅尚度假酒店3天2晚套餐（含2早2正）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "【年夜饭】上海中星雅高铂尔曼大酒店（高级房2晚+自助早餐2顿+年夜饭+年初一自助晚餐）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "2天1晚（含1早1正）|上海西郊宾馆直播专用",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 14
+        },
+        {
+          "name": "【年夜饭】濮院古镇濮侍郎酒店（酒店住宿2晚+自助早餐2顿+年夜饭+年初一晚餐）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 12342,
+          "orderCount": 1
+        },
+        {
+          "name": "香港+澳门5日半自助游丨纯玩无购物",
+          "rawCategory": "出境",
+          "category": "travel",
+          "amount": 6998,
+          "orderCount": 1
+        },
+        {
+          "name": "苏州金鸡湖凯宾斯基大酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "杭州黄龙饭店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 3189,
+          "orderCount": 3
+        },
+        {
+          "name": "苏州太湖假日酒店直播专用",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "版纳、普洱、景迈山双飞7日游丨纯玩无购物",
+          "rawCategory": "长线",
+          "category": "travel",
+          "amount": 8196,
+          "orderCount": 1
+        },
+        {
+          "name": "2天1晚 （含1早2正）| 崇明由由世御别墅酒店直播专属",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "苏州国际会议酒店3天2晚套餐（专享）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "【年夜饭】苏州金鸡湖凯宾斯基大酒店（豪华高尔夫房1晚+自助早餐1顿+年夜饭）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "苏州湾华邑温泉度假酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "意大利一地深度+西西里岛16日游丨纯玩无购物",
+          "rawCategory": "出境",
+          "category": "travel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "4天3晚（含3早3正）| 武义唐风温泉度假村 （温泉季含3早7正+每日自助下午茶）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 5440,
+          "orderCount": 1
+        },
+        {
+          "name": "8.8元+1688元黄金雪蟹炒年糕12人包房-壹天聚乐部上海四店通用聚会套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 1696.8,
+          "orderCount": 1
+        },
+        {
+          "name": "出境丨美国个人签证 含EVUS 不含加急费（君威）",
+          "rawCategory": "出境",
+          "category": "travel",
+          "amount": 4173,
+          "orderCount": 1
+        },
+        {
+          "name": "3天2晚（含2早2正1简餐）| 上海东方绿舟度假酒店（花园酒店）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "2天1晚（含1早1正）|上海东郊宾馆",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "【朱桢专属】【享帝王蟹/小青龙二选一】【周末、节假日不加价】（12人包房）上海四店通用壹天聚乐部",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 3376,
+          "orderCount": 2
+        },
+        {
+          "name": "濮院时尚古镇1日游丨纯玩无购物",
+          "rawCategory": "短线",
+          "category": "travel",
+          "amount": 236,
+          "orderCount": 1
+        },
+        {
+          "name": "2天1晚（含1早1正）|上海龙柏饭店",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 1196,
+          "orderCount": 8
+        },
+        {
+          "name": "常熟虞山诺富特酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 2994,
+          "orderCount": 2
+        },
+        {
+          "name": "【年夜饭】上海光大国际大酒店（商务房1晚+自助早餐1顿+年夜饭）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 3592,
+          "orderCount": 1
+        },
+        {
+          "name": "【年夜饭】太湖龙之梦古镇大酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 11880,
+          "orderCount": 1
+        },
+        {
+          "name": "4天3晚（含3早3正）丨湖州桃源TAOYUAN莫干山奢度假庄园酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "南京玄武饭店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "上海国际旅游度假区富邑酒店（原上海浦东东郊逸扉酒店）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "港珠澳、深圳、惠州双飞6日美食之旅丨纯玩无购物",
+          "rawCategory": "长线",
+          "category": "travel",
+          "amount": 8398,
+          "orderCount": 2
+        },
+        {
+          "name": "上海伊敦康得思酒店(吴淞口邮轮港店)",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "3天2晚（含2早2正）丨湖州桃源TAOYUAN莫干山奢度假庄园酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "3天2晚（含2早2正）丨湖州慧心谷绿奢度假村",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 2196,
+          "orderCount": 3
+        },
+        {
+          "name": "主题游 | 分餐制 | 不一样的黄山5天4晚",
+          "rawCategory": "主题游",
+          "category": "travel",
+          "amount": 40290,
+          "orderCount": 3
+        },
+        {
+          "name": "湖州南太湖雅高诺富特酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "3天2晚（含2早2正）丨安吉梦山水奢逸度假酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "4天3晚（含3早3正）丨湖州慧心谷绿奢度假村",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "广西北海、防城港双飞5日游（2晚连住水屋）丨纯玩无购物",
+          "rawCategory": "长线",
+          "category": "travel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "南京黄埔大酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "【年夜饭】南京黄埔大酒店（特色标准间/豪华大床房2晚+自助早餐2顿+年夜饭+年初一晚餐）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "【年夜饭】上海银星皇冠假日酒店（高级房/电影主题房2晚+自助早餐2顿+年夜饭+年初一自助晚餐）（6人起订）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 7710,
+          "orderCount": 2
+        },
+        {
+          "name": "【新春套餐】上海龙柏饭店（标准房1晚+1顿早餐+1顿年夜饭）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "上海国际饭店",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 6
+        },
+        {
+          "name": "【新春套餐】嘉兴万豪酒店（豪华房/景观房1晚+自助早餐1顿+1顿新春团圆饭）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 2999,
+          "orderCount": 1
+        },
+        {
+          "name": "【年夜饭】 南京丽笙精选度假酒店（高级园景精选房2晚+2顿早餐+1顿年夜饭+1顿自助晚餐）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 12990,
+          "orderCount": 1
+        },
+        {
+          "name": "越南全景7日游丨纯玩无购物（河内进胡志明出）",
+          "rawCategory": "出境",
+          "category": "travel",
+          "amount": 10598,
+          "orderCount": 1
+        },
+        {
+          "name": "3天2晚（含2早2正）| 余姚四明湖开元名都度假酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 798,
+          "orderCount": 1
+        },
+        {
+          "name": "【年夜饭】上海东方绿舟度假酒店（花园酒店）（1晚/2晚）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "3天2晚（含2早2正）丨绍兴丁香花园酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "5天4晚+含4早9正（5顿午市简餐+4顿晚市桌餐）丨绍兴丁香花园酒店",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "扬州皇冠假日酒店直播专用",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 4194,
+          "orderCount": 4
+        },
+        {
+          "name": "上海威斯汀大饭店·午餐自助/晚餐自助/特惠双人餐（直播价叁）",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "燕云楼4人/6人/10人大厅套餐",
           "rawCategory": "聚会餐",
           "category": "dining",
           "amount": 0,
           "orderCount": 2
+        },
+        {
+          "name": "上海东锦江希尔顿大酒店·蟹天蟹地4人套餐+4人自助下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 8
+        },
+        {
+          "name": "上海锦江汤臣洲际大酒店·景观包房八人|景观包房十人",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 8740,
+          "orderCount": 9
         },
         {
           "name": "【私域】上海昆仑华亭宾馆·单人自助下午茶",
@@ -2748,13 +3375,6 @@
           "category": "dining",
           "amount": 258,
           "orderCount": 1
-        },
-        {
-          "name": "苏浙汇·精选4人套餐/招牌鲥鱼6人套餐/包房宴请10人套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1988,
-          "orderCount": 5
         },
         {
           "name": "上海桃浦雅辰悦居酒店-尊享4人西餐+4人自助下午茶",
@@ -2771,46 +3391,60 @@
           "orderCount": 3
         },
         {
-          "name": "上海环球港凯悦酒店·45楼享悦中餐厅/47楼天际餐吧自助下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 899,
-          "orderCount": 12
+          "name": "年夜饭丨龙之梦太湖演艺城·钻石酒店3日",
+          "rawCategory": "短线",
+          "category": "travel",
+          "amount": 2798,
+          "orderCount": 1
         },
         {
-          "name": "静安昆仑大酒店·周末双人午市/周末双人晚市/花漾金秋双人下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
+          "name": "【年夜饭】上海松江凯悦酒店（城景房1晚+1顿早餐+1顿年夜饭）",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
           "amount": 0,
-          "orderCount": 9
+          "orderCount": 1
         },
         {
-          "name": "上海海神诺富特大酒店- （50层高空景观-旋转餐厅）四人小青龙套餐",
+          "name": "丽水云和梯田、古堰画乡4日游丨纯玩无购物",
+          "rawCategory": "短线",
+          "category": "travel",
+          "amount": 2128,
+          "orderCount": 1
+        },
+        {
+          "name": "壹天聚乐部- 上海亚新店（时光主题馆）",
+          "rawCategory": "壹日聚",
+          "category": "dining",
+          "amount": 1688,
+          "orderCount": 1
+        },
+        {
+          "name": "特价丨九寨沟、剑门关双飞6日游（九寨沟五钻酒店）丨纯玩无购物",
+          "rawCategory": "长线",
+          "category": "travel",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "苏浙汇·精选4人套餐/招牌鲥鱼6人套餐/包房宴请10人套餐",
           "rawCategory": "聚会餐",
           "category": "dining",
-          "amount": 0,
+          "amount": 1988,
+          "orderCount": 5
+        },
+        {
+          "name": "上海1号私藏菜·6人自选品质套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 1197,
           "orderCount": 7
         },
         {
-          "name": "上海东锦江希尔顿大酒店·蟹天蟹地4人套餐+4人自助下午茶",
+          "name": "上海1号私藏菜·波龙松叶蟹包房宴请十人自选套餐",
           "rawCategory": "聚会餐",
           "category": "dining",
           "amount": 0,
-          "orderCount": 8
-        },
-        {
-          "name": "外滩新亚大酒店- 食憶新亜-亜粤集-双人下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 138,
-          "orderCount": 4
-        },
-        {
-          "name": "上海中星铂尔曼大酒店·四人刺身波龙套餐+四人行政酒廊天际下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 3
+          "orderCount": 2
         },
         {
           "name": "上海前滩31雅辰酒店-海鲜午市自助餐（超值）",
@@ -2818,20 +3452,6 @@
           "category": "dining",
           "amount": 390,
           "orderCount": 2
-        },
-        {
-          "name": "全聚德（3店通用）· · 4人聚会套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 596,
-          "orderCount": 2
-        },
-        {
-          "name": "【私域】上海桃浦雅辰悦居酒店-尊享4人西餐+4人自助下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 477,
-          "orderCount": 1
         },
         {
           "name": "上海新锦江大酒店（41楼蓝天旋转餐厅）·双人精选套餐/4人豪华套餐/4人下午茶套餐",
@@ -2848,39 +3468,102 @@
           "orderCount": 1
         },
         {
-          "name": "上海奥林匹克俱乐部丽笙酒店·周末自助午餐",
+          "name": "上海世博滨江大酒店·如意午市点心自助",
           "rawCategory": "聚会餐",
           "category": "dining",
-          "amount": 476,
+          "amount": 2484.9,
+          "orderCount": 14
+        },
+        {
+          "name": "上海海神诺富特大酒店- （50层高空景观-旋转餐厅）四人小青龙套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 7
+        },
+        {
+          "name": "上海衡山北郊宾馆",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
           "orderCount": 3
         },
         {
-          "name": "上海威斯汀大饭店·午餐自助/晚餐自助/特惠双人餐（直播价叁）",
-          "rawCategory": "聚会餐",
-          "category": "dining",
+          "name": "江西庐山南昌滕王阁双高5日游丨纯玩无购物",
+          "rawCategory": "长线",
+          "category": "travel",
           "amount": 0,
           "orderCount": 1
         },
         {
-          "name": "上海锦江汤臣洲际大酒店·景观包房八人|景观包房十人",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 8740,
-          "orderCount": 9
-        },
-        {
-          "name": "燕云楼4人/6人/10人大厅套餐",
+          "name": "【预付款】清远、肇庆美食动卧7日游丨纯玩无购物",
           "rawCategory": "聚会餐",
           "category": "dining",
           "amount": 0,
-          "orderCount": 2
+          "orderCount": 3
+        },
+        {
+          "name": "静安昆仑大酒店·周末双人午市/周末双人晚市/花漾金秋双人下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 9
+        },
+        {
+          "name": "上海中星铂尔曼大酒店·四人刺身波龙套餐+四人行政酒廊天际下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "上海环球港凯悦酒店·45楼享悦中餐厅/47楼天际餐吧自助下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 899,
+          "orderCount": 12
         },
         {
           "name": "上海锦江饭店·锦懋4人餐/锦懋6人餐/锦懋10人餐",
           "rawCategory": "聚会餐",
           "category": "dining",
-          "amount": 3484,
+          "amount": 2088,
           "orderCount": 6
+        },
+        {
+          "name": "壹天聚乐部-上海世博店（世界之窗主题馆）",
+          "rawCategory": "壹日聚",
+          "category": "dining",
+          "amount": 1988,
+          "orderCount": 1
+        },
+        {
+          "name": "3天2晚（含2早2正）丨君澜桐庐宾馆",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 998,
+          "orderCount": 1
+        },
+        {
+          "name": "上海虹桥宾馆·江南园景中式套餐（4人）（6人）（8人）（10人）",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 598,
+          "orderCount": 8
+        },
+        {
+          "name": "外滩新亚大酒店- 食憶新亜-亜粤集-双人下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 138,
+          "orderCount": 4
+        },
+        {
+          "name": "上海锦江都城达华宾馆-老上海精选下午茶（双人）",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 2079,
+          "orderCount": 19
         },
         {
           "name": "金茂悦泰环球美食餐厅（金茂旗舰店）·帝王蟹宴请十人套餐",
@@ -2890,74 +3573,39 @@
           "orderCount": 5
         },
         {
-          "name": "上海外高桥喜来登酒店·海鲜料理4人套餐+4人下午茶自助",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 398,
-          "orderCount": 1
-        },
-        {
-          "name": "上海世博洲际酒店·4人餐/6人餐/10人餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 888,
-          "orderCount": 2
-        },
-        {
-          "name": "上海昆仑华亭宾馆·2人中餐/4人中餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "金茂悦泰环球美食餐厅（金茂旗舰店）·精选4人套餐/鲜活长脚蟹6人套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 4788,
-          "orderCount": 11
-        },
-        {
-          "name": "浦东喜来登由由大酒店·4人餐/6人餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1854,
-          "orderCount": 8
-        },
-        {
-          "name": "上海凯宾斯基大酒店·元素西餐厅大闸蟹自助餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 376,
-          "orderCount": 1
-        },
-        {
-          "name": "东琮上海点心（衡山店）单人午市自助/梧桐茶境双人下午茶/一茶三喝单人下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1080,
-          "orderCount": 10
-        },
-        {
-          "name": "上海世博滨江大酒店·如意午市点心自助",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 2484.9,
-          "orderCount": 14
-        },
-        {
-          "name": "中心二十二·海鲜餐厅（上海中心大厦旗舰店）工作日双人套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1908,
-          "orderCount": 5
-        },
-        {
           "name": "中心二十二·海鲜餐厅（上海中心大厦旗舰店）鲜活波龙8人聚会套餐/鲜活帝王蟹十人宴请套餐",
           "rawCategory": "聚会餐",
           "category": "dining",
           "amount": 2880,
           "orderCount": 4
+        },
+        {
+          "name": "丰收粮管集（新世界店）··6人经典套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 399,
+          "orderCount": 3
+        },
+        {
+          "name": "盐官潮乐之城1日游丨纯玩无购物",
+          "rawCategory": "短线",
+          "category": "travel",
+          "amount": 118.01,
+          "orderCount": 1
+        },
+        {
+          "name": "上海崇明金茂隐逸酒店",
+          "rawCategory": "上海酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "苏州树山书香世家温泉酒店3天2晚套餐（含2早2正）",
+          "rawCategory": "外地酒店",
+          "category": "hotel",
+          "amount": 0,
+          "orderCount": 2
         },
         {
           "name": "上海新锦江大酒店·赛美蓉精选西冷牛排4人西餐",
@@ -2988,32 +3636,39 @@
           "orderCount": 4
         },
         {
-          "name": "【福利秒杀专属】上海佘山世茂洲际酒店·双人晚市自助（深坑酒店）【福利专享】",
+          "name": "全聚德（3店通用）· · 4人聚会套餐",
           "rawCategory": "聚会餐",
           "category": "dining",
-          "amount": 489,
-          "orderCount": 1
-        },
-        {
-          "name": "上海锦江都城达华宾馆-老上海精选下午茶（双人）",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 198,
-          "orderCount": 7
-        },
-        {
-          "name": "上海桃浦雅辰悦居酒店-港式经典下午茶自助",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 206,
+          "amount": 596,
           "orderCount": 2
         },
         {
-          "name": "上海东锦江希尔顿大酒店·中港式点心畅享",
+          "name": "金茂悦泰环球美食餐厅（金茂旗舰店）·精选4人套餐/鲜活长脚蟹6人套餐",
           "rawCategory": "聚会餐",
           "category": "dining",
-          "amount": 216,
-          "orderCount": 5
+          "amount": 4788,
+          "orderCount": 11
+        },
+        {
+          "name": "上海中心J酒店-午市单人定食套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 752,
+          "orderCount": 3
+        },
+        {
+          "name": "浦东喜来登由由大酒店·4人餐/6人餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 1854,
+          "orderCount": 8
+        },
+        {
+          "name": "东琮上海点心（衡山店）单人午市自助/梧桐茶境双人下午茶/一茶三喝单人下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 1080,
+          "orderCount": 10
         },
         {
           "name": "上海中心J酒店-101自助晚餐（直播专享）",
@@ -3030,18 +3685,18 @@
           "orderCount": 6
         },
         {
-          "name": "上海绿发JW万豪侯爵酒店·小青龙畅吃自助餐",
+          "name": "上海凯宾斯基大酒店·元素西餐厅大闸蟹自助餐",
           "rawCategory": "聚会餐",
           "category": "dining",
-          "amount": 398,
-          "orderCount": 2
+          "amount": 376,
+          "orderCount": 1
         },
         {
-          "name": "丰收粮管集（新世界店）··6人经典套餐",
+          "name": "中心二十二·海鲜餐厅（上海中心大厦旗舰店）工作日双人套餐",
           "rawCategory": "聚会餐",
           "category": "dining",
-          "amount": 399,
-          "orderCount": 3
+          "amount": 1908,
+          "orderCount": 5
         },
         {
           "name": "浦东喜来登由由大酒店·10人餐",
@@ -3065,853 +3720,6 @@
           "orderCount": 1
         },
         {
-          "name": "【年夜饭】上海新锦江大酒店·4楼宴会厅·金玉满堂十人新春盛宴",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 3988,
-          "orderCount": 2
-        },
-        {
-          "name": "上海龙之梦万丽酒店·59楼云端聚叙高空景观中式10人套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "上海苏宁宝丽嘉酒店·Cafe Bellagio午市半自助",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "梅龙镇酒家（南京西路总店）4人套餐/十人包房宴请套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 498,
-          "orderCount": 1
-        },
-        {
-          "name": "【年夜饭】浦东喜来登由由大酒店·10人圆桌年夜饭/双人自助年夜饭",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "上海建国宾馆·海鲜自助餐[外籍歌手驻唱]",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "醉辉皇·精选3人套餐/精选6人套餐/豪华宴请10人套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 598,
-          "orderCount": 3
-        },
-        {
-          "name": "上海新锦江大酒店·1楼赛美蓉周三至周四单人午市自助",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "海仑宾馆3楼-東淓·蘇宴·帝王蟹豪华餐·4人/6人/8人",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 2576,
-          "orderCount": 6
-        },
-        {
-          "name": "中心二十二·海鲜餐厅（上海中心大厦旗舰店）鲜活面包蟹4人套餐/鲜活松叶蟹6人套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 3784,
-          "orderCount": 4
-        },
-        {
-          "name": "上海虹桥宾馆·江南园景中式套餐（4人）（6人）（8人）（10人）",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 598,
-          "orderCount": 8
-        },
-        {
-          "name": "上海奥林匹克俱乐部丽笙酒店·主厨精选4人餐/鲜活波龙6人餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1286,
-          "orderCount": 4
-        },
-        {
-          "name": "上海苏宁宝丽嘉酒店·嘉府壹号·多规格中餐套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1588,
-          "orderCount": 4
-        },
-        {
-          "name": "上海衡山路十二号华邑酒店·4人/10人年夜饭",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1588,
-          "orderCount": 1
-        },
-        {
-          "name": "上海环球港凯悦酒店·大闸蟹畅吃自助-单人工作日/单人全周通用/双人工作日/双人全周通用",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 387,
-          "orderCount": 1
-        },
-        {
-          "name": "上海建工浦江皇冠假日酒店·畅吃海陆鲜皇冠自助晚餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "上海桃浦雅辰悦居酒店-尊享小青龙4人西餐+4人自助下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "【福利秒杀专属】上海静安洲际酒店双人晚自助",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 238,
-          "orderCount": 1
-        },
-        {
-          "name": "【年夜饭】上海环球港凯悦酒店·新春10人包厢套餐/除夕团圆套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "上海兴国宾馆·丽宫中餐厅·六人中餐/十人中餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1088,
-          "orderCount": 1
-        },
-        {
-          "name": "【四人享特惠】上海世博滨江大酒店·自助晚餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "金米箩大酒店（虹口总店）帝王蟹6人大厅套餐\\帝王蟹10人大厅套餐\\帝王蟹10人工作日包厢套餐\\帝王蟹十人通用包厢套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 598,
-          "orderCount": 3
-        },
-        {
-          "name": "上海佘山世茂洲际酒店·午市自助/晚市自助（深坑酒店）",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 536,
-          "orderCount": 2
-        },
-        {
-          "name": "上海中心J酒店-午市单人定食套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 752,
-          "orderCount": 3
-        },
-        {
-          "name": "上海兴国宾馆·秋季北美洲自助午餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 326,
-          "orderCount": 1
-        },
-        {
-          "name": "上海静安洲际酒店·中式双人下午茶套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 690,
-          "orderCount": 6
-        },
-        {
-          "name": "上海静安洲际酒店·5楼翠庭中餐厅·鲜活小青龙6人套餐/鲜活波龙8人套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "上海新锦江大酒店·4楼宴会厅·五福临门新春6人套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "上海兴国宾馆·主楼·泰芬吧·自助下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 198,
-          "orderCount": 1
-        },
-        {
-          "name": "上海锦江饭店·4人西式套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 499,
-          "orderCount": 1
-        },
-        {
-          "name": "上海世博逸衡酒店·单人午市自助+单人自助下午茶（可拆分使用）",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 278,
-          "orderCount": 1
-        },
-        {
-          "name": "玺粤轩（南京西路店）精选鲜活波龙6人套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "上海东方滨江大酒店（国际会议中心）单人午市/晚市自助",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 597,
-          "orderCount": 1
-        },
-        {
-          "name": "上海东锦江希尔顿大酒店·双人午市自助+双人自助下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 299,
-          "orderCount": 1
-        },
-        {
-          "name": "上海天鹅宾馆-四人中餐+四人下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 399,
-          "orderCount": 1
-        },
-        {
-          "name": "粤港潮楼海鲜中餐厅·4人品质套餐/6人鲜活波龙海鲜套餐/十人包房宴请套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 698,
-          "orderCount": 1
-        },
-        {
-          "name": "嘉兴浦龙酒店(湘家荡店)",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 14932,
-          "orderCount": 9
-        },
-        {
-          "name": "2天1晚（含1早1正）|上海龙柏饭店",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 1196,
-          "orderCount": 8
-        },
-        {
-          "name": "上海东锦江希尔顿逸林酒店",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 4
-        },
-        {
-          "name": "主题游 | 分餐制 | 不一样的黄山5天4晚",
-          "rawCategory": "主题游",
-          "category": "travel",
-          "amount": 40290,
-          "orderCount": 3
-        },
-        {
-          "name": "苏州东山宾馆3天2晚套餐（含2早2正）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 1198,
-          "orderCount": 4
-        },
-        {
-          "name": "2天1晚（含1早1正）|上海西郊宾馆直播专用",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 15800,
-          "orderCount": 14
-        },
-        {
-          "name": "新加坡+马来西亚（兰卡威+槟城+吉隆坡）8日游丨纯玩无购物",
-          "rawCategory": "出境",
-          "category": "travel",
-          "amount": 111871,
-          "orderCount": 8
-        },
-        {
-          "name": "上海静安雅高铂尔曼酒店",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "年夜饭丨龙之梦太湖演艺城·钻石酒店3日",
-          "rawCategory": "短线",
-          "category": "travel",
-          "amount": 2798,
-          "orderCount": 1
-        },
-        {
-          "name": "【私域】静安昆仑大酒店·周末双人午市/花漾金秋双人下午茶",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 135,
-          "orderCount": 1
-        },
-        {
-          "name": "上海虹桥宾馆（郁锦香）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 9
-        },
-        {
-          "name": "盐官潮乐之城1日游丨纯玩无购物",
-          "rawCategory": "短线",
-          "category": "travel",
-          "amount": 118.01,
-          "orderCount": 1
-        },
-        {
-          "name": "3天2晚（含2早2正）丨湖州慧心谷绿奢度假村",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 1098,
-          "orderCount": 2
-        },
-        {
-          "name": "4天3晚（含3早3正）丨湖州慧心谷绿奢度假村",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "特价 | 马来西亚+新加坡7日游 | 纯玩无购物",
-          "rawCategory": "出境",
-          "category": "travel",
-          "amount": 47992,
-          "orderCount": 4
-        },
-        {
-          "name": "百合居酒屋·双人套餐/新春小青龙4人餐（春节可用）",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 834,
-          "orderCount": 2
-        },
-        {
-          "name": "上海静安洲际酒店·午市自助餐（直播）",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 238,
-          "orderCount": 2
-        },
-        {
-          "name": "上海衡山北郊宾馆",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "江西庐山南昌滕王阁双高5日游丨纯玩无购物",
-          "rawCategory": "长线",
-          "category": "travel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "湖州南太湖雅高诺富特酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "3天2晚（含2早2正）丨桐庐海博大酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "特价| 乌镇黄金水岸度假4日游 |包吃包住",
-          "rawCategory": "短线",
-          "category": "travel",
-          "amount": 2107,
-          "orderCount": 4
-        },
-        {
-          "name": "苏州万豪酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 1316,
-          "orderCount": 2
-        },
-        {
-          "name": "嘉兴月河客栈",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "东方明珠电视塔+午餐+乘船游览浦江",
-          "rawCategory": "短线",
-          "category": "travel",
-          "amount": 4046,
-          "orderCount": 10
-        },
-        {
-          "name": "【新春套餐】上海滴水湖洲际酒店  (豪华房1晚+1顿早餐+1顿新春年夜饭)",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "苏州知音温德姆至尊酒店直播专用（双十一）",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "上海松江凯悦酒店",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 4
-        },
-        {
-          "name": "【年夜饭】上海松江凯悦酒店（城景房1晚+1顿早餐+1顿年夜饭）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "江西婺女洲、三清山、葛仙村 、望仙谷双高6日丨纯玩无购物",
-          "rawCategory": "长线",
-          "category": "travel",
-          "amount": 10697,
-          "orderCount": 1
-        },
-        {
-          "name": "宣城落羽红杉·月亮湾3日游丨纯玩无购物",
-          "rawCategory": "短线",
-          "category": "travel",
-          "amount": 3196,
-          "orderCount": 1
-        },
-        {
-          "name": "壹天聚乐部- 上海亚新店（时光主题馆）",
-          "rawCategory": "壹日聚",
-          "category": "dining",
-          "amount": 1688,
-          "orderCount": 1
-        },
-        {
-          "name": "大江户温泉物语·浴资+寿喜锅套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 198,
-          "orderCount": 2
-        },
-        {
-          "name": "南京玄武饭店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "5天4晚+含4早9正（5顿午市简餐+4顿晚市桌餐）丨绍兴丁香花园酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "上海国际旅游度假区富邑酒店（原上海浦东东郊逸扉酒店）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "3天2晚（含2早2正）丨君澜桐庐宾馆",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 998,
-          "orderCount": 1
-        },
-        {
-          "name": "上海复旦皇冠假日酒店·4人套餐/10人包房套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1488,
-          "orderCount": 1
-        },
-        {
-          "name": "上海衡山路十二号华邑酒店·午市单人任点任食",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 592,
-          "orderCount": 2
-        },
-        {
-          "name": "2天1晚 （含1早2正）| 崇明由由世御别墅酒店直播专属",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "【年夜饭】濮院古镇濮侍郎酒店（酒店住宿2晚+自助早餐2顿+年夜饭+年初一晚餐）",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 12342,
-          "orderCount": 1
-        },
-        {
-          "name": "上海佘山世茂洲际酒店(世茂深坑酒店)",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "苏州太湖假日酒店直播专用",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "河南安阳、太行大峡谷卧高7日游丨纯玩无购物（5晚连住）",
-          "rawCategory": "长线",
-          "category": "travel",
-          "amount": 7198,
-          "orderCount": 1
-        },
-        {
-          "name": "版纳、普洱、景迈山双飞7日游丨纯玩无购物",
-          "rawCategory": "长线",
-          "category": "travel",
-          "amount": 8196,
-          "orderCount": 1
-        },
-        {
-          "name": "苏州国际会议酒店3天2晚套餐（专享）",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "苏州金鸡湖凯宾斯基大酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "【年夜饭】苏州金鸡湖凯宾斯基大酒店（豪华高尔夫房1晚+自助早餐1顿+年夜饭）",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "苏州湾华邑温泉度假酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "4天3晚（含3早3正）| 武义唐风温泉度假村 （温泉季含3早7正+每日自助下午茶）",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 5440,
-          "orderCount": 1
-        },
-        {
-          "name": "3天2晚（含2早2正1简餐）| 上海东方绿舟度假酒店（花园酒店）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "【私域】宏安瑞士大酒店·冬季盛宴海陆3人6人餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 223,
-          "orderCount": 1
-        },
-        {
-          "name": "【秒杀】健美创研花香护手霜30g*10支  (味道随机）",
-          "rawCategory": "商品",
-          "category": "commerce",
-          "amount": 5,
-          "orderCount": 1
-        },
-        {
-          "name": "2天1晚（含1早1正）|上海东郊宾馆",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "爱达魔都号丨上海-济州-釜山-上海5日游",
-          "rawCategory": "出境游轮",
-          "category": "travel",
-          "amount": 4198,
-          "orderCount": 1
-        },
-        {
-          "name": "港珠澳、深圳、惠州双飞6日美食之旅丨纯玩无购物",
-          "rawCategory": "长线",
-          "category": "travel",
-          "amount": 8398,
-          "orderCount": 2
-        },
-        {
-          "name": "3天2晚（含2早2正）丨缙云辰舜开元名都酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 798,
-          "orderCount": 1
-        },
-        {
-          "name": "3天2晚（含2早2正）丨浦江仙华檀宫国际度假酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 2694,
-          "orderCount": 2
-        },
-        {
-          "name": "特价丨奉贤海湾森林公园·青溪古镇1日",
-          "rawCategory": "短线",
-          "category": "travel",
-          "amount": 74,
-          "orderCount": 1
-        },
-        {
-          "name": "宁波四明湖红杉·覆卮山3日游丨纯玩无购物",
-          "rawCategory": "短线",
-          "category": "travel",
-          "amount": 140,
-          "orderCount": 1
-        },
-        {
-          "name": "【朱桢专属】【享帝王蟹/小青龙二选一】【周末、节假日不加价】（12人包房）上海四店通用壹天聚乐部",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 3376,
-          "orderCount": 2
-        },
-        {
-          "name": "【新春套餐】上海龙柏饭店（标准房1晚+1顿早餐+1顿年夜饭）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "上海滴水湖洲际酒店",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "濮院时尚古镇1日游丨纯玩无购物",
-          "rawCategory": "短线",
-          "category": "travel",
-          "amount": 236,
-          "orderCount": 1
-        },
-        {
-          "name": "常熟虞山诺富特酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 2994,
-          "orderCount": 2
-        },
-        {
-          "name": "上海伊敦康得思酒店(吴淞口邮轮港店)",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "3天2晚（含2早2正）丨湖州桃源TAOYUAN莫干山奢度假庄园酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "4天3晚（含3早3正）丨湖州桃源TAOYUAN莫干山奢度假庄园酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "上海衡山路十二号华邑酒店·单人中式自助（活动价）",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 216,
-          "orderCount": 2
-        },
-        {
-          "name": "上海明天广场JW万豪酒店·周中午市自助餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 384,
-          "orderCount": 2
-        },
-        {
-          "name": "越南全景7日游丨纯玩无购物（河内进胡志明出）",
-          "rawCategory": "出境",
-          "category": "travel",
-          "amount": 10598,
-          "orderCount": 1
-        },
-        {
-          "name": "3天2晚（含2早2正）| 余姚四明湖开元名都度假酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 798,
-          "orderCount": 1
-        },
-        {
-          "name": "南极磷虾油",
-          "rawCategory": "商品",
-          "category": "commerce",
-          "amount": 98,
-          "orderCount": 1
-        },
-        {
-          "name": "杭州黄龙饭店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 3189,
-          "orderCount": 3
-        },
-        {
-          "name": "意大利一地深度+西西里岛16日游丨纯玩无购物",
-          "rawCategory": "出境",
-          "category": "travel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "8.8元+1688元黄金雪蟹炒年糕12人包房-壹天聚乐部上海四店通用聚会套餐",
-          "rawCategory": "聚会餐",
-          "category": "dining",
-          "amount": 1696.8,
-          "orderCount": 1
-        },
-        {
-          "name": "3天2晚（含2早2正）丨绍兴丁香花园酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "上海国际饭店",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 6
-        },
-        {
-          "name": "扬州皇冠假日酒店直播专用",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 4194,
-          "orderCount": 4
-        },
-        {
-          "name": "【年夜饭】上海东方绿舟度假酒店（花园酒店）（1晚/2晚）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "3天2晚（含2早2正）丨安吉梦山水奢逸度假酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "濮院梅尚度假酒店3天2晚套餐（含2早2正）",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "【年夜饭】上海中星雅高铂尔曼大酒店（高级房2晚+自助早餐2顿+年夜饭+年初一自助晚餐）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "上海崇明金茂隐逸酒店",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 3
-        },
-        {
-          "name": "苏州树山书香世家温泉酒店3天2晚套餐（含2早2正）",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
           "name": "【新春套餐】苏州树山书香世家温泉酒店3天2晚套餐（含2早2正）",
           "rawCategory": "外地酒店",
           "category": "hotel",
@@ -3923,62 +3731,6 @@
           "rawCategory": "外地酒店",
           "category": "hotel",
           "amount": 15588,
-          "orderCount": 1
-        },
-        {
-          "name": "【年夜饭】上海光大国际大酒店（商务房1晚+自助早餐1顿+年夜饭）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 3592,
-          "orderCount": 1
-        },
-        {
-          "name": "【年夜饭】太湖龙之梦古镇大酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 11880,
-          "orderCount": 1
-        },
-        {
-          "name": "香港+澳门5日半自助游丨纯玩无购物",
-          "rawCategory": "出境",
-          "category": "travel",
-          "amount": 6998,
-          "orderCount": 1
-        },
-        {
-          "name": "【年夜饭】上海静安雅高铂尔曼酒店",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "越南全景7日游丨纯玩无购物",
-          "rawCategory": "出境",
-          "category": "travel",
-          "amount": 11198,
-          "orderCount": 1
-        },
-        {
-          "name": "【年夜饭】上海佘山世茂洲际酒店(世茂深坑酒店)(豪华房石榴石主题1晚+1顿早餐+1顿年夜饭)",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "2天1晚 （1早1正）|上海银星皇冠假日酒店",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 2
-        },
-        {
-          "name": "广西北海、防城港双飞5日游（2晚连住水屋）丨纯玩无购物",
-          "rawCategory": "长线",
-          "category": "travel",
-          "amount": 0,
           "orderCount": 1
         },
         {
@@ -4010,76 +3762,412 @@
           "orderCount": 1
         },
         {
-          "name": "【年夜饭】上海银星皇冠假日酒店（高级房/电影主题房2晚+自助早餐2顿+年夜饭+年初一自助晚餐）（6人起订）",
-          "rawCategory": "上海酒店",
-          "category": "hotel",
-          "amount": 7710,
+          "name": "上海龙之梦万丽酒店·59楼云端聚叙高空景观中式10人套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
           "orderCount": 2
         },
         {
-          "name": "丽水云和梯田、古堰画乡4日游丨纯玩无购物",
-          "rawCategory": "短线",
-          "category": "travel",
-          "amount": 2128,
-          "orderCount": 1
-        },
-        {
-          "name": "特价丨九寨沟、剑门关双飞6日游（九寨沟五钻酒店）丨纯玩无购物",
-          "rawCategory": "长线",
-          "category": "travel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "出境丨美国个人签证 含EVUS 不含加急费（君威）",
-          "rawCategory": "出境",
-          "category": "travel",
-          "amount": 4173,
-          "orderCount": 1
-        },
-        {
-          "name": "南京黄埔大酒店",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "【年夜饭】南京黄埔大酒店（特色标准间/豪华大床房2晚+自助早餐2顿+年夜饭+年初一晚餐）",
-          "rawCategory": "外地酒店",
-          "category": "hotel",
-          "amount": 0,
-          "orderCount": 1
-        },
-        {
-          "name": "壹天聚乐部-上海世博店（世界之窗主题馆）",
-          "rawCategory": "壹日聚",
+          "name": "上海苏宁宝丽嘉酒店·Cafe Bellagio午市半自助",
+          "rawCategory": "聚会餐",
           "category": "dining",
-          "amount": 1988,
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "上海东锦江希尔顿大酒店·中港式点心畅享",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 216,
+          "orderCount": 5
+        },
+        {
+          "name": "【年夜饭】浦东喜来登由由大酒店·10人圆桌年夜饭/双人自助年夜饭",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "梅龙镇酒家（南京西路总店）4人套餐/十人包房宴请套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 1494,
+          "orderCount": 3
+        },
+        {
+          "name": "上海新锦江大酒店·1楼赛美蓉周三至周四单人午市自助",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "醉辉皇·精选3人套餐/精选6人套餐/豪华宴请10人套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 598,
+          "orderCount": 3
+        },
+        {
+          "name": "海仑宾馆3楼-東淓·蘇宴·帝王蟹豪华餐·4人/6人/8人",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 2576,
+          "orderCount": 6
+        },
+        {
+          "name": "上海世博逸衡酒店·单人午市自助+单人自助下午茶（可拆分使用）",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 278,
+          "orderCount": 1
+        },
+        {
+          "name": "上海兴国宾馆·秋季北美洲自助午餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 326,
+          "orderCount": 1
+        },
+        {
+          "name": "上海绿发JW万豪侯爵酒店·小青龙畅吃自助餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 398,
+          "orderCount": 2
+        },
+        {
+          "name": "中心二十二·海鲜餐厅（上海中心大厦旗舰店）鲜活面包蟹4人套餐/鲜活松叶蟹6人套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 3784,
+          "orderCount": 4
+        },
+        {
+          "name": "【年夜饭】上海环球港凯悦酒店·新春10人包厢套餐/除夕团圆套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "上海东方滨江大酒店（国际会议中心）单人午市/晚市自助",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 597,
+          "orderCount": 1
+        },
+        {
+          "name": "上海静安洲际酒店·中式双人下午茶套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 690,
+          "orderCount": 6
+        },
+        {
+          "name": "上海东锦江希尔顿大酒店·双人午市自助+双人自助下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 299,
+          "orderCount": 1
+        },
+        {
+          "name": "上海奥林匹克俱乐部丽笙酒店·主厨精选4人餐/鲜活波龙6人餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 1286,
+          "orderCount": 4
+        },
+        {
+          "name": "上海苏宁宝丽嘉酒店·嘉府壹号·多规格中餐套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 1588,
+          "orderCount": 4
+        },
+        {
+          "name": "【福利秒杀专属】上海静安洲际酒店双人晚自助",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 238,
+          "orderCount": 1
+        },
+        {
+          "name": "百合居酒屋·双人套餐/新春小青龙4人餐（春节可用）",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 834,
+          "orderCount": 2
+        },
+        {
+          "name": "上海奥林匹克俱乐部丽笙酒店·周末自助午餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 476,
+          "orderCount": 3
+        },
+        {
+          "name": "玺粤轩（南京西路店）精选鲜活波龙6人套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "上海衡山路十二号华邑酒店·4人/10人年夜饭",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 1588,
+          "orderCount": 1
+        },
+        {
+          "name": "上海外高桥喜来登酒店·海鲜料理4人套餐+4人下午茶自助",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 398,
+          "orderCount": 1
+        },
+        {
+          "name": "上海世博洲际酒店·4人餐/6人餐/10人餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 888,
+          "orderCount": 2
+        },
+        {
+          "name": "上海昆仑华亭宾馆·2人中餐/4人中餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "【福利秒杀专属】上海佘山世茂洲际酒店·双人晚市自助（深坑酒店）【福利专享】",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 489,
+          "orderCount": 1
+        },
+        {
+          "name": "上海建工浦江皇冠假日酒店·畅吃海陆鲜皇冠自助晚餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "上海天鹅宾馆-四人中餐+四人下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 399,
+          "orderCount": 1
+        },
+        {
+          "name": "上海桃浦雅辰悦居酒店-尊享小青龙4人西餐+4人自助下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 3
+        },
+        {
+          "name": "上海复旦皇冠假日酒店·4人套餐/10人包房套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 1488,
+          "orderCount": 1
+        },
+        {
+          "name": "金米箩大酒店（虹口总店）帝王蟹6人大厅套餐\\帝王蟹10人大厅套餐\\帝王蟹10人工作日包厢套餐\\帝王蟹十人通用包厢套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 598,
+          "orderCount": 3
+        },
+        {
+          "name": "上海锦江都城达华宾馆-福羊吉祥贺新年10人团圆宴",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 2999,
+          "orderCount": 1
+        },
+        {
+          "name": "上海兴国宾馆·丽宫中餐厅·六人中餐/十人中餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 2176,
+          "orderCount": 2
+        },
+        {
+          "name": "【私域】上海桃浦雅辰悦居酒店-尊享4人西餐+4人自助下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 477,
+          "orderCount": 1
+        },
+        {
+          "name": "上海静安洲际酒店·午市自助餐（直播）",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 238,
+          "orderCount": 2
+        },
+        {
+          "name": "【私域】宏安瑞士大酒店·冬季盛宴海陆3人6人餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 223,
+          "orderCount": 1
+        },
+        {
+          "name": "上海桃浦雅辰悦居酒店-港式经典下午茶自助",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 206,
+          "orderCount": 2
+        },
+        {
+          "name": "上海建国宾馆·海鲜自助餐[外籍歌手驻唱]",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "上海环球港凯悦酒店·大闸蟹畅吃自助-单人工作日/单人全周通用/双人工作日/双人全周通用",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 387,
+          "orderCount": 1
+        },
+        {
+          "name": "【四人享特惠】上海世博滨江大酒店·自助晚餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 1
+        },
+        {
+          "name": "上海佘山世茂洲际酒店·午市自助/晚市自助（深坑酒店）",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 536,
+          "orderCount": 2
+        },
+        {
+          "name": "九井泽精致料理（金茂店）·落地景观4人餐/豪华4人餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 388,
+          "orderCount": 1
+        },
+        {
+          "name": "南极磷虾油",
+          "rawCategory": "商品",
+          "category": "commerce",
+          "amount": 98,
+          "orderCount": 1
+        },
+        {
+          "name": "上海衡山路十二号华邑酒店·午市单人任点任食",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 592,
+          "orderCount": 2
+        },
+        {
+          "name": "上海衡山路十二号华邑酒店·单人中式自助（活动价）",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 216,
+          "orderCount": 2
+        },
+        {
+          "name": "上海明天广场JW万豪酒店·周中午市自助餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 384,
+          "orderCount": 2
+        },
+        {
+          "name": "上海静安洲际酒店·5楼翠庭中餐厅·鲜活小青龙6人套餐/鲜活波龙8人套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "上海新锦江大酒店·4楼宴会厅·五福临门新春6人套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 0,
+          "orderCount": 2
+        },
+        {
+          "name": "上海兴国宾馆·主楼·泰芬吧·自助下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 594,
+          "orderCount": 3
+        },
+        {
+          "name": "【年夜饭】上海新锦江大酒店·4楼宴会厅·金玉满堂十人新春盛宴",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 3988,
+          "orderCount": 2
+        },
+        {
+          "name": "上海锦江饭店·4人西式套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 499,
+          "orderCount": 1
+        },
+        {
+          "name": "粤港潮楼海鲜中餐厅·4人品质套餐/6人鲜活波龙海鲜套餐/十人包房宴请套餐",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 698,
+          "orderCount": 1
+        },
+        {
+          "name": "【秒杀】健美创研花香护手霜30g*10支  (味道随机）",
+          "rawCategory": "商品",
+          "category": "commerce",
+          "amount": 5,
+          "orderCount": 1
+        },
+        {
+          "name": "【私域】静安昆仑大酒店·周末双人午市/花漾金秋双人下午茶",
+          "rawCategory": "聚会餐",
+          "category": "dining",
+          "amount": 135,
           "orderCount": 1
         }
       ],
       "annualDinner": {
-        "amount": 64485,
-        "orderCount": 26
+        "amount": 80474,
+        "orderCount": 28
       },
       "unknownCategories": [],
-      "unknownSourceOrders": 45,
+      "unknownSourceOrders": 56,
       "checks": [
         {
           "key": "scan_totals",
-          "left": 4032,
-          "right": 4032
+          "left": 4164,
+          "right": 4164
         }
       ]
     },
-    "sourceLastRecorded": "2026-11-24",
+    "sourceLastRecorded": "2026-11-25",
     "totals": {
-      "sessions": 74,
+      "sessions": 76,
       "programs": 24,
-      "scans": 4032,
-      "orders": 134,
-      "amount": 1132161.12
+      "scans": 4164,
+      "orders": 138,
+      "amount": 1147347.12
     }
   }
 }
